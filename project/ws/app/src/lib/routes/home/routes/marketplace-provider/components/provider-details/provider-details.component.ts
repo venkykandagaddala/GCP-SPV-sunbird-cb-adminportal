@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
+import * as _ from 'lodash'
 
 @Component({
   selector: 'ws-app-provider-details',
   templateUrl: './provider-details.component.html',
-  styleUrls: ['./provider-details.component.scss']
+  styleUrls: ['./provider-details.component.scss'],
 })
 export class ProviderDetailsComponent implements OnInit {
 
@@ -24,12 +25,12 @@ export class ProviderDetailsComponent implements OnInit {
     this.providerFormGroup = this.formBuilder.group({
       partnerName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
       url: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
-      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(600)])
+      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(600)]),
     })
   }
 
   getTextLength(controlName: string) {
-    return this.providerFormGroup.get(controlName)!.value!.length
+    return _.get(this.providerFormGroup.get(controlName), 'value!.length', 0)
   }
 
 }

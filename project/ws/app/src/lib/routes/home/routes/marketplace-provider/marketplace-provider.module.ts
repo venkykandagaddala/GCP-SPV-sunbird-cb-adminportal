@@ -23,7 +23,7 @@ const routes: Routes = [
   declarations: [
     MarketPlaceDashboardComponent,
     ProviderDetailsComponent,
-    ConfigureMarketplaceProvidersComponent
+    ConfigureMarketplaceProvidersComponent,
   ],
   imports: [
     CommonModule,
@@ -36,7 +36,7 @@ const routes: Routes = [
     MatIconModule,
     MatExpansionModule,
     MatTabsModule,
-    BreadcrumbsOrgModule
+    BreadcrumbsOrgModule,
   ],
   exports: [RouterModule],
 })

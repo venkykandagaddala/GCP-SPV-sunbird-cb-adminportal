@@ -70,11 +70,11 @@ export class RequestCopyDetailsComponent implements OnInit {
   competencySubtheme!: FormControl
 
   constructor(private formBuilder: FormBuilder,
-    private requestService: RequestServiceService,
-    private activatedRouter: ActivatedRoute,
-    private snackBar: MatSnackBar,
-    private router: Router,
-    public dialog: MatDialog
+              private requestService: RequestServiceService,
+              private activatedRouter: ActivatedRoute,
+              private snackBar: MatSnackBar,
+              private router: Router,
+              public dialog: MatDialog
   ) {
 
     this.currentUser = sessionStorage.getItem('idDetails') ? sessionStorage.getItem('idDetails') : ''
@@ -651,9 +651,9 @@ export class RequestCopyDetailsComponent implements OnInit {
           this.router.navigateByUrl('/app/home/all-request')
           this.snackBar.open('Request submitted successfully ')
         }
-      }, 1000)
+      },         1000)
     },
-      (error: any) => {
+                                                        (error: any) => {
         this.dialogRefs.close({ error })
         this.snackBar.open('Request Failed')
 

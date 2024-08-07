@@ -1,25 +1,25 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { MarketPlaceDashboardComponent } from './market-place-dashboard.component';
+import { MarketPlaceDashboardComponent } from './market-place-dashboard.component'
 
 describe('MarketPlaceDashboardComponent', () => {
-  let component: MarketPlaceDashboardComponent;
-  let fixture: ComponentFixture<MarketPlaceDashboardComponent>;
+  let component: MarketPlaceDashboardComponent
+  let fixture: ComponentFixture<MarketPlaceDashboardComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MarketPlaceDashboardComponent ]
+      declarations: [MarketPlaceDashboardComponent],
     })
-    .compileComponents();
-  }));
+    .compileComponents()
+  }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MarketPlaceDashboardComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture = TestBed.createComponent(MarketPlaceDashboardComponent)
+    component = fixture.componentInstance
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+})
