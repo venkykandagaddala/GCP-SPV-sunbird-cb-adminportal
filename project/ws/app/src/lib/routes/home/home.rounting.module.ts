@@ -397,6 +397,10 @@ const routes: Routes = [
           pageData: PageResolve,
         },
       },
+      {
+        path: 'marketplace-providers',
+        loadChildren: () => import('./routes/marketplace-provider/marketplace-provider.module').then(u => u.MarketplaceProviderModule),
+      },
 
     ],
   },
