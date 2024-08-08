@@ -24,7 +24,6 @@ export class KCMMappingComponent implements OnInit {
       this.kcmConfig = data.pageData.data
       this.kcmConfig.defaultKCMConfig[0].frameworkId = environment.KCMframeworkName
       this.taxonomyConfig = [...this.kcmConfig.defaultKCMConfig, ...this.kcmConfig.frameworkConfig]
-      console.log('kcmConfig', this.taxonomyConfig)
     })
   }
 
