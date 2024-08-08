@@ -5,7 +5,7 @@ import { DomSanitizer } from '@angular/platform-browser'
 @Component({
   selector: 'ws-app-demo-video-popup',
   templateUrl: './demo-video-popup.component.html',
-  styleUrls: ['./demo-video-popup.component.scss']
+  styleUrls: ['./demo-video-popup.component.scss'],
 })
 export class DemoVideoPopupComponent implements OnInit {
   videoLink = ''

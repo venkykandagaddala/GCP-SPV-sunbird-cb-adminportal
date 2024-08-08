@@ -137,7 +137,7 @@ import { DemoVideoPopupComponent } from './components/demo-video-popup/demo-vide
     AssignListPopupComponent,
     KCMMappingComponent,
     SingleAssignPopupComponent,
-    DemoVideoPopupComponent
+    DemoVideoPopupComponent,
   ],
   imports: [
     CommonModule,
