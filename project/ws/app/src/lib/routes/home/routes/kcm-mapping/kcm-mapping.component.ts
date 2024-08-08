@@ -22,8 +22,9 @@ export class KCMMappingComponent implements OnInit {
     // this.environmentVal.url = `https://localhost:3000`
     this.activateRoute.data.subscribe(data => {
       this.kcmConfig = data.pageData.data
-      this.taxonomyConfig = this.kcmConfig.frameworkConfig
-      // console.log('kcmConfig', this.kcmConfig)
+      this.kcmConfig.defaultKCMConfig[0].frameworkId = environment.KCMframeworkName
+      this.taxonomyConfig = [...this.kcmConfig.defaultKCMConfig, ...this.kcmConfig.frameworkConfig]
+      console.log('kcmConfig', this.taxonomyConfig)
     })
   }
 
