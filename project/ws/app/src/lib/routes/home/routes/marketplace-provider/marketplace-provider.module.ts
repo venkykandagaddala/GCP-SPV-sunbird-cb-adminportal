@@ -6,7 +6,8 @@ import { RouterModule, Routes } from '@angular/router'
 import { ConfigureMarketplaceProvidersComponent } from './components/configure-marketplace-providers/configure-marketplace-providers.component'
 import { MatCardModule, MatButtonModule, MatIconModule, MatExpansionModule, MatTabsModule, MatInputModule } from '@angular/material'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { BreadcrumbsOrgModule } from '@sunbird-cb/collection'
+import { BreadcrumbsOrgModule } from '@sunbird-cb/collection';
+import { HelpCenterGuideComponent } from './components/help-center-guide/help-center-guide.component'
 
 const routes: Routes = [
   {
@@ -24,6 +25,7 @@ const routes: Routes = [
     MarketPlaceDashboardComponent,
     ProviderDetailsComponent,
     ConfigureMarketplaceProvidersComponent,
+    HelpCenterGuideComponent,
   ],
   imports: [
     CommonModule,

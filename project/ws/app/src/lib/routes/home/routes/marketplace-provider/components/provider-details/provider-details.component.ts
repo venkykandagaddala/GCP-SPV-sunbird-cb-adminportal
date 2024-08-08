@@ -10,6 +10,17 @@ import * as _ from 'lodash'
 export class ProviderDetailsComponent implements OnInit {
 
   providerFormGroup!: FormGroup
+  addedTipsList: any[] = [
+    {
+      tip: 'Progress & certificates for Cornell courses are visible only after you complete the course & pass the assesment. ',
+    },
+    {
+      tip: 'You will be redirected to the external provider site.',
+    },
+    {
+      tip: 'You will be able to access the courses through iGOT but not directly login in to their system',
+    },
+  ]
 
   constructor(
     private formBuilder: FormBuilder

@@ -88,6 +88,52 @@
       font-weight: 700;
     }
   }
+
+  .VisibleToLearner {
+    font: 400 12px Lato;
+    color: #212529;
+    margin: 0px 2px;
+  }
+
+  .addTipsIcon {
+    color: #1B4CA1;
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+  }
+
+  .addTipsText {
+    font: 500 14px Lato;
+    color: #1B4CA1;
+  }
+
+  .tipsCard {
+    width: 900px;
+    border: 1px solid #00000029;
+    border-radius: 4px 0px 0px 4px;
+    height: 46px;
+    padding: 0px 16px;
+
+    .tipText {
+      font: 400 14px Lato;
+      color: #000000;
+    }
+  }
+
+  .removeTipBox {
+    width: 56px;
+    height: 48px;
+    border-radius: 0px 4px 4px 0px;
+    // padding: 12px 16px;
+    background-color: #D13924;
+
+    .removeIcon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      color: #FFFFFF;
+    }
+  }
 }
 
 .cancelBtn {

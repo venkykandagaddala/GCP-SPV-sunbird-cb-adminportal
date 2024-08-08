@@ -53,6 +53,31 @@
         </div>
       </div>
 
+      <div class="flex flex-column gap-2">
+        <span class="lable flex items-center">Provider Specific Tips
+          <span class="VisibleToLearner">(Visible to Learners)</span>
+          <mat-icon class="info-icon">info_outline</mat-icon>
+        </span>
+
+        <div class="flex gap-2">
+          <mat-icon class="addTipsIcon">add_circle</mat-icon>
+          <span class="addTipsText">Add tips</span>
+        </div>
+
+        <div class="flex flex-column gap-4">
+          <ng-container *ngFor="let tip of addedTipsList">
+            <div class="flex gap-0">
+              <div class="tipsCard flex items-center">
+                <span class="tipText">{{tip.tip}}</span>
+              </div>
+              <div class="removeTipBox flex justify-center items-center">
+                <mat-icon class="removeIcon">close</mat-icon>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
       <div class="flex flex-column gap-1 w-full">
         <div class="flex items-center gap-1 required">
           <span class="lable">File Upload</span>
