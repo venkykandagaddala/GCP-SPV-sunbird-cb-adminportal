@@ -92,6 +92,7 @@ import { AssignListPopupComponent } from './routes/request/assign-list-popup/ass
 import { KCMMappingComponent } from './routes/kcm-mapping/kcm-mapping.component'
 import { TaxonomyEditorModule } from '@sunbird-cb/taxonomy-editor'
 import { SingleAssignPopupComponent } from './routes/request/single-assign-popup/single-assign-popup.component'
+import { DemoVideoPopupComponent } from './components/demo-video-popup/demo-video-popup.component'
 @NgModule({
   declarations: [
     HomeComponent,
@@ -136,6 +137,7 @@ import { SingleAssignPopupComponent } from './routes/request/single-assign-popup
     AssignListPopupComponent,
     KCMMappingComponent,
     SingleAssignPopupComponent,
+    DemoVideoPopupComponent
   ],
   imports: [
     CommonModule,
@@ -206,7 +208,8 @@ import { SingleAssignPopupComponent } from './routes/request/single-assign-popup
     ConfirmationPopupComponent,
     SuccessComponent,
     AssignListPopupComponent,
-    SingleAssignPopupComponent],
+    SingleAssignPopupComponent,
+    DemoVideoPopupComponent],
   providers: [
     // CKEditorService,
     // LoaderService,
