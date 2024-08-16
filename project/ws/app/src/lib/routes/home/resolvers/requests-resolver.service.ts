@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Resolve } from '@angular/router'
-import { Observable, of } from 'rxjs'
+import { of } from 'rxjs'
 import { map, catchError } from 'rxjs/operators'
 // import { IResolveResponse } from '@sunbird-cb/utils'
 // import { RequestsService } from '../services/onboarding-requests.service'
@@ -14,7 +14,7 @@ export class RequestsResolve
   url: any
   pageLimit = 1000
   constructor(private http: HttpClient) { }
-  resolve(): Observable<any> {
+  resolve(): any {
     const reqArray = window.location.pathname.split('requests/')
     this.requestType = reqArray[1]
 
@@ -37,11 +37,14 @@ export class RequestsResolve
       offset: 0,
       deptName: 'iGOT',
     }
-    return this.http.post(this.url, reqbody).pipe(
-      map((datanew: any) => ({
-        data: this.requestType === 'domain' ? datanew.result : datanew.result.data, error: null,
-      })),
-      catchError(error => of({ error, data: null })),
-    )
+    setTimeout(() => {
+      return this.http.post(this.url, reqbody).pipe(
+        map((datanew: any) => ({
+          data: this.requestType === 'domain' ? datanew.result : datanew.result.data, error: null,
+        })),
+        catchError(error => of({ error, data: null })),
+      )
+    },         1000)
+
   }
 }
