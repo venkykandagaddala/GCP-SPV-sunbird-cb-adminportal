@@ -1,0 +1,63 @@
+<div>
+  <ws-app-help-center-guide [helpCenterGuide]="helpCenterGuide"></ws-app-help-center-guide>
+</div>
+
+<mat-card class="content-upload m-1">
+  <div class="flex flex-col mb-6">
+    <div class="flex gap-1 items-center">
+      <span class="header">Manage Content</span>
+      <mat-icon class="info-icon required">info_outline</mat-icon>
+    </div>
+    <span class="sub-header">Select the type how will you want to fetch data.</span>
+  </div>
+  <mat-card-content>
+    <div class="flex flex-col gap-5">
+      <div class="flex gap-2">
+        <button mat-button class="scv-btn">Via CSV</button>
+        <button mat-button class="api-btn">Via API</button>
+      </div>
+
+      <div class="flex gap-4">
+        <div class="flex flex-col w-full instructions-box">
+          <div class="flex flex-col gap-4">
+            <span class="instruction-text mb-2">Open & follow these instruction</span>
+            <span class="instruction-text">1.Keep the row of the items you wish to process</span>
+            <span class="instruction-text">2.Keep the row of the items you wish to process</span>
+            <span class="instruction-text">3.Delete the entire row you donot intend to process</span>
+            <button mat-button class="download-btn">Download</button>
+          </div>
+        </div>
+        <div class="flex flex-col gap-10 items-center justify-center w-full instructions-box">
+          <img class="file-icon" src="/assets/icons/csv.svg">
+          <button class="import-btn" mat-button>Import</button>
+          <div class="flex flex-col gap-3 items-center">
+            <span class="browse-file">Browse files</span>
+            <span class="or-text">of</span>
+            <span class="drag-file">Drag file to upload</span>
+          </div>
+          <div class="flex flex-col gap-1 items-center">
+            <span class="file-size">Max file size: 100 MB</span>
+            <span class="file-type">Supported file types: CSV, .xlsx</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<ng-container *ngIf="uploadedContentList?.length > 0">
+  <mat-tab-group class="">
+    <mat-tab label="Upload Status">
+      <div class="w-full mt-3 flex flex-col">
+        <ng-container *ngFor="let content of uploadedContentList">
+          <ws-app-providers [cardDetails]="content" [cardTheme]="'content-upload'"
+            (buttonActions)="contentEvents($event, content)"></ws-app-providers>
+        </ng-container>
+      </div>
+    </mat-tab>
+    <mat-tab label="Courses">
+      <div class="w-full mt-4 flex flex-col gap-1">
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>

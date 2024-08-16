@@ -17,4 +17,6 @@ export class HelpCenterGuideComponent implements OnInit {
   ngOnInit() {
   }
 
+  openVideoPopup() { }
+
 }

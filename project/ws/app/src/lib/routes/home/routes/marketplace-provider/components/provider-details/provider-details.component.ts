@@ -9,6 +9,14 @@ import * as _ from 'lodash'
 })
 export class ProviderDetailsComponent implements OnInit {
 
+  helpCenterGuide = {
+    header: 'Provider Details: Video Guides and Tips',
+    guideNotes: [
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.'
+    ],
+    helpVideoLink: 'url'
+  }
   providerFormGroup!: FormGroup
   addedTipsList: any[] = [
     {

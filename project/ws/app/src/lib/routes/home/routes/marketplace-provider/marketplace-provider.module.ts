@@ -4,10 +4,13 @@ import { MarketPlaceDashboardComponent } from './components/market-place-dashboa
 import { ProviderDetailsComponent } from './components/provider-details/provider-details.component'
 import { RouterModule, Routes } from '@angular/router'
 import { ConfigureMarketplaceProvidersComponent } from './components/configure-marketplace-providers/configure-marketplace-providers.component'
-import { MatCardModule, MatButtonModule, MatIconModule, MatExpansionModule, MatTabsModule, MatInputModule } from '@angular/material'
+import { MatCardModule, MatButtonModule, MatIconModule, MatExpansionModule, MatTabsModule, MatInputModule, MatMenuModule, MatDialogModule } from '@angular/material'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { BreadcrumbsOrgModule } from '@sunbird-cb/collection';
+import { BreadcrumbsOrgModule } from '@sunbird-cb/collection'
 import { HelpCenterGuideComponent } from './components/help-center-guide/help-center-guide.component'
+import { ProvidersComponent } from './components/providers/providers.component'
+import { ConformationPopupComponent } from './dialogs/conformation-popup/conformation-popup.component'
+import { ContentUploadComponent } from './components/content-upload/content-upload.component'
 
 const routes: Routes = [
   {
@@ -22,10 +25,13 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
+    ConformationPopupComponent,
     MarketPlaceDashboardComponent,
     ProviderDetailsComponent,
     ConfigureMarketplaceProvidersComponent,
     HelpCenterGuideComponent,
+    ProvidersComponent,
+    ContentUploadComponent,
   ],
   imports: [
     CommonModule,
@@ -39,6 +45,11 @@ const routes: Routes = [
     MatExpansionModule,
     MatTabsModule,
     BreadcrumbsOrgModule,
+    MatMenuModule,
+    MatDialogModule,
+  ],
+  entryComponents: [
+    ConformationPopupComponent
   ],
   exports: [RouterModule],
 })
