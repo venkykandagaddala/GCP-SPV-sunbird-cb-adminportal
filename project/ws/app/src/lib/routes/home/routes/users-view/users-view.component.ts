@@ -184,7 +184,7 @@ export class UsersViewComponent implements OnInit {
   }
 
   onCreateClick() {
-    this.router.navigate([`/app/users/create-user`])
+    this.router.navigate([`/app/home/create-user`])
   }
 
   menuActions($event: { action: string, row: any }) {
