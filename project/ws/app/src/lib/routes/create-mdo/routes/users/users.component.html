@@ -8,11 +8,13 @@
     </div>
   </div>
   <div class="flex-display">
-    <ws-widget-ui-user-table [hidden]="currentTab==='rolesandaccess'" [tableData]="tabledata" [data]="data"
-      [otherInput]="createdDepartment" [needAddAdmin]="true" [needCreateUser]="true" (actionsClick)="editUser($event)"
-      (searchByEnterKey)="onEnterkySearch($event)">
+    <ws-widget-ui-user-table [hidden]="currentTab==='rolesandaccess' || currentTab === 'mentormanage'"
+      [tableData]="tabledata" [data]="data" [otherInput]="createdDepartment" [needAddAdmin]="true"
+      [needCreateUser]="true" (actionsClick)="editUser($event)" (searchByEnterKey)="onEnterkySearch($event)">
     </ws-widget-ui-user-table>
-    <ws-app-roles-access [hidden]="currentTab==='users'" (clickedDepartment)="fClickedDepartment($event)">
+    <ws-app-roles-access [hidden]="currentTab==='users' || currentTab === 'mentormanage'"
+      (clickedDepartment)="fClickedDepartment($event)">
     </ws-app-roles-access>
+    <ws-app-mentor-manage [hidden]="currentTab==='users' || currentTab === 'rolesandaccess'"></ws-app-mentor-manage>
   </div>
 </div>

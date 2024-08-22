@@ -44,10 +44,10 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   constructor(private usersSvc: UsersService, private router: Router,
-              private route: ActivatedRoute,
-              private profile: ProfileV2Service,
-              private profileUtilSvc: ProfileV2UtillService,
-              private usersService: UsersService) {
+    private route: ActivatedRoute,
+    private profile: ProfileV2Service,
+    private profileUtilSvc: ProfileV2UtillService,
+    private usersService: UsersService) {
   }
   ngOnInit() {
     this.tabsData = [
@@ -60,6 +60,12 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         name: 'Roles and access',
         key: 'rolesandaccess',
+        render: true,
+        enabled: true,
+      },
+      {
+        name: 'Mentor Management',
+        key: 'mentormanage',
         render: true,
         enabled: true,
       }]
@@ -112,6 +118,8 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentTab = id
     if (this.currentTab === 'users') {
       this.getAllActiveUsersByDepartmentId(this.id)
+    } else if (this.currentTab === 'mentormanage') {
+      this.getMentorManage()
     }
     const el = document.getElementById(id)
     if (el != null) {
@@ -246,5 +254,8 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
         redirectionPath: window.location.href,
       }, state: { userData: event.row, updateButton: true },
     })
+  }
+  getMentorManage() {
+
   }
 }
