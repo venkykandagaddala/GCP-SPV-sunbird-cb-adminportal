@@ -57,6 +57,7 @@
     </mat-tab>
     <mat-tab label="Courses">
       <div class="w-full mt-4 flex flex-col gap-1">
+        <ws-app-courses-table [tableData]="tabledata" [data]="coursesList" [length]="length"></ws-app-courses-table>
       </div>
     </mat-tab>
   </mat-tab-group>

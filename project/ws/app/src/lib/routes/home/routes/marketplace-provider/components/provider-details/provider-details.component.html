@@ -5,12 +5,18 @@
 <mat-card class="onboard-provider m-1">
   <mat-card-title class="card-titel mb-7">Onboard Provider</mat-card-title>
   <mat-card-content>
-    <form [formGroup]="providerFormGroup" class="w-full flex flex-column gap-6 ">
+    <form [formGroup]="providerFormGroup" class="w-full flex flex-column gap-6 " (ngSubmit)="saveProviderDetails()">
       <div class="flex flex-column gap-1">
         <span class="lable required">Thumbnail</span>
         <span class="img-note">Image will be cropped to 16:9 aspect ratio</span>
         <div class="img-card">
-          <mat-icon class="img-icon flex justify-center items-center">photo_camera</mat-icon>
+          <mat-icon (click)="uploadThumbnail()"
+            class="img-icon flex justify-center items-center">photo_camera</mat-icon>
+          <input type="file" #fileInput class="inputfile" (change)="onFileSelected($event)" accept="image/*">
+          <canvas #canvas class="inputfile"></canvas>
+          <ng-container *ngIf="imageUrl">
+            <img class="thumbnailImg" [src]="imageUrl" alt="Cropped Image Preview" width="300px" height="auto">
+          </ng-container>
         </div>
       </div>
       <div class="w-full flex gap-6">
@@ -20,11 +26,11 @@
             <mat-icon class="info-icon">info_outline</mat-icon>
           </div>
           <mat-form-field class="w-full provider-input-form">
-            <input formControlName="partnerName" matInput placeholder="Type here">
+            <input formControlName="contentPartnerName" matInput placeholder="Type here">
           </mat-form-field>
           <div class="flex justify-between items-center">
             <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
-            <span class="input-note">{{getTextLength('partnerName')}}/70</span>
+            <span class="input-note">{{getTextLength('contentPartnerName')}}/70</span>
           </div>
         </div>
         <div class="flex flex-column gap-1 w-full">
@@ -33,11 +39,11 @@
             <mat-icon class="info-icon">info_outline</mat-icon>
           </div>
           <mat-form-field class="w-full provider-input-form">
-            <input formControlName="url" matInput placeholder="Type here">
+            <input formControlName="websiteUrl" matInput placeholder="Type here">
           </mat-form-field>
           <div class="flex justify-between items-center">
             <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
-            <span class="input-note">{{getTextLength('url')}}/70</span>
+            <span class="input-note">{{getTextLength('websiteUrl')}}/70</span>
           </div>
         </div>
       </div>
@@ -60,23 +66,26 @@
       <div class="flex flex-column gap-2">
         <span class="lable flex items-center">Provider Specific Tips
           <span class="VisibleToLearner">(Visible to Learners)</span>
-          <mat-icon class="info-icon">info_outline</mat-icon>
+          <mat-icon class="info-icon"
+            matTooltip="Please add the tips to learners. Maximum size of tips?">info_outline</mat-icon>
         </span>
 
-        <div class="flex gap-2">
+        <a class="addTips flex gap-2" (click)="addTips()">
           <mat-icon class="addTipsIcon">add_circle</mat-icon>
           <span class="addTipsText">Add tips</span>
-        </div>
+        </a>
 
-        <div class="flex flex-column gap-4">
-          <ng-container *ngFor="let tip of addedTipsList">
+        <div class="flex flex-column gap-4" formArrayName="providerTips">
+          <ng-container *ngFor="let tip of getTipsList.controls; let i = index">
             <div class="flex gap-0">
               <div class="tipsCard flex items-center">
-                <span class="tipText">{{tip.tip}}</span>
+                <mat-form-field class="w-full">
+                  <input [id]="'item-' + i" [formControlName]="i" matInput placeholder="Type here">
+                </mat-form-field>
               </div>
-              <div class="removeTipBox flex justify-center items-center">
+              <button mat-button (click)="removeTipAtIndex(i)" class="removeTipBox flex justify-center items-center">
                 <mat-icon class="removeIcon">close</mat-icon>
-              </div>
+              </button>
             </div>
           </ng-container>
         </div>
@@ -87,21 +96,39 @@
           <span class="lable">File Upload</span>
           <mat-icon class="info-icon">info_outline</mat-icon>
         </div>
-        <div class="fileUploadCard w-full flex justify-center items-center flex-column gap-2">
-          <img src="/assets/icons/pdf.svg" class="pdfImg">
-          <span class="browseFileText mt-5">Browse files</span>
-          <span class="fileUploadDescription">or</span>
-          <span class="fileUploadDescription">Drag file to upload</span>
-          <div class="flex flex-column gap-1 justify-center items-center w-full mt-5">
-            <span class="fileSizeText">Max file size: 100 MB</span>
-            <span class="fileTypeText">Supported file types: <span class="fileType">PDF</span></span>
-          </div>
+        <div class="fileUploadCard w-full flex justify-center items-center flex-column gap-2" wsAuthDragDrop
+          (fileDropped)="onDrop($event)">
+          <ng-container *ngIf="!pdfUploaded; else fileUploaded">
+            <img src="/assets/icons/pdf.svg" class="pdfImg">
+            <a class="browseFileText mt-5" (click)="fileInput.click()">Browse files</a>
+            <span class="fileUploadDescription">or</span>
+            <span class="fileUploadDescription">Drag file to upload</span>
+            <div class="flex flex-column gap-1 justify-center items-center w-full mt-5">
+              <span class="fileSizeText">Max file size: 100 MB</span>
+              <span class="fileTypeText">Supported file types: <span class="fileType">PDF</span></span>
+            </div>
+          </ng-container>
+          <ng-template #fileUploaded>
+            <div class="flex items-center my-2">
+              <img src="/assets/icons/samplePdf.svg" class="samplePdf">
+              <div class="flex flex-column justify-between pdfDetails">
+                <span class="pdfName">MOU.pdf</span>
+                <span class="fileUplaodedDate">File uploaded : 13/07/2021</span>
+                <span class="documentAttached flex items-center">
+                  <mat-icon class="greenTick">check_circle</mat-icon>
+                  Document attached
+                </span>
+              </div>
+            </div>
+          </ng-template>
         </div>
+        <input type="file" #fileInput class="inputfile" accept=".pdf"
+          (change)="onDrop($event.target.files[0]); fileInput.value = null" />
       </div>
 
       <div class="flex items-center gap-4">
-        <button mat-button class="cancelBtn">Cancel</button>
-        <button mat-button class="saveBtn">Save</button>
+        <button mat-button type="button" class="cancelBtn" (click)="navigateToProvidersDashboard()">Cancel</button>
+        <button mat-button type="submit" class="saveBtn">Save</button>
       </div>
     </form>
   </mat-card-content>

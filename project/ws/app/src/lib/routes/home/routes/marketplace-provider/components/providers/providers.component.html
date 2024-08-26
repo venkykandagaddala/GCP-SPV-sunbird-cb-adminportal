@@ -65,7 +65,7 @@
     <div class="flex justify-between">
       <div class="flex gap-3 items-center mb-2">
         <img class="providers-icon" src="/assets/icons/empty_shelf.svg">
-        <span class="provider-name">{{cardDetails?.providerName}}</span>
+        <span class="provider-name">{{cardDetails?.contentPartnerName}}</span>
       </div>
       <div>
         <button type="button" mat-icon-button i18n-aria-label aria-label="action items" [matMenuTriggerFor]="cardMenu"
@@ -74,15 +74,13 @@
         </button>
         <mat-menu #cardMenu="matMenu">
           <ng-template matMenuContent>
-            <div mat-menu-item class="provider-menu-item">
-              <button class="flex item-btn" mat-icon-button i18n-aria-label aria-label="Analytics"
-                (click)="buttonClick('edit')">
+            <div mat-menu-item class="provider-menu-item" (click)="buttonClick('edit')">
+              <button class="flex item-btn" mat-icon-button i18n-aria-label aria-label="Analytics">
                 Edit
               </button>
             </div>
-            <div mat-menu-item class="provider-menu-item">
-              <button class="flex item-btn" mat-icon-button i18n-aria-label aria-label="Analytics"
-                (click)="buttonClick('delete')">
+            <div mat-menu-item class="provider-menu-item" (click)="buttonClick('delete')">
+              <button class="flex item-btn" mat-icon-button i18n-aria-label aria-label="Analytics">
                 Delete
               </button>
             </div>
@@ -96,7 +94,7 @@
           <span class="lable">ID</span>
           <mat-icon class="infoIcon">info_outline</mat-icon>
         </span>
-        <span class="provider-info">{{cardDetails?.providerDetails?.id}}</span>
+        <span class="provider-info">{{cardDetails?.id}}</span>
       </div>
 
       <div class="provider-details">
@@ -104,7 +102,7 @@
           <span class="lable">Total Courses Received</span>
           <mat-icon class="infoIcon">info_outline</mat-icon>
         </span>
-        <span class="provider-info">{{cardDetails?.providerDetails?.totalCourses}}</span>
+        <span class="provider-info">{{cardDetails?.totalCourses ? cardDetails?.totalCourses : 'NA'}}</span>
       </div>
 
       <div class="provider-details">
@@ -112,7 +110,7 @@
           <span class="lable">Last updated on</span>
           <mat-icon class="infoIcon">info_outline</mat-icon>
         </span>
-        <span class="provider-info">{{cardDetails?.providerDetails?.LastUpdatedOn}}</span>
+        <span class="provider-info">{{cardDetails?.updatedOn | date:'dd MMM yyyy, h:mm a'}}</span>
       </div>
     </div>
     <div class="legend"></div>
@@ -123,8 +121,8 @@
           <mat-icon class="infoIcon">info_outline</mat-icon>
         </span>
         <div class="flex items-center justify-center"
-          [ngClass]="cardDetails?.providerDetails?.authenticationApproved ? 'approved' : 'not-approved' ">
-          <span>{{cardDetails?.providerDetails?.authenticationApproved ? 'Done' : 'Not done'}}</span>
+          [ngClass]="cardDetails?.authenticationApproved ? 'approved' : 'not-approved' ">
+          <span>{{cardDetails?.authenticationApproved ? 'Done' : 'Not done'}}</span>
         </div>
       </div>
 
@@ -133,38 +131,38 @@
           <span class="lable">Content Upload</span>
         </span>
         <div class="flex items-center justify-center gap-3"
-          [ngClass]="cardDetails?.providerDetails?.authenticationApproved ? 'config-btn' : 'disable-config'"
-          (click)="buttonClick(cardDetails?.providerDetails?.contentUpdatedOn ? 'update' : 'Configure', 'contentUploda')">
-          <span>{{cardDetails?.providerDetails?.contentUpdatedOn ? 'Update' : 'Configure'}}</span>
+          [ngClass]="cardDetails?.authenticationApproved ? 'config-btn' : 'disable-config'"
+          (click)="buttonClick(cardDetails?.contentUpdatedOn ? 'update' : 'Configure', 'contentUpload')">
+          <span>{{cardDetails?.contentUpdatedOn ? 'Update' : 'Configure'}}</span>
           <mat-icon class="right-arrow-icon">keyboard_arrow_right</mat-icon>
         </div>
-        <ng-container *ngIf="cardDetails?.providerDetails?.contentUpdatedOn">
+        <ng-container *ngIf="cardDetails?.contentUpdatedOn">
           <div class="flex gap-2">
             <mat-icon class="update-icon">update</mat-icon>
             <div class="flex flex-column gap-2">
               <span class="update-lable">Last Updated On:</span>
-              <span class="updated-time">{{cardDetails?.providerDetails?.contentUpdatedOn}}</span>
+              <span class="updated-time">{{cardDetails?.contentUpdatedOn}}</span>
             </div>
           </div>
         </ng-container>
       </div>
 
-      <div class="provider-details flex flex-col gap-2">
+      <!-- <div class="provider-details flex flex-col gap-2">
         <span class="flex gap-1">
           <span class="lable">Progress</span>
         </span>
         <div class="flex items-center justify-center gap-3"
-          [ngClass]="cardDetails?.providerDetails?.authenticationApproved ? 'config-btn' : 'disable-config'"
-          (click)="buttonClick(cardDetails?.providerDetails?.contentUpdatedOn ? 'update' : 'Configure', 'progress')">
-          <span>{{cardDetails?.providerDetails?.ProgressUpdatedOn ? 'Update' : 'Configure'}}</span>
+          [ngClass]="cardDetails?.authenticationApproved ? 'config-btn' : 'disable-config'"
+          (click)="buttonClick(cardDetails?.contentUpdatedOn ? 'update' : 'Configure', 'progress')">
+          <span>{{cardDetails?.ProgressUpdatedOn ? 'Update' : 'Configure'}}</span>
           <mat-icon class="right-arrow-icon">keyboard_arrow_right</mat-icon>
         </div>
-        <ng-container *ngIf="cardDetails?.providerDetails?.ProgressUpdatedOn">
+        <ng-container *ngIf="cardDetails?.ProgressUpdatedOn">
           <div class="flex gap-2">
             <mat-icon class="update-icon">update</mat-icon>
             <div class="flex flex-column gap-2">
               <span class="update-lable">Last Updated On:</span>
-              <span class="updated-time">{{cardDetails?.providerDetails?.ProgressUpdatedOn}}</span>
+              <span class="updated-time">{{cardDetails?.ProgressUpdatedOn}}</span>
             </div>
           </div>
         </ng-container>
@@ -175,21 +173,21 @@
           <span class="lable">Certification</span>
         </span>
         <div class="flex items-center justify-center gap-3"
-          [ngClass]="cardDetails?.providerDetails?.authenticationApproved ? 'config-btn' : 'disable-config'"
-          (click)="buttonClick(cardDetails?.providerDetails?.contentUpdatedOn ? 'update' : 'Configure', 'certification')">
-          <span>{{cardDetails?.providerDetails?.CertificationOn ? 'Update' : 'Configure'}}</span>
+          [ngClass]="cardDetails?.authenticationApproved ? 'config-btn' : 'disable-config'"
+          (click)="buttonClick(cardDetails?.contentUpdatedOn ? 'update' : 'Configure', 'certification')">
+          <span>{{cardDetails?.CertificationOn ? 'Update' : 'Configure'}}</span>
           <mat-icon class="right-arrow-icon">keyboard_arrow_right</mat-icon>
         </div>
-        <ng-container *ngIf="cardDetails?.providerDetails?.CertificationOn">
+        <ng-container *ngIf="cardDetails?.CertificationOn">
           <div class="flex gap-2">
             <mat-icon class="update-icon">update</mat-icon>
             <div class="flex flex-column gap-2">
               <span class="update-lable">Last Updated On:</span>
-              <span class="updated-time">{{cardDetails?.providerDetails?.CertificationOn}}</span>
+              <span class="updated-time">{{cardDetails?.CertificationOn}}</span>
             </div>
           </div>
         </ng-container>
-      </div>
+      </div> -->
 
     </div>
   </div>

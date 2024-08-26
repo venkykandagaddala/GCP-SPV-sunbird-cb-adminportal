@@ -46,3 +46,12 @@
     font-weight: 400;
   }
 }
+
+.MarketplaceLoader {
+  height: calc(100vh - 300px);
+
+  .MarketplaceSpinner {
+    position: unset !important;
+    margin: 0px !important;
+  }
+}

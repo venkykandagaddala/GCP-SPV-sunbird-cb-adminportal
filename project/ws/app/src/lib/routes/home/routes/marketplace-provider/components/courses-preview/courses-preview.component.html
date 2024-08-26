@@ -1,0 +1,14 @@
+<div class="flex flex-col gap-4">
+  <div>
+    <button mat-button class="back-btn" [routerLink]="'/app/home/marketplace-providers/onboard-partner'">
+      <mat-icon class="back-icon">arrow_back</mat-icon>
+      Go back
+    </button>
+  </div>
+
+  <div>
+    <span class="preview-header">Preview</span>
+  </div>
+
+  <ws-app-courses-table [tableData]="tabledata" [data]="coursesList" [length]="length"></ws-app-courses-table>
+</div>

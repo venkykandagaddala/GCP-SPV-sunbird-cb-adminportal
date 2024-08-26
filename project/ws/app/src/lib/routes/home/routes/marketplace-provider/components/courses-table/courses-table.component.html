@@ -1,0 +1,78 @@
+<div class="courses-table flex flex-column gap-4">
+  <div class="flex justify-between">
+    <div class="search">
+      <div class=rsearch>
+        <mat-icon class="color-60 search-icon">search</mat-icon>
+        <input class="sinput color-60" type="Standard" label="" (input)="applyFilter($event.target.value)"
+          placeholder="Search">
+      </div>
+    </div>
+
+    <div>
+      <button mat-raised-button class="delete-all"></button>
+    </div>
+  </div>
+
+  <div class="example-table-container">
+
+    <mat-table #table matSort [dataSource]="dataSource" class="example-table table1 responsiveTable"
+      *ngIf="dataSource.filteredData.length > 0">
+
+      <ng-container matColumnDef="{{col.key}}" *ngFor="let col of tableData!.columns">
+        <ng-container [ngSwitch]="col.cellType">
+          <ng-container *ngSwitchCase="'select'">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class=".h-400-r-14-l color-60">
+              <mat-checkbox [(ngModel)]="allSelected" (change)="selectAll()">
+              </mat-checkbox>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <mat-checkbox [(ngModel)]="element['isChecked']" (change)="onCheckboxChange(element)"
+                [disabled]="element['isActive']">
+              </mat-checkbox>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'text'">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class=".h-400-r-14-l color-60"> {{col.displayName}}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <ng-container *ngIf="col.imageKey">
+                <img class="imageCell" [src]="element[col.imageKey]">
+              </ng-container>
+              <span class="h-400-r-14-l textclass color-87 ">
+                {{element[col.key]}}
+              </span>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'delete-btn'">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class=".h-400-r-14-l color-60"> {{col.displayName}}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <button mat-button class="delete-btn" [ngClass]="{'disable-delete': element['isActive'] }"
+                (click)="buttonClick('delete', element)">
+                <mat-icon class="delete-icon">delete</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+        </ng-container>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="columnsList"></mat-header-row>
+
+      <mat-row *matRowDef="let row; columns: columnsList">
+      </mat-row>
+
+    </mat-table>
+    <div class="no-cbp-data" *ngIf="dataSource.filteredData.length === 0 && searchKey">
+      <div><img src="/assets/images/no-content-data-search.svg"></div>
+      <div class="mat-subheading-1 margin-remove">No results found</div>
+      <div>Try adjusting your search to find what you are looking for.</div>
+    </div>
+    <mat-card class="flex-1" role="none" *ngIf="dataSource.filteredData.length === 0">
+      <span class="mat-subtitle">No data found</span>
+    </mat-card>
+  </div>
+  <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
+  </mat-paginator>

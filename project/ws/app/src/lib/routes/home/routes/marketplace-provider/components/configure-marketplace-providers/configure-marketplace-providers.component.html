@@ -7,15 +7,16 @@
   </div>
 
   <div class="w-full">
-    <mat-tab-group class="">
-      <mat-tab label="Provider Details">
+    <mat-tab-group class="" [(selectedIndex)]="selectedIndex">
+      <mat-tab data-id="provider" label="Provider Details">
         <div class="w-full mt-4">
-          <ws-app-provider-details></ws-app-provider-details>
+          <ws-app-provider-details [providerDetails]="providerDetails"></ws-app-provider-details>
         </div>
       </mat-tab>
-      <mat-tab label="Content Upload">
+      <!-- <mat-tab data-id="contentUpload" label="Content Upload" [disabled]="!providerDetails"> -->
+      <mat-tab data-id="contentUpload" label="Content Upload">
         <div class="w-full mt-4">
-          <ws-app-content-upload></ws-app-content-upload>
+          <ws-app-content-upload [providerDetails]="providerDetails"></ws-app-content-upload>
         </div>
       </mat-tab>
       <!-- <mat-tab label="Authentication">

@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core'
 import { FormControl } from '@angular/forms'
 import { ConformationPopupComponent } from '../../dialogs/conformation-popup/conformation-popup.component'
 import { MatDialog } from '@angular/material'
+import { Router } from '@angular/router'
+import { MarketplaceService } from '../../services/marketplace.service'
+import { HttpErrorResponse } from '@angular/common/http'
+import * as _ from 'lodash'
+import { debounceTime } from 'rxjs/operators'
 
 @Component({
   selector: 'ws-app-market-place-dashboard',
@@ -61,18 +66,72 @@ export class MarketPlaceDashboardComponent implements OnInit {
     }
   ]
   searchControl = new FormControl()
+  apiSubscription: any
+  displayLoader = false
 
   constructor(
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router,
+    private marketPlaceSvc: MarketplaceService
   ) { }
 
   ngOnInit() {
+    this.getProviders()
+    this.subscribeValueChanges()
+  }
+
+  getProviders(searchKey?: string) {
+    this.displayLoader = true
+    this.providersList = []
+    const formBody: any = {
+      filterCriteriaMap: {
+        isActive: true
+      },
+      pageNumber: 0,
+      pageSize: 10,
+      facets: [
+        "contentPartnerName"
+      ],
+      orderBy: "createdOn",
+      orderDirection: "desc"
+    }
+
+    if (searchKey) {
+      formBody['searchString'] = searchKey
+    }
+
+    if (this.apiSubscription) {
+      this.apiSubscription.unsubscribe()
+    }
+
+    this.apiSubscription = this.marketPlaceSvc.getProvidersList(formBody).subscribe({
+      next: (responce: any) => {
+        this.displayLoader = false
+        this.providersList = _.get(responce, 'result.data', [])
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log('error', error)
+      }
+    })
+  }
+
+  subscribeValueChanges() {
+    if (this.searchControl) {
+      this.searchControl.valueChanges.pipe(debounceTime(500)).subscribe((searchKey: any) => {
+        console.log('searchKey: ', searchKey)
+        this.getProviders(searchKey)
+      })
+    }
   }
 
   providerEvents(event: any, provider: any) {
     switch (event.action) {
       case 'edit':
-        console.log(event, provider)
+        const providerDetails = {
+          id: _.get(provider, 'id'),
+          providerName: _.get(provider, 'contentPartnerName')
+        }
+        this.navigateToConfiguration(event.mode, providerDetails)
         break
       case 'delete':
         console.log(event, provider)
@@ -80,7 +139,15 @@ export class MarketPlaceDashboardComponent implements OnInit {
       case 'update':
         this.openConformationPopup()
         break
+      case 'Configure':
+        this.navigateToConfiguration(event.mode, provider)
+        break
     }
+  }
+
+  navigateToConfiguration(tab: string = 'provider', providerDetails?: any) {
+    this.router.navigate(['/app/home/marketplace-providers/onboard-partner'],
+      { state: { tab: tab, providerDetails: providerDetails } })
   }
 
   openConformationPopup() {
