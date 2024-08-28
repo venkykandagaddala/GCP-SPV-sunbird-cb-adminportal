@@ -15,6 +15,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter'
 import _ from 'lodash'
 import { TelemetryEvents } from '../../events/model/telemetry.event.model'
 import { ProfileV2UtillService } from '../services/home-utill.service'
+import { preventHtmlAndJs } from '../../../validators/prevent-html-and-js.validator'
 /* tslint:enable */
 
 export const MY_FORMATS = {
@@ -146,8 +147,8 @@ export class CreateEventComponent implements OnInit {
       eventPicture: new FormControl('', [Validators.required]),
       eventTitle: new FormControl('', [Validators.required]),
       // summary: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
-      agenda: new FormControl('', []),
+      description: new FormControl('', [Validators.required, preventHtmlAndJs()]),
+      agenda: new FormControl('', [preventHtmlAndJs()]),
       // isItKarmayogiTalk: new FormControl('', []),
       eventType: new FormControl('', [Validators.required]),
       eventDate: new FormControl('', [Validators.required]),
@@ -580,7 +581,7 @@ export class CreateEventComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(() => {
       setTimeout(() => {
         this.router.navigate([`/app/home/events`])
-      },         700)
+      }, 700)
     })
   }
 

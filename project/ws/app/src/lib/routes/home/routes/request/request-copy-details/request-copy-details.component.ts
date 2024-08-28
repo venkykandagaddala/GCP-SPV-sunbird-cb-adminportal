@@ -8,6 +8,7 @@ import { ConfirmationPopupComponent } from '../confirmation-popup/confirmation-p
 /* tslint:disable */
 import _ from 'lodash'
 import { debounceTime, distinctUntilChanged, startWith } from 'rxjs/operators'
+import { preventHtmlAndJs } from '../../../validators/prevent-html-and-js.validator'
 /* tslint:enable */
 
 @Component({
@@ -70,22 +71,22 @@ export class RequestCopyDetailsComponent implements OnInit {
   competencySubtheme!: FormControl
 
   constructor(private formBuilder: FormBuilder,
-              private requestService: RequestServiceService,
-              private activatedRouter: ActivatedRoute,
-              private snackBar: MatSnackBar,
-              private router: Router,
-              public dialog: MatDialog
+    private requestService: RequestServiceService,
+    private activatedRouter: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    public dialog: MatDialog
   ) {
 
     this.currentUser = sessionStorage.getItem('idDetails') ? sessionStorage.getItem('idDetails') : ''
 
     this.requestForm = this.formBuilder.group({
-      titleName: new FormControl('', [Validators.required, Validators.pattern(this.noSpecialChar), Validators.minLength(10)]),
-      Objective: new FormControl('', [Validators.required, Validators.pattern(this.noSpecialChar)]),
-      userType: new FormControl('', [Validators.pattern(this.noSpecialChar)]),
+      titleName: new FormControl('', [Validators.required, preventHtmlAndJs(), Validators.pattern(this.noSpecialChar), Validators.minLength(10)]),
+      Objective: new FormControl('', [Validators.required, preventHtmlAndJs(), Validators.pattern(this.noSpecialChar)]),
+      userType: new FormControl('', [preventHtmlAndJs(), Validators.pattern(this.noSpecialChar)]),
       learningMode: new FormControl(''),
       compArea: new FormControl(''),
-      referenceLink: new FormControl(''),
+      referenceLink: new FormControl('', preventHtmlAndJs()),
       requestType: new FormControl('', Validators.required),
       assignee: new FormControl(''),
       providers: new FormControl([[]]),
@@ -651,9 +652,9 @@ export class RequestCopyDetailsComponent implements OnInit {
           this.router.navigateByUrl('/app/home/all-request')
           this.snackBar.open('Request submitted successfully ')
         }
-      },         1000)
+      }, 1000)
     },
-                                                        (error: any) => {
+      (error: any) => {
         this.dialogRefs.close({ error })
         this.snackBar.open('Request Failed')
 
