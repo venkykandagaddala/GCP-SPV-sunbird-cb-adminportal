@@ -11,8 +11,8 @@ export class CoursesTableComponent implements OnInit, OnChanges {
   @Input() tableData!: any
   @Input() data?: []
   @Input() length = 20
-  @Output() actionsClick?: EventEmitter<any>
-  @Output() searchKey?: EventEmitter<string>
+  @Output() actionsClick = new EventEmitter<any>()
+  @Output() searchKey = new EventEmitter<string>()
 
   displayedColumns: any
   dataSource!: any
@@ -21,6 +21,7 @@ export class CoursesTableComponent implements OnInit, OnChanges {
   columnsList: any = []
   allSelected = false
   selectedRowData: any = []
+  showDeleteAll = true
 
   constructor() {
     this.dataSource = new MatTableDataSource<any>()
@@ -29,6 +30,7 @@ export class CoursesTableComponent implements OnInit, OnChanges {
   ngOnInit() {
     if (this.tableData) {
       this.displayedColumns = this.tableData.columns
+      this.showDeleteAll = this.tableData.showDeleteAll
     }
   }
 
@@ -50,9 +52,13 @@ export class CoursesTableComponent implements OnInit, OnChanges {
     this.columnsList = _.map(this.tableData.columns, c => c.key)
   }
 
-  buttonClick(action: string, row: any) {
-    if (this.tableData && this.actionsClick) {
-      this.actionsClick.emit({ action, row })
+  deleteAllSelected() {
+    this.buttonClick('delete', this.selectedRowData)
+  }
+
+  buttonClick(action: string, rows: any) {
+    if (this.tableData) {
+      this.actionsClick.emit({ action, rows })
     }
   }
 
@@ -76,7 +82,11 @@ export class CoursesTableComponent implements OnInit, OnChanges {
   }
 
   onCheckboxChange(column: any) {
-    console.log(column)
+    if (column.isChecked) {
+      this.selectedRowData.push(column)
+    } else {
+      this.selectedRowData = this.selectedRowData.filter((rowData: any) => rowData.id !== column.id)
+    }
   }
 
 }

@@ -94,7 +94,7 @@
           <span class="lable">ID</span>
           <mat-icon class="infoIcon">info_outline</mat-icon>
         </span>
-        <span class="provider-info">{{cardDetails?.id}}</span>
+        <span class="provider-info">{{cardDetails?.orgId}}</span>
       </div>
 
       <div class="provider-details">
@@ -121,8 +121,8 @@
           <mat-icon class="infoIcon">info_outline</mat-icon>
         </span>
         <div class="flex items-center justify-center"
-          [ngClass]="cardDetails?.authenticationApproved ? 'approved' : 'not-approved' ">
-          <span>{{cardDetails?.authenticationApproved ? 'Done' : 'Not done'}}</span>
+          [ngClass]="cardDetails?.isAuthenticate ? 'approved' : 'not-approved' ">
+          <span>{{cardDetails?.isAuthenticate ? 'Done' : 'Not done'}}</span>
         </div>
       </div>
 
@@ -131,17 +131,23 @@
           <span class="lable">Content Upload</span>
         </span>
         <div class="flex items-center justify-center gap-3"
-          [ngClass]="cardDetails?.authenticationApproved ? 'config-btn' : 'disable-config'"
-          (click)="buttonClick(cardDetails?.contentUpdatedOn ? 'update' : 'Configure', 'contentUpload')">
-          <span>{{cardDetails?.contentUpdatedOn ? 'Update' : 'Configure'}}</span>
+          [ngClass]="cardDetails?.isAuthenticate ? 'config-btn' : 'disable-config'"
+          (click)="buttonClick(cardDetails?.contentUploadLastUpdatedDate ? 'update' : 'Configure', 'contentUpload')">
+          <span>{{cardDetails?.contentUploadLastUpdatedDate ? 'Update' : 'Configure'}}</span>
           <mat-icon class="right-arrow-icon">keyboard_arrow_right</mat-icon>
         </div>
-        <ng-container *ngIf="cardDetails?.contentUpdatedOn">
+        <!-- need to remove below and uncomment above -->
+        <!-- <div class="flex items-center justify-center gap-3"
+          (click)="buttonClick(cardDetails?.contentUploadLastUpdatedDate ? 'update' : 'Configure', 'contentUpload')">
+          <span>{{cardDetails?.contentUploadLastUpdatedDate ? 'Update' : 'Configure'}}</span>
+          <mat-icon class="right-arrow-icon">keyboard_arrow_right</mat-icon>
+        </div> -->
+        <ng-container *ngIf="cardDetails?.contentUploadLastUpdatedDate">
           <div class="flex gap-2">
             <mat-icon class="update-icon">update</mat-icon>
             <div class="flex flex-column gap-2">
               <span class="update-lable">Last Updated On:</span>
-              <span class="updated-time">{{cardDetails?.contentUpdatedOn}}</span>
+              <span class="updated-time">{{cardDetails?.contentUploadLastUpdatedDate}}</span>
             </div>
           </div>
         </ng-container>
@@ -152,8 +158,8 @@
           <span class="lable">Progress</span>
         </span>
         <div class="flex items-center justify-center gap-3"
-          [ngClass]="cardDetails?.authenticationApproved ? 'config-btn' : 'disable-config'"
-          (click)="buttonClick(cardDetails?.contentUpdatedOn ? 'update' : 'Configure', 'progress')">
+          [ngClass]="cardDetails?.isAuthenticate ? 'config-btn' : 'disable-config'"
+          (click)="buttonClick(cardDetails?.contentUploadLastUpdatedDate ? 'update' : 'Configure', 'progress')">
           <span>{{cardDetails?.ProgressUpdatedOn ? 'Update' : 'Configure'}}</span>
           <mat-icon class="right-arrow-icon">keyboard_arrow_right</mat-icon>
         </div>
@@ -173,8 +179,8 @@
           <span class="lable">Certification</span>
         </span>
         <div class="flex items-center justify-center gap-3"
-          [ngClass]="cardDetails?.authenticationApproved ? 'config-btn' : 'disable-config'"
-          (click)="buttonClick(cardDetails?.contentUpdatedOn ? 'update' : 'Configure', 'certification')">
+          [ngClass]="cardDetails?.isAuthenticate ? 'config-btn' : 'disable-config'"
+          (click)="buttonClick(cardDetails?.contentUploadLastUpdatedDate ? 'update' : 'Configure', 'certification')">
           <span>{{cardDetails?.CertificationOn ? 'Update' : 'Configure'}}</span>
           <mat-icon class="right-arrow-icon">keyboard_arrow_right</mat-icon>
         </div>

@@ -1,8 +1,14 @@
-<div class="dialog-container">
+<div class="dialog-container" [ngClass]="{'dialog-container-center': !dialogDetails?.buttons}">
   <ng-container [ngSwitch]="dialogDetails.dialogType">
     <ng-container *ngSwitchCase="'warning'">
       <div class="flex justify-center items-center mb-4">
         <mat-icon aria-hidden="false" class="warning-icon">info_outlined</mat-icon>
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'csvLoader'">
+      <div class="flex flex-col justify-center items-center">
+        <img src="/assets/icons/csv.svg" class="csvFile mb-3">
+        <mat-progress-bar mode="determinate" class="csvProgressBar" value="40"></mat-progress-bar>
       </div>
     </ng-container>
   </ng-container>
@@ -28,8 +34,10 @@
     </ng-container>
   </ng-container>
 </div>
-<div class="px2 footer flex w-full gap-2" [ngClass]="dialogDetails.footerClass">
-  <ng-container *ngFor="let btn of dialogDetails?.buttons">
-    <button mat-raised-button (click)="closePopup(btn.response)" [ngClass]="btn.btnClass">{{btn.btnText}}</button>
-  </ng-container>
-</div>
+<ng-container *ngIf="dialogDetails?.buttons">
+  <div class="px2 footer flex w-full gap-2" [ngClass]="dialogDetails.footerClass">
+    <ng-container *ngFor="let btn of dialogDetails?.buttons">
+      <button mat-raised-button (click)="closePopup(btn.response)" [ngClass]="btn.btnClass">{{btn.btnText}}</button>
+    </ng-container>
+  </div>
+</ng-container>

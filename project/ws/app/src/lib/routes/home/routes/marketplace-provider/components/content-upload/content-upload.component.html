@@ -13,7 +13,7 @@
   <mat-card-content>
     <div class="flex flex-col gap-5">
       <div class="flex gap-2">
-        <button mat-button class="scv-btn">Via CSV</button>
+        <button mat-button class="scv-btn" (click)="uploadFile()">Via CSV</button>
         <button mat-button class="api-btn">Via API</button>
       </div>
 
@@ -27,38 +27,66 @@
             <button mat-button class="download-btn">Download</button>
           </div>
         </div>
-        <div class="flex flex-col gap-10 items-center justify-center w-full instructions-box">
-          <img class="file-icon" src="/assets/icons/csv.svg">
-          <button class="import-btn" mat-button>Import</button>
-          <div class="flex flex-col gap-3 items-center">
-            <span class="browse-file">Browse files</span>
-            <span class="or-text">of</span>
-            <span class="drag-file">Drag file to upload</span>
-          </div>
-          <div class="flex flex-col gap-1 items-center">
-            <span class="file-size">Max file size: 100 MB</span>
-            <span class="file-type">Supported file types: CSV, .xlsx</span>
-          </div>
+        <div class="flex flex-col gap-10 items-center justify-center w-full instructions-box" wsAuthDragDrop
+          (fileDropped)="onDrop($event)">
+          <ng-container *ngIf="!contentFileUploaded; else fileUploaded">
+            <img class="file-icon" src="/assets/icons/csv.svg">
+            <button class="import-btn" mat-button (click)="fileInput.click()">Import</button>
+            <div class="flex flex-col gap-3 items-center">
+              <a class="browse-file" (click)="fileInput.click()">Browse files</a>
+              <span class="or-text">of</span>
+              <span class="drag-file">Drag file to upload</span>
+            </div>
+            <div class="flex flex-col gap-1 items-center">
+              <span class="file-size">Max file size: 100 MB</span>
+              <span class="file-type">Supported file types: CSV, .xlsx</span>
+            </div>
+          </ng-container>
+          <ng-template #fileUploaded>
+            <div class="flex items-center my-2">
+              <img src="/assets/icons/samplePdf.svg" class="samplePdf">
+              <div class="flex flex-column justify-between pdfDetails">
+                <span class="pdfName">{{fileName}}</span>
+                <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>
+                <span class="documentAttached flex items-center">
+                  <mat-icon class="greenTick">check_circle</mat-icon>
+                  Document attached
+                </span>
+              </div>
+            </div>
+          </ng-template>
+          <input type="file" style="display: none;" #fileInput accept=".xlsx, .csv"
+            (change)="onDrop($event.target.files[0]); fileInput.value = null" />
         </div>
       </div>
     </div>
   </mat-card-content>
 </mat-card>
 
-<ng-container *ngIf="uploadedContentList?.length > 0">
-  <mat-tab-group class="">
-    <mat-tab label="Upload Status">
-      <div class="w-full mt-3 flex flex-col">
+<mat-tab-group class="">
+  <mat-tab label="Upload Status">
+    <div class="w-full mt-3 flex flex-col">
+      <ng-container *ngIf="!showUploadedStatusLoader; else showLoader">
         <ng-container *ngFor="let content of uploadedContentList">
           <ws-app-providers [cardDetails]="content" [cardTheme]="'content-upload'"
             (buttonActions)="contentEvents($event, content)"></ws-app-providers>
         </ng-container>
-      </div>
-    </mat-tab>
-    <mat-tab label="Courses">
+        <!-- <ng-container *ngIf="uploadedContentList.length === 0"></ng-container> -->
+      </ng-container>
+    </div>
+  </mat-tab>
+  <mat-tab label="Courses">
+    <ng-container *ngIf="!showCoursesLoader; else showLoader">
       <div class="w-full mt-4 flex flex-col gap-1">
-        <ws-app-courses-table [tableData]="tabledata" [data]="coursesList" [length]="length"></ws-app-courses-table>
+        <ws-app-courses-table [tableData]="tabledata" [data]="coursesList" [length]="length"
+          (actionsClick)="deletedSelectedCourses($event)"></ws-app-courses-table>
       </div>
-    </mat-tab>
-  </mat-tab-group>
-</ng-container>
+    </ng-container>
+  </mat-tab>
+</mat-tab-group>
+
+<ng-template #showLoader>
+  <div class="w-full flex items-center justify-center dataLoader">
+    <mat-spinner [diameter]="50" class="dataSpinner"></mat-spinner>
+  </div>
+</ng-template>

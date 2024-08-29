@@ -5,14 +5,15 @@
 <mat-card class="onboard-provider m-1">
   <mat-card-title class="card-titel mb-7">Onboard Provider</mat-card-title>
   <mat-card-content>
-    <form [formGroup]="providerFormGroup" class="w-full flex flex-column gap-6 " (ngSubmit)="saveProviderDetails()">
+    <form [formGroup]="providerFormGroup" class="w-full flex flex-column gap-6 " (ngSubmit)="submit()">
       <div class="flex flex-column gap-1">
         <span class="lable required">Thumbnail</span>
         <span class="img-note">Image will be cropped to 16:9 aspect ratio</span>
         <div class="img-card">
-          <mat-icon (click)="uploadThumbnail()"
+          <mat-icon (click)="thumbNailInput.click()"
             class="img-icon flex justify-center items-center">photo_camera</mat-icon>
-          <input type="file" #fileInput class="inputfile" (change)="onFileSelected($event)" accept="image/*">
+          <input type="file" #thumbNailInput class="inputfile"
+            (change)="onThumbNailSelected($event.target.files[0]); thumbNailInput.value = null" accept="image/*">
           <canvas #canvas class="inputfile"></canvas>
           <ng-container *ngIf="imageUrl">
             <img class="thumbnailImg" [src]="imageUrl" alt="Cropped Image Preview" width="300px" height="auto">
@@ -112,8 +113,8 @@
             <div class="flex items-center my-2">
               <img src="/assets/icons/samplePdf.svg" class="samplePdf">
               <div class="flex flex-column justify-between pdfDetails">
-                <span class="pdfName">MOU.pdf</span>
-                <span class="fileUplaodedDate">File uploaded : 13/07/2021</span>
+                <span class="pdfName">{{fileName}}</span>
+                <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>
                 <span class="documentAttached flex items-center">
                   <mat-icon class="greenTick">check_circle</mat-icon>
                   Document attached

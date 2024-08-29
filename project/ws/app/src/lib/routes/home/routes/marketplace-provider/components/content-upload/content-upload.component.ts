@@ -1,11 +1,13 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core'
-import { MatTableDataSource } from '@angular/material'
+import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core'
+import { MatDialog, MatSnackBar, MatTableDataSource } from '@angular/material'
 import { Router } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { map } from 'rxjs/operators'
-import { of } from 'rxjs'
 import * as _ from 'lodash'
 import { DatePipe } from '@angular/common'
+import { HttpErrorResponse } from '@angular/common/http'
+import { ConformationPopupComponent } from '../../dialogs/conformation-popup/conformation-popup.component'
+import { forkJoin } from 'rxjs'
 
 @Component({
   selector: 'ws-app-content-upload',
@@ -14,6 +16,8 @@ import { DatePipe } from '@angular/common'
   providers: [DatePipe]
 })
 export class ContentUploadComponent implements OnInit {
+  @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>
+  @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>
 
   @Input() providerDetails?: any
 
@@ -127,49 +131,78 @@ export class ContentUploadComponent implements OnInit {
     }
   ]
   length = 20
+  contentFileUploaded = false
+  contentFileUploadCondition: any
+  FILE_UPLOAD_MAX_SIZE: number = 100 * 1024 * 1024
+  contentFile: any
+  fileName: string = ''
+  fileUploadedDate: string | null = ''
+  dialogRef: any
+  showUploadedStatusLoader = false
+  showCoursesLoader = false
 
   constructor(
     private router: Router,
     private marketPlaceSvc: MarketplaceService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.providerDetails && changes.providerDetails.currentValue) {
-      // this.getContentList()
+      this.getContentList()
       this.getCoursesList()
     }
   }
 
+  //#region (content files)
   getContentList() {
-    if (this.providerDetails && this.providerDetails.providerName) {
-      const formBody = {
-        providerName: this.providerDetails.providerName,
-        size: 10,
-        page: 0,
-        isActive: false
-      }
-      this.marketPlaceSvc.getContentList(formBody)
+    if (this.providerDetails && this.providerDetails.id) {
+      this.showUploadedStatusLoader = true
+      this.marketPlaceSvc.getContentList(this.providerDetails.id)
         .pipe(map((responce: any) => {
           return this.formateContentList(responce)
         }))
         .subscribe({
           next: (result: any) => {
-            console.log('files list', result)
+            this.showUploadedStatusLoader = false
+            this.uploadedContentList = result
+          },
+          error: (error: HttpErrorResponse) => {
+            this.showUploadedStatusLoader = false
+            const errmsg = _.get(error, 'error.params.errMsg')
+            this.showSnackBar(errmsg)
           }
         })
     }
   }
 
   formateContentList(responce: any) {
-    return of(responce)
+    const formatedList: any = []
+    if (responce) {
+      responce.forEach((element: any) => {
+        const formatedData = {
+          status: element.status === 'success' ? 'Live' : 'Failed',
+          name: element.fileName,
+          // intiatedOn: this.datePipe.transform(new Date(element.initiatedOn), 'dd MMM yyyy hh:mm a'),
+          // completedOn: this.datePipe.transform(new Date(element.completedOn), 'dd MMM yyyy hh:mm a'),
+        }
+        formatedList.push(formatedData)
+      })
+    }
+    return formatedList
   }
+  //#endregion
 
+  //#region (courses)
   getCoursesList() {
     if (this.providerDetails && this.providerDetails.contentPartnerName) {
+      this.showCoursesLoader = true
       this.coursesList = []
       const formBody = {
         // providerName: this.providerDetails.contentPartnerName,
+        // need to remove below and uncomment above
         providerName: 'eCornell',
         size: 20,
         page: 0,
@@ -182,6 +215,12 @@ export class ContentUploadComponent implements OnInit {
         .subscribe({
           next: (result: any) => {
             this.coursesList = result
+            this.showCoursesLoader = false
+          },
+          error: (error: HttpErrorResponse) => {
+            const errmsg = _.get(error, 'error.params.errMsg')
+            this.showCoursesLoader = false
+            this.showSnackBar(errmsg)
           }
         })
     }
@@ -205,6 +244,7 @@ export class ContentUploadComponent implements OnInit {
     })
     return formatedList
   }
+  //#endregion
 
   ngOnInit() {
     this.tabledata = {
@@ -218,7 +258,8 @@ export class ContentUploadComponent implements OnInit {
 
       ],
       needCheckBox: true,
-      disableOn: 'isActive'
+      disableOn: 'isActive',
+      showDeleteAll: true
     }
     this.dataSource = new MatTableDataSource(this.coursesList)
   }
@@ -234,9 +275,108 @@ export class ContentUploadComponent implements OnInit {
     }
   }
 
+  onDrop(file: File) {
+    this.contentFileUploadCondition = {
+      fileName: false,
+      eval: false,
+      externalReference: false,
+      iframe: false,
+      isSubmitPressed: false,
+      preview: false,
+      url: '',
+    }
+    this.fileName = file.name.replace(/[^A-Za-z0-9_.]/g, '')
+    if (!(this.fileName.toLowerCase().endsWith('.csv') || this.fileName.toLowerCase().endsWith('.xlsx'))) {
+      this.showSnackBar('Please upload csv or xlsx file')
+    } else if (file.size > this.FILE_UPLOAD_MAX_SIZE) {
+      this.showSnackBar('file size should not be more than 100 MB')
+    } else {
+      this.contentFile = file
+      this.contentFileUploaded = true
+      this.fileUploadedDate = this.datePipe.transform(new Date(), 'dd/MM/yyyy')
+    }
+  }
+
+  uploadFile() {
+    this.openFileUploadPopup() // need to remove
+    if (this.contentFile) {
+      this.openFileUploadPopup()
+      const formdata = new FormData()
+      formdata.append(
+        'content',
+        this.contentFile as Blob,
+        (this.contentFile as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
+      )
+
+      this.marketPlaceSvc.uploadContent(formdata, this.providerDetails.contentPartnerName).subscribe({
+        next: (res: any) => {
+          if (res) {
+            console.log('file uploaded', res)
+            this.dialogRef.close()
+            // this.getContentList()
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          const errmsg = _.get(error, 'error.params.errMsg')
+          this.dialogRef.close()
+          this.showSnackBar(errmsg)
+        }
+      })
+    }
+  }
+
+  openFileUploadPopup() {
+    const dialogData = {
+      dialogType: 'csvLoader',
+      descriptions: [
+        {
+          messages: [
+            {
+              msgClass: '',
+              msg: `File processing`,
+            },
+          ],
+        },
+      ],
+    }
+    this.dialogRef = this.dialog.open(ConformationPopupComponent, {
+      data: dialogData,
+      autoFocus: false,
+      width: '956px',
+      maxWidth: '80vw',
+      maxHeight: '90vh',
+      height: '427px',
+      // disableClose: true,
+    })
+  }
+
+  deletedSelectedCourses(event: any) {
+    if (event && event.row) {
+      const deletionSubscritionList: any = []
+      event.rows.forEach((row: any) => {
+        deletionSubscritionList.push(this.marketPlaceSvc.deleteCourse(row.id))
+      })
+      forkJoin(deletionSubscritionList).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.getCoursesList()
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          const errmsg = _.get(error, 'error.params.errMsg')
+          this.showSnackBar(errmsg)
+        }
+      })
+    }
+  }
+
   navigateToPreview(course: any) {
     this.marketPlaceSvc.setSelectedCourse(course)
     this.router.navigateByUrl('/app/home/marketplace-providers/course-preview')
+  }
+
+  showSnackBar(message: string) {
+    this.snackBar.open(message)
   }
 
 }

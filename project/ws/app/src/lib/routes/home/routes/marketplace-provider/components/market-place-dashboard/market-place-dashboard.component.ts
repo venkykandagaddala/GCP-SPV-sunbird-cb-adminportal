@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { FormControl } from '@angular/forms'
 import { ConformationPopupComponent } from '../../dialogs/conformation-popup/conformation-popup.component'
-import { MatDialog } from '@angular/material'
+import { MatDialog, MatSnackBar } from '@angular/material'
 import { Router } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { HttpErrorResponse } from '@angular/common/http'
@@ -24,47 +24,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
     helpVideoLink: 'url'
   }
 
-  providersList: any = [
-    {
-      providerImg: '/assets/icons/png.svg',
-      providerName: 'Cornell University',
-      providerDetails: {
-        id: '#123457',
-        totalCourses: '123',
-        LastUpdatedOn: '15 Mar 2024, 11:33 AM',
-        authenticationApproved: false,
-        contentUpdatedOn: '',
-        ProgressUpdatedOn: '',
-        CertificationOn: ''
-      }
-    },
-    {
-      providerImg: '/assets/icons/png.svg',
-      providerName: 'Cornell University',
-      providerDetails: {
-        id: '#123457',
-        totalCourses: '123',
-        LastUpdatedOn: '15 Mar 2024, 11:33 AM',
-        authenticationApproved: true,
-        contentUpdatedOn: '',
-        ProgressUpdatedOn: '',
-        CertificationOn: ''
-      }
-    },
-    {
-      providerImg: '/assets/icons/png.svg',
-      providerName: 'University of Michigan',
-      providerDetails: {
-        id: '#123457',
-        totalCourses: '123',
-        LastUpdatedOn: '15 Mar 2024, 11:33 AM',
-        authenticationApproved: true,
-        contentUpdatedOn: '15 Mar 2024, 11:33 AM',
-        ProgressUpdatedOn: '15 Mar 2024, 11:33 AM',
-        CertificationOn: '15 Mar 2024, 11:33 AM'
-      }
-    }
-  ]
+  providersList: any = []
   searchControl = new FormControl()
   apiSubscription: any
   displayLoader = false
@@ -72,7 +32,8 @@ export class MarketPlaceDashboardComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private router: Router,
-    private marketPlaceSvc: MarketplaceService
+    private marketPlaceSvc: MarketplaceService,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -110,7 +71,9 @@ export class MarketPlaceDashboardComponent implements OnInit {
         this.providersList = _.get(responce, 'result.data', [])
       },
       error: (error: HttpErrorResponse) => {
-        console.log('error', error)
+        this.displayLoader = false
+        const errmsg = _.get(error, 'error.params.errMsg')
+        this.showSnackBar(errmsg)
       }
     })
   }
@@ -135,9 +98,10 @@ export class MarketPlaceDashboardComponent implements OnInit {
         break
       case 'delete':
         console.log(event, provider)
+        this.openConformationPopup(provider)
         break
       case 'update':
-        this.openConformationPopup()
+        // this.openConformationPopup()
         break
       case 'Configure':
         this.navigateToConfiguration(event.mode, provider)
@@ -150,7 +114,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
       { state: { tab: tab, providerDetails: providerDetails } })
   }
 
-  openConformationPopup() {
+  openConformationPopup(provider: any) {
     const dialogData = {
       dialogType: 'warning',
       descriptions: [
@@ -190,8 +154,33 @@ export class MarketPlaceDashboardComponent implements OnInit {
     })
     dialogRef.afterClosed().subscribe((res: any) => {
       if (res) {
+        this.deleteProvider(_.get(provider, 'id'))
       }
     })
+  }
+
+  deleteProvider(partnerId: string) {
+    this.displayLoader = true
+    this.marketPlaceSvc.deleteProvider(partnerId).subscribe({
+      next: (res: any) => {
+        if (res) {
+          setTimeout(() => {
+            this.getProviders()
+          }, 2000)
+        } else {
+          this.displayLoader = false
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.displayLoader = false
+        const errmsg = _.get(error, 'error.params.errMsg', 'Something went wrong')
+        this.showSnackBar(errmsg)
+      }
+    })
+  }
+
+  showSnackBar(message: string) {
+    this.snackBar.open(message)
   }
 
 }

@@ -97,3 +97,44 @@
     }
   }
 }
+
+.samplePdf {
+  width: 186px;
+  height: 247px;
+}
+
+.pdfDetails {
+  height: 93px;
+
+  .pdfName {
+    font: 400 16px Lato;
+    color: #000000DE;
+  }
+
+  .fileUplaodedDate {
+    font: 400 12px Lato;
+    color: #000000DE;
+  }
+
+  .documentAttached {
+    color: #00000099;
+    font: 700 12px Lato;
+
+    .greenTick {
+      width: 20px;
+      height: 20px;
+      font-size: 20px;
+      margin-right: 5px;
+      color: #1D8923;
+    }
+  }
+}
+
+.dataLoader {
+  height: 100px;
+
+  .dataSpinner {
+    position: unset !important;
+    margin: 0px !important;
+  }
+}

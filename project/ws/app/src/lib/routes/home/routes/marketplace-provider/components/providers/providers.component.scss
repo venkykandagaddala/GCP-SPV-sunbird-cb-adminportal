@@ -106,8 +106,9 @@
   }
 
 .provider-menu-item {
-    width: 170px;
     height: 26px !important;
+    display: flex;
+    align-items: center;
 
     .item-btn {
       font: 400 14px Lato;
