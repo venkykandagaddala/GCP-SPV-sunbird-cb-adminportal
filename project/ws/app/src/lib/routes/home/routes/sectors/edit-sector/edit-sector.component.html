@@ -72,7 +72,8 @@
                   <div class="flex-parent-element margin-bottom-l">
                     <div class="flex-child-element flex">
                       <mat-form-field appearance="outline" class="sector-title">
-                        <input matInput [formControl]="control" placeholder="Enter text" class="sub-sector-name">
+                        <input matInput [formControl]="control" placeholder="Enter text" class="sub-sector-name"
+                          (input)="validateInput($event.target.value)">
                       </mat-form-field>
                       <button mat-button [disabled]="control.disabled" class="remove-btn" type="button"
                         (click)="removeTextbox(i)">

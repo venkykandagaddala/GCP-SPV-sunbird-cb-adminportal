@@ -6,6 +6,7 @@ import { DialogConfirmComponent } from '../../../../../../../../../src/app/compo
 import { RequestsService } from '../../services/onboarding-requests.service'
 import { RejectReasonDialogComponent } from '../reject-reason-dialog/reject-reason-dialog.component'
 import * as _ from 'lodash'
+import { preventHtmlAndJs } from '../../validators/prevent-html-and-js.validator'
 
 @Component({
   selector: 'ws-app-requests-approval',
@@ -68,7 +69,7 @@ export class RequestsApprovalComponent implements OnInit {
       position: new FormControl(this.requestType === 'position' ? this.posData.position : '', this.requestType === 'position' ? [Validators.required, Validators.maxLength(500), Validators.pattern(this.customCharsPattern)] : []),
       organisation: new FormControl(this.requestType === 'organisation' ? this.posData.organisation : '', this.requestType === 'organisation' ? [Validators.required, Validators.pattern(this.customCharsPattern)] : []),
       domain: new FormControl(this.requestType === 'domain' ? this.posData.domain : '', this.requestType === 'domain' ? [Validators.required, Validators.pattern(this.domainPattern)] : []),
-      description: new FormControl(this.posData.description, []),
+      description: new FormControl(this.posData.description, [preventHtmlAndJs()]),
       wfId: new FormControl(this.posData.wfId),
     })
 

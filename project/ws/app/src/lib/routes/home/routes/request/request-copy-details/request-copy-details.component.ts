@@ -8,6 +8,7 @@ import { ConfirmationPopupComponent } from '../confirmation-popup/confirmation-p
 /* tslint:disable */
 import _ from 'lodash'
 import { debounceTime, distinctUntilChanged, startWith } from 'rxjs/operators'
+import { preventHtmlAndJs } from '../../../validators/prevent-html-and-js.validator'
 /* tslint:enable */
 
 @Component({
@@ -80,12 +81,12 @@ export class RequestCopyDetailsComponent implements OnInit {
     this.currentUser = sessionStorage.getItem('idDetails') ? sessionStorage.getItem('idDetails') : ''
 
     this.requestForm = this.formBuilder.group({
-      titleName: new FormControl('', [Validators.required, Validators.pattern(this.noSpecialChar), Validators.minLength(10)]),
-      Objective: new FormControl('', [Validators.required, Validators.pattern(this.noSpecialChar)]),
-      userType: new FormControl('', [Validators.pattern(this.noSpecialChar)]),
+      titleName: new FormControl('', [Validators.required, preventHtmlAndJs(), Validators.pattern(this.noSpecialChar), Validators.minLength(10)]),
+      Objective: new FormControl('', [Validators.required, preventHtmlAndJs(), Validators.pattern(this.noSpecialChar)]),
+      userType: new FormControl('', [preventHtmlAndJs(), Validators.pattern(this.noSpecialChar)]),
       learningMode: new FormControl(''),
       compArea: new FormControl(''),
-      referenceLink: new FormControl(''),
+      referenceLink: new FormControl('', preventHtmlAndJs()),
       requestType: new FormControl('', Validators.required),
       assignee: new FormControl(''),
       providers: new FormControl([[]]),
