@@ -120,12 +120,12 @@ export class MentorManageComponent implements OnInit, OnDestroy {
     // this.getNVUsers('')
 
     this.reportsNoteList = [
-      `Easily create users individually or in bulk.`,
-      `Edit any user profile within your organization.`,
-      `Verified Users: Users with all their primary fields approved.`,
       // tslint:disable-next-line: max-line-length
-      `Non-Verified Users: Users whose one or more primary fields are yet to be approved. You can help by reviewing and approving their requests.`,
-      `Not My User: Remove a user from your organization with a simple click.`,
+      `There are two tabs—<strong>All Verified Users</strong> (lists all verified users) and <strong>Assigned Mentors</strong> (lists users who have been assigned as mentors).`,
+      // tslint:disable-next-line: max-line-length
+      `Assign a mentor from the <strong>All Verified Users</strong> tab, and they will automatically appear in the <strong>Assigned Mentors</strong> tab.`,
+      // tslint:disable-next-line: max-line-length
+      `Mentors can be assigned or managed from either tab, with changes reflected across both.`
     ]
   }
 
