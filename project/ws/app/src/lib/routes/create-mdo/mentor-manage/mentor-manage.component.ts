@@ -111,7 +111,7 @@ export class MentorManageComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         this.getAllVerifiedUsers('')
         this.getMentorUsers('')
-      }, 1000)
+      },         1000)
 
     })
     // this.getNMUsers('')
@@ -125,7 +125,7 @@ export class MentorManageComponent implements OnInit, OnDestroy {
       // tslint:disable-next-line: max-line-length
       `Assign a mentor from the <strong>All Verified Users</strong> tab, and they will automatically appear in the <strong>Assigned Mentors</strong> tab.`,
       // tslint:disable-next-line: max-line-length
-      `Mentors can be assigned or managed from either tab, with changes reflected across both.`
+      `Mentors can be assigned or managed from either tab, with changes reflected across both.`,
     ]
   }
 

@@ -10,7 +10,7 @@
       </div>
     </mat-card-header> -->
     <mat-card-title class="flex-4 mobile-margin text-capitalize margin-bottom-l">
-      <span class="h-600-s-20-m color-87">Users</span>
+      <span class="h-600-s-20-m color-87">Mentor management</span>
     </mat-card-title>
     <mat-card class="mb-8">
       <mat-card-content class="flex gap-10">
@@ -58,12 +58,14 @@
           <a class="filter-option cursor-pointer"
             [ngClass]="{'ws-mat-accent-border-active' : currentFilter === 'verified','ws-mat-accent-border font-medium':currentFilter !== 'verified'}"
             mat-button (click)="filter('verified'); tabTelemetry('verified', 0)" role="button">All Verified <span
-              *ngIf="verifiedUsersDataCount === 1">User</span> <span *ngIf="verifiedUsersDataCount > 1">Users</span>
+              *ngIf="verifiedUsersDataCount === 1 || verifiedUsersDataCount === 0">User</span> <span
+              *ngIf="verifiedUsersDataCount > 1">Users</span>
             ({{verifiedUsersDataCount}})</a>
           <a class="filter-option cursor-pointer"
             [ngClass]="{'ws-mat-accent-border-active' : currentFilter === 'mentor','ws-mat-accent-border font-medium':currentFilter !== 'mentor'}"
             mat-button (click)="filter('mentor'); tabTelemetry('mentor', 0)" role="button">Assigned <span
-              *ngIf="mentorUsersDataCount === 1">Mentor</span> <span *ngIf="mentorUsersDataCount > 1">Mentors</span>
+              *ngIf="mentorUsersDataCount === 1 || mentorUsersDataCount === 0">Mentor</span> <span
+              *ngIf="mentorUsersDataCount > 1">Mentors</span>
             ({{mentorUsersDataCount}})</a>
           <!-- <a routerLink="/app/home/mentor-manage/non-mentor" routerLinkActive="router-link-active" class="filter-option"
             [ngClass]="{'ws-mat-accent-border-active' : currentFilter === 'non-mentor','ws-mat-accent-border font-medium':currentFilter !== 'verified'}"
