@@ -93,6 +93,7 @@ import { KCMMappingComponent } from './routes/kcm-mapping/kcm-mapping.component'
 import { TaxonomyEditorModule } from '@sunbird-cb/taxonomy-editor'
 import { SingleAssignPopupComponent } from './routes/request/single-assign-popup/single-assign-popup.component'
 import { DemoVideoPopupComponent } from './components/demo-video-popup/demo-video-popup.component'
+import { PublicGcpUrlPipe } from './pipes/public-gcp-url.pipe'
 @NgModule({
   declarations: [
     HomeComponent,
@@ -138,6 +139,7 @@ import { DemoVideoPopupComponent } from './components/demo-video-popup/demo-vide
     KCMMappingComponent,
     SingleAssignPopupComponent,
     DemoVideoPopupComponent,
+    PublicGcpUrlPipe,
   ],
   imports: [
     CommonModule,
