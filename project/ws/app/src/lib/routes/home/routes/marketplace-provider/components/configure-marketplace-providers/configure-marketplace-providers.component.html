@@ -13,11 +13,12 @@
           <ws-app-provider-details [providerDetails]="providerDetails"></ws-app-provider-details>
         </div>
       </mat-tab>
-      <!-- <mat-tab data-id="contentUpload" label="Content Upload" [disabled]="!providerDetails"> -->
-      <mat-tab data-id="contentUpload" label="Content Upload">
-        <div class="w-full mt-4">
-          <ws-app-content-upload [providerDetails]="providerDetails"></ws-app-content-upload>
-        </div>
+      <mat-tab data-id="contentUpload" label="Content Upload" [disabled]="!providerDetails">
+        <ng-container *ngIf="providerDetails">
+          <div class="w-full mt-4">
+            <ws-app-content-upload [providerDetails]="providerDetails"></ws-app-content-upload>
+          </div>
+        </ng-container>
       </mat-tab>
       <!-- <mat-tab label="Authentication">
         <p>Authentication</p>

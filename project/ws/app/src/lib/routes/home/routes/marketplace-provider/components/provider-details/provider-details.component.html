@@ -7,7 +7,10 @@
   <mat-card-content>
     <form [formGroup]="providerFormGroup" class="w-full flex flex-column gap-6 " (ngSubmit)="submit()">
       <div class="flex flex-column gap-1">
-        <span class="lable required">Thumbnail</span>
+        <span class="lable required">Logo
+          <mat-icon class="info-icon"
+            matTooltip="Image must be cropped to a 1:1 aspect ratio, sized between 300 KB and 2 MB, and in SVG or PNG format.">info_outline</mat-icon>
+        </span>
         <span class="img-note">Image will be cropped to 16:9 aspect ratio</span>
         <div class="img-card">
           <mat-icon (click)="thumbNailInput.click()"
@@ -23,8 +26,16 @@
       <div class="w-full flex gap-6">
         <div class="flex flex-column gap-1 w-full">
           <div class="flex items-center gap-1 required">
+            <span class="lable">Organization Id</span>
+          </div>
+          <mat-form-field class="w-full provider-input-form">
+            <input formControlName="orgId" matInput placeholder="Type here">
+          </mat-form-field>
+        </div>
+        <div class="flex flex-column gap-1 w-full">
+          <div class="flex items-center gap-1 required">
             <span class="lable">Contact Partner Name</span>
-            <mat-icon class="info-icon">info_outline</mat-icon>
+            <!-- <mat-icon class="info-icon" matTooltip="" >info_outline</mat-icon> -->
           </div>
           <mat-form-field class="w-full provider-input-form">
             <input formControlName="contentPartnerName" matInput placeholder="Type here">
@@ -36,8 +47,8 @@
         </div>
         <div class="flex flex-column gap-1 w-full">
           <div class="flex items-center gap-1 required">
-            <span class="lable">URL</span>
-            <mat-icon class="info-icon">info_outline</mat-icon>
+            <span class="lable">Website URL</span>
+            <!-- <mat-icon class="info-icon">info_outline</mat-icon> -->
           </div>
           <mat-form-field class="w-full provider-input-form">
             <input formControlName="websiteUrl" matInput placeholder="Type here">
@@ -52,15 +63,16 @@
       <div class="flex flex-column gap-1 w-full">
         <div class="flex items-center gap-1 required">
           <span class="lable">Description</span>
-          <mat-icon class="info-icon">info_outline</mat-icon>
+          <mat-icon class="info-icon"
+            matTooltip="We recomment you to give desciption in 300-500 characters">info_outline</mat-icon>
         </div>
         <mat-form-field class="w-full description">
           <textarea matInput rows="6" formControlName="description"
-            placeholder="Type the decription in fewer than 600 characters" i18n-placeholder></textarea>
+            placeholder="Type the decription in fewer than 500 characters" i18n-placeholder></textarea>
         </mat-form-field>
         <div class="flex justify-between items-center">
           <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
-          <span class="input-note">{{getTextLength('description')}}/600</span>
+          <span class="input-note">{{getTextLength('description')}}/500</span>
         </div>
       </div>
 
@@ -68,7 +80,7 @@
         <span class="lable flex items-center">Provider Specific Tips
           <span class="VisibleToLearner">(Visible to Learners)</span>
           <mat-icon class="info-icon"
-            matTooltip="Please add the tips to learners. Maximum size of tips?">info_outline</mat-icon>
+            matTooltip="Tips will be available for learners accessing any course from this provider. For example, with Cornell courses: Progress and certificates are visible only after completing the course and passing the assessment.">info_outline</mat-icon>
         </span>
 
         <a class="addTips flex gap-2" (click)="addTips()">

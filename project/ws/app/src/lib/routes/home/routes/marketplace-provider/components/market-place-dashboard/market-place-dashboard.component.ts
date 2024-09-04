@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core'
-import { FormControl } from '@angular/forms'
 import { ConformationPopupComponent } from '../../dialogs/conformation-popup/conformation-popup.component'
 import { MatDialog, MatSnackBar } from '@angular/material'
 import { Router } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { HttpErrorResponse } from '@angular/common/http'
 import * as _ from 'lodash'
-import { debounceTime } from 'rxjs/operators'
+import { map } from 'rxjs/operators'
+import { DatePipe } from '@angular/common'
 
 @Component({
   selector: 'ws-app-market-place-dashboard',
@@ -25,31 +25,73 @@ export class MarketPlaceDashboardComponent implements OnInit {
   }
 
   providersList: any = []
-  searchControl = new FormControl()
   apiSubscription: any
   displayLoader = false
+  tabledata: any
+  searchKey: string = ''
+  paginationDetails: any
+  menuItems: {
+    icon: string,
+    btnText: string,
+    action: string
+  }[] = []
 
   constructor(
     private dialog: MatDialog,
     private router: Router,
     private marketPlaceSvc: MarketplaceService,
     private snackBar: MatSnackBar,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit() {
-    this.getProviders()
-    this.subscribeValueChanges()
+    this.intializeTableData()
   }
 
-  getProviders(searchKey?: string) {
+  intializeTableData() {
+    this.tabledata = {
+      columns: [
+        { displayName: 'Content Provider Name', key: 'contentPartnerName', cellType: 'text', imageKey: 'thumbnailUrl' },
+        { displayName: 'Onboarded On', key: 'createdOn', cellType: 'text', cellClass: 'cell-gray-text' },
+        { displayName: 'Last Updated On', key: 'updatedOn', cellType: 'text', cellClass: 'cell-gray-text' },
+        { displayName: 'Authentication', key: 'isAuthenticate', cellType: 'authentication' },
+      ],
+      needCheckBox: false,
+      showDeleteAll: false
+    }
+
+    this.menuItems = [
+      {
+        icon: 'edit',
+        btnText: 'Configure',
+        action: 'configure'
+      },
+      // {
+      //   icon: 'power_settings_new',
+      //   btnText: 'Deactivate',
+      //   action: 'deactivate'
+      // }
+    ]
+
+    this.paginationDetails = {
+      startIndex: 0,
+      lastIndes: 20,
+      pageSize: 20,
+      pageIndex: 0,
+      totalCount: 20
+    }
+    this.getProviders()
+  }
+
+  getProviders() {
     this.displayLoader = true
     this.providersList = []
     const formBody: any = {
       filterCriteriaMap: {
         isActive: true
       },
-      pageNumber: 0,
-      pageSize: 10,
+      pageNumber: this.paginationDetails.pageIndex,
+      pageSize: this.paginationDetails.pageSize,
       facets: [
         "contentPartnerName"
       ],
@@ -57,54 +99,64 @@ export class MarketPlaceDashboardComponent implements OnInit {
       orderDirection: "desc"
     }
 
-    if (searchKey) {
-      formBody['searchString'] = searchKey
+    if (this.searchKey) {
+      formBody['searchString'] = this.searchKey
     }
 
     if (this.apiSubscription) {
       this.apiSubscription.unsubscribe()
     }
 
-    this.apiSubscription = this.marketPlaceSvc.getProvidersList(formBody).subscribe({
-      next: (responce: any) => {
-        this.displayLoader = false
-        this.providersList = _.get(responce, 'result.data', [])
-      },
-      error: (error: HttpErrorResponse) => {
-        this.displayLoader = false
-        const errmsg = _.get(error, 'error.params.errMsg')
-        this.showSnackBar(errmsg)
-      }
-    })
+    this.apiSubscription = this.marketPlaceSvc.getProvidersList(formBody)
+      .pipe(map((responce: any) => {
+        const providersDetails = {
+          providersList: this.formateProvidersList(_.get(responce, 'result.data', [])),
+          totalCount: _.get(responce, 'result.totalCount', 0)
+        }
+        return providersDetails
+      }))
+      .subscribe({
+        next: (responce: any) => {
+          this.displayLoader = false
+          this.providersList = responce.providersList
+          this.paginationDetails.totalCount = responce.totalCount
+        },
+        error: (error: HttpErrorResponse) => {
+          this.displayLoader = false
+          const errmsg = _.get(error, 'error.params.errMsg')
+          this.showSnackBar(errmsg)
+        }
+      })
   }
 
-  subscribeValueChanges() {
-    if (this.searchControl) {
-      this.searchControl.valueChanges.pipe(debounceTime(500)).subscribe((searchKey: any) => {
-        console.log('searchKey: ', searchKey)
-        this.getProviders(searchKey)
+  onSearch(searchKey: string) {
+    this.searchKey = searchKey
+    this.getProviders()
+  }
+
+  formateProvidersList(responce: any) {
+    const formatedList: any = []
+    if (responce) {
+      responce.forEach((element: any) => {
+        element.createdOn = this.datePipe.transform(new Date(element.createdOn), 'MMM dd, yyyy')
+        element.updatedOn = this.datePipe.transform(new Date(element.createdOn), 'MMM dd, yyyy')
+        formatedList.push(element)
       })
     }
+    return formatedList
   }
 
-  providerEvents(event: any, provider: any) {
+  providerEvents(event: any) {
     switch (event.action) {
-      case 'edit':
+      case 'configure':
         const providerDetails = {
-          id: _.get(provider, 'id'),
-          providerName: _.get(provider, 'contentPartnerName')
+          id: _.get(event.rows, 'id'),
+          providerName: _.get(event.rows, 'contentPartnerName')
         }
         this.navigateToConfiguration(event.mode, providerDetails)
         break
-      case 'delete':
-        console.log(event, provider)
-        this.openConformationPopup(provider)
-        break
-      case 'update':
-        // this.openConformationPopup()
-        break
-      case 'Configure':
-        this.navigateToConfiguration(event.mode, provider)
+      case 'deactivate':
+        this.openConformationPopup(event.row)
         break
     }
   }
@@ -119,7 +171,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
       dialogType: 'warning',
       descriptions: [
         {
-          header: 'This will delete this provider permanently.',
+          header: 'Deactivating this provider will permanently disable its services after 15 days.',
           headerClass: 'flex items-center justify-center text-blue',
           messages: [
             {
@@ -177,6 +229,11 @@ export class MarketPlaceDashboardComponent implements OnInit {
         this.showSnackBar(errmsg)
       }
     })
+  }
+
+  onPageChange(event: any) {
+    this.paginationDetails = event
+    this.getProviders()
   }
 
   showSnackBar(message: string) {

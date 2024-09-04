@@ -71,7 +71,8 @@ const routes: Routes = [
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTooltipModule
   ],
   providers: [DatePipe],
   entryComponents: [

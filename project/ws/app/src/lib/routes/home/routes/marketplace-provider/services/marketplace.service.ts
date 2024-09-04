@@ -4,15 +4,15 @@ import { Observable } from 'rxjs'
 
 const API_END_POINTS = {
   CREATE_CONTENTPARTNER: `/apis/proxies/v8/contentpartner/v1/create`,
+  UPLOAD_THUMBNAIL: `apis/proxies/v8/storage/v1/uploadCiosIcon`,
+  UPLOAD_CIOS_CONTRACT: `/apis/proxies/v8/storage/v1/uploadCiosContract`,
   GET_PROVIDERS_LIST: `/apis/proxies/v8/contentpartner/v1/search`,
   DELETE_PROVIDER: `/apis/proxies/v8/contentpartner/v1/delete/`,
   GET_PROVIDER_DETAILS: (id: string) => `/apis/proxies/v8/contentpartner/v1/read/${id}`,
-  UPLOAD_CONTENT: `/apis/proxies/v8/ciosIntegration/v1/loadContentFromExcel`,
+  UPLOAD_CONTENT: `/apis/proxies/v8/ciosIntegration/v1/loadContentFromExcel/`,
   GET_FILES_LIST: `/apis/proxies/v8/ciosIntegration/v1/file/info/`,
   GET_CONTENT_LIST: `/apis/proxies/v8/ciosIntegration/v1/readAllContentFromDb`,
-  DELETE_COURSE: `/apis/proxies/v8/cios/v1/content/delete/`,
-  CREATE_RESOURCE: `/apis/proxies/v8/action/content/v3/create`,
-  UPLOAD_FILE: `/apis/proxies/v8/upload/action/content/v3/upload/`,
+  DELETE_NOT_PULISHED_COURSES: 'apis/proxies/v8/ciosIntegration/v1/deleteContent',
 }
 
 @Injectable({
@@ -28,6 +28,34 @@ export class MarketplaceService {
 
   createProvider(formBody: any) {
     return this.http.post(`${API_END_POINTS.CREATE_CONTENTPARTNER}`, formBody)
+  }
+
+  uploadThumbNail(
+    icon: any
+  ): Observable<any> {
+    const file = icon.get('content') as File
+    let fileName = file.name
+    const newFormData = new FormData()
+    newFormData.append('file', file, fileName)
+    const url = `${API_END_POINTS.UPLOAD_THUMBNAIL}`
+    return this.http.post<any>(
+      url,
+      newFormData
+    )
+  }
+
+  uploadCIOSContract(
+    data: any
+  ): Observable<any> {
+    const file = data.get('content') as File
+    let fileName = file.name
+    const newFormData = new FormData()
+    newFormData.append('file', file, fileName)
+    const url = `${API_END_POINTS.UPLOAD_CIOS_CONTRACT}`
+    return this.http.post<any>(
+      url,
+      newFormData
+    )
   }
 
   getProvidersList(formBody: any) {
@@ -47,58 +75,34 @@ export class MarketplaceService {
   }
 
   uploadContent(
-    data: FormData,
+    data: any,
     partnerName: string
   ): Observable<any> {
     const file = data.get('content') as File
     let fileName = file.name
     const newFormData = new FormData()
-    newFormData.append('data', file, fileName)
-    const formBody = {
-      file: newFormData,
-      partnerName
-    }
-    const url = `${API_END_POINTS.UPLOAD_CONTENT}`
+    newFormData.append('file', file, fileName)
+    const url = `${API_END_POINTS.UPLOAD_CONTENT}${partnerName}`
     return this.http.post<any>(
       url,
-      formBody,
+      newFormData
     )
   }
 
   getCoursesList(formBody: any) {
-    return this.http.post(`${API_END_POINTS.GET_CONTENT_LIST}`, formBody)
+    return this.http.post<any>(`${API_END_POINTS.GET_CONTENT_LIST}`, formBody)
   }
 
-  deleteCourse(courseId: string) {
-    return this.http.delete(`${API_END_POINTS.DELETE_COURSE}${courseId}`)
+  // deleteCourse(courseId: string) {
+  //   return this.http.delete(`${API_END_POINTS.DELETE_COURSE}${courseId}`)
+  // }
+
+  deleteUnPublishedCourses(formBody: any) {
+    return this.http.post<any>(`${API_END_POINTS.DELETE_NOT_PULISHED_COURSES}`, formBody, { responseType: 'text' as 'json' })
   }
 
   setSelectedCourse(course: any) {
     this.selectedCourse = course
-  }
-
-  createResource(req: any) {
-    return this.http.post<null>(
-      `${API_END_POINTS.CREATE_RESOURCE}`,
-      req,
-    )
-  }
-
-  upload(
-    data: FormData,
-    contentId: any,
-    options?: any
-  ): Observable<any> {
-    const file = data.get('content') as File
-    let fileName = file.name
-    const newFormData = new FormData()
-    newFormData.append('data', file, fileName)
-    const url = `${API_END_POINTS.UPLOAD_FILE}${contentId}`
-    return this.http.post<any>(
-      url,
-      newFormData,
-      options,
-    )
   }
 
   get getSelectedCourse() {

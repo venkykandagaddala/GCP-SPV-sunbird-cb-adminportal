@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core'
-import { MatDialog, MatSnackBar, MatTableDataSource } from '@angular/material'
+import { MatDialog, MatSnackBar } from '@angular/material'
 import { Router } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { map } from 'rxjs/operators'
@@ -7,7 +7,6 @@ import * as _ from 'lodash'
 import { DatePipe } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { ConformationPopupComponent } from '../../dialogs/conformation-popup/conformation-popup.component'
-import { forkJoin } from 'rxjs'
 
 @Component({
   selector: 'ws-app-content-upload',
@@ -29,6 +28,8 @@ export class ContentUploadComponent implements OnInit {
     ],
     helpVideoLink: 'url'
   }
+
+  contentTableData: any
   uploadedContentList = [
     {
       status: 'Live',
@@ -55,10 +56,17 @@ export class ContentUploadComponent implements OnInit {
       completedOn: '15 Mar 2024 11:33 AM',
     },
   ]
+  showUploadedStatusLoader = false
+  contenetMenuItems: {
+    icon: string,
+    btnText: string,
+    action: string
+  }[] = []
+  contentSearchKey = ''
+  contentTablePaginationDetails: any
 
-  tabledata: any
-  dataSource!: MatTableDataSource<any>
-  coursesList: any = [
+  publishedCoursesTableData: any
+  publishedCoursesList: any = [
     {
       id: 1,
       courseName: 'AI Accelerator Bootcamp..',
@@ -130,16 +138,107 @@ export class ContentUploadComponent implements OnInit {
       isActive: false,
     }
   ]
-  length = 20
-  contentFileUploaded = false
-  contentFileUploadCondition: any
+  showPublishedCoursesLoader = false
+  publishedCoursesSerachKey = ''
+  publishedCoursesTablePaginationDetails: any
+
+  unPublishedCoursesTableData: any
+  unPublishedCoursesList: any = [
+    {
+      id: 1,
+      courseName: 'AI Accelerator Bootcamp..',
+      courseImg: '/assets/icons/csv.svg',
+      source: 'file 1',
+      courseStatus: 'Published',
+      publishedOn: 'Sep 13, 2024',
+      listedOn: 'Sep 13, 2024',
+      isActive: false,
+    },
+    {
+      id: 2,
+      courseName: 'AI Accelerator Bootcamp..',
+      source: 'file 1',
+      courseStatus: 'Published',
+      publishedOn: 'Sep 13, 2024',
+      listedOn: 'Sep 13, 2024',
+      courseImg: '/assets/icons/csv.svg',
+      isActive: true,
+    },
+    {
+      id: 3,
+      courseName: 'AI Accelerator Bootcamp..',
+      source: 'file 1',
+      courseStatus: 'Published',
+      publishedOn: 'Sep 13, 2024',
+      listedOn: 'Sep 13, 2024',
+      courseImg: '/assets/icons/csv.svg',
+      isActive: false,
+    },
+    {
+      id: 4,
+      courseName: 'AI Accelerator Bootcamp..',
+      isActive: false,
+      source: 'file 1',
+      courseStatus: 'Not Published',
+      publishedOn: 'N/A',
+      listedOn: 'Sep 13, 2024',
+      courseImg: '/assets/icons/csv.svg',
+    },
+    {
+      id: 5,
+      courseName: 'AI Accelerator Bootcamp..',
+      source: 'file 1',
+      courseStatus: 'Not Published',
+      publishedOn: 'N/A',
+      listedOn: 'Sep 13, 2024',
+      courseImg: '/assets/icons/csv.svg',
+      isActive: true,
+    },
+    {
+      id: 6,
+      courseName: 'AI Accelerator Bootcamp..',
+      source: 'file 1',
+      courseStatus: 'Not Published',
+      publishedOn: 'N/A',
+      listedOn: 'Sep 13, 2024',
+      courseImg: '/assets/icons/csv.svg',
+      isActive: false,
+    },
+    {
+      id: 7,
+      courseName: 'AI Accelerator Bootcamp..',
+      courseImg: '/assets/icons/csv.svg',
+      source: 'file 1',
+      courseStatus: 'Published',
+      publishedOn: 'Sep 13, 2024',
+      listedOn: 'Sep 13, 2024',
+      isActive: false,
+    }
+  ]
+  showUnpublishedCoursesLoader = false
+  unpublishedCoursesMenuItems: {
+    icon: string,
+    btnText: string,
+    action: string
+  }[] = []
+  unPublishedCoursesSearchKey = ''
+  unPublishedCoursesTablePaginationDetails: any
+
+  // contentFileUploaded = false
+  // contentFileUploadCondition: any
   FILE_UPLOAD_MAX_SIZE: number = 100 * 1024 * 1024
   contentFile: any
   fileName: string = ''
   fileUploadedDate: string | null = ''
   dialogRef: any
-  showUploadedStatusLoader = false
-  showCoursesLoader = false
+  defaultPagination = {
+    startIndex: 0,
+    lastIndes: 20,
+    pageSize: 20,
+    pageIndex: 0,
+    totalCount: 20
+  }
+  selectedIndex = 0
 
   constructor(
     private router: Router,
@@ -151,8 +250,10 @@ export class ContentUploadComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.providerDetails && changes.providerDetails.currentValue) {
+      this.tableDataInitialzation()
       this.getContentList()
-      this.getCoursesList()
+      this.getPublishedCoursesList()
+      this.getUnPublishedCoursesList()
     }
   }
 
@@ -185,8 +286,8 @@ export class ContentUploadComponent implements OnInit {
         const formatedData = {
           status: element.status === 'success' ? 'Live' : 'Failed',
           name: element.fileName,
-          // intiatedOn: this.datePipe.transform(new Date(element.initiatedOn), 'dd MMM yyyy hh:mm a'),
-          // completedOn: this.datePipe.transform(new Date(element.completedOn), 'dd MMM yyyy hh:mm a'),
+          intiatedOn: this.datePipe.transform(new Date(element.initiatedOn), 'dd MMM yyyy hh:mm a'),
+          completedOn: this.datePipe.transform(new Date(element.completedOn), 'dd MMM yyyy hh:mm a'),
         }
         formatedList.push(formatedData)
       })
@@ -196,30 +297,68 @@ export class ContentUploadComponent implements OnInit {
   //#endregion
 
   //#region (courses)
-  getCoursesList() {
-    if (this.providerDetails && this.providerDetails.contentPartnerName) {
-      this.showCoursesLoader = true
-      this.coursesList = []
+  getPublishedCoursesList() {
+    if (this.providerDetails && this.providerDetails.providerName) {
+      this.showPublishedCoursesLoader = true
+      this.publishedCoursesList = []
       const formBody = {
-        // providerName: this.providerDetails.contentPartnerName,
-        // need to remove below and uncomment above
-        providerName: 'eCornell',
-        size: 20,
-        page: 0,
-        isActive: false
+        providerName: this.providerDetails.providerName,
+        size: this.publishedCoursesTablePaginationDetails.pageSize,
+        page: this.publishedCoursesTablePaginationDetails.pageIndex,
+        isActive: true,
+        keyword: this.publishedCoursesSerachKey
       }
       this.marketPlaceSvc.getCoursesList(formBody)
         .pipe(map((responce: any) => {
-          return this.formateCoursesList(_.get(responce, 'result', []))
+          const formatedData = {
+            totalCount: _.get(responce, 'totalElements', 0),
+            formatedList: this.formateCoursesList(_.get(responce, 'result', []))
+          }
+          return formatedData
         }))
         .subscribe({
           next: (result: any) => {
-            this.coursesList = result
-            this.showCoursesLoader = false
+            this.publishedCoursesList = result.formatedList
+            this.publishedCoursesTablePaginationDetails.totalCount = result.totalCount
+            this.showPublishedCoursesLoader = false
           },
           error: (error: HttpErrorResponse) => {
             const errmsg = _.get(error, 'error.params.errMsg')
-            this.showCoursesLoader = false
+            this.showPublishedCoursesLoader = false
+            this.showSnackBar(errmsg)
+          }
+        })
+    }
+  }
+
+  getUnPublishedCoursesList() {
+    if (this.providerDetails && this.providerDetails.providerName) {
+      this.showUnpublishedCoursesLoader = true
+      this.unPublishedCoursesList = []
+      const formBody = {
+        providerName: this.providerDetails.providerName,
+        size: this.unPublishedCoursesTablePaginationDetails.pageSize,
+        page: this.unPublishedCoursesTablePaginationDetails.pageIndex,
+        isActive: false,
+        keyword: this.unPublishedCoursesSearchKey
+      }
+      this.marketPlaceSvc.getCoursesList(formBody)
+        .pipe(map((responce: any) => {
+          const formatedData = {
+            totalCount: _.get(responce, 'totalElements', 0),
+            formatedList: this.formateCoursesList(_.get(responce, 'result', []))
+          }
+          return formatedData
+        }))
+        .subscribe({
+          next: (result: any) => {
+            this.unPublishedCoursesList = result.formatedList
+            this.unPublishedCoursesTablePaginationDetails.totalCount = result.totalCount
+            this.showUnpublishedCoursesLoader = false
+          },
+          error: (error: HttpErrorResponse) => {
+            const errmsg = _.get(error, 'error.params.errMsg')
+            this.showPublishedCoursesLoader = false
             this.showSnackBar(errmsg)
           }
         })
@@ -244,24 +383,96 @@ export class ContentUploadComponent implements OnInit {
     })
     return formatedList
   }
+
+  searchCourses(publishedCourses: boolean, searchKey: string) {
+    if (publishedCourses) {
+      this.publishedCoursesSerachKey = searchKey
+      this.setPagination('published', this.defaultPagination)
+      this.getPublishedCoursesList()
+    } else {
+      this.unPublishedCoursesSearchKey = searchKey
+      this.setPagination('notPublished', this.defaultPagination)
+      this.getUnPublishedCoursesList()
+    }
+  }
+
+  pageChange(event: any, courseType: string) {
+    if (courseType === 'published') {
+      this.publishedCoursesTablePaginationDetails = event
+      this.getPublishedCoursesList()
+    } else if (courseType === 'notPublished') {
+      this.unPublishedCoursesTablePaginationDetails = event
+      this.getUnPublishedCoursesList()
+    }
+  }
   //#endregion
 
   ngOnInit() {
-    this.tabledata = {
+  }
+
+  tableDataInitialzation() {
+    this.contentTableData = {
       columns: [
-        { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg' },
+        { displayName: 'File Name', key: 'name', cellType: 'text' },
+        { displayName: 'File Status', key: 'status', cellType: 'status' },
+        { displayName: 'Initiated On', key: 'intiatedOn', cellType: 'text' },
+        { displayName: 'Completed On', key: 'completedOn', cellType: 'text' },
+      ],
+      needCheckBox: false,
+      showDeleteAll: false,
+      showSearchBox: false,
+      showPagination: false
+    }
+    this.contenetMenuItems = [
+      {
+        icon: '',
+        btnText: 'Download Log',
+        action: 'downloadLog'
+      },
+    ]
+
+    this.unPublishedCoursesTableData = {
+      columns: [
+        { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg', cellClass: 'text-overflow-elipse' },
         { displayName: 'Source', key: 'source', cellType: 'text' },
-        { displayName: 'Course Status', key: 'courseStatus', cellType: 'text' },
-        { displayName: 'Publised On', key: 'publishedOn', cellType: 'text' },
-        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' },
-        { displayName: '', key: 'delete', cellType: 'delete-btn' },
+        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' }
 
       ],
       needCheckBox: true,
-      disableOn: 'isActive',
       showDeleteAll: true
     }
-    this.dataSource = new MatTableDataSource(this.coursesList)
+    this.unpublishedCoursesMenuItems = [
+      {
+        icon: '',
+        btnText: 'Delete',
+        action: 'delete'
+      },
+    ]
+    this.setPagination('notPublished', this.defaultPagination)
+
+    this.publishedCoursesTableData = {
+      columns: [
+        { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg', cellClass: 'text-overflow-elipse' },
+        { displayName: 'Source', key: 'source', cellType: 'text' },
+        { displayName: 'Publised On', key: 'publishedOn', cellType: 'text' },
+        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' },
+
+      ],
+      needCheckBox: false,
+      showDeleteAll: false
+    }
+    this.setPagination('published', this.defaultPagination)
+  }
+
+  setPagination(tableType: string, pagination: any) {
+    switch (tableType) {
+      case 'published':
+        this.publishedCoursesTablePaginationDetails = JSON.parse(JSON.stringify(pagination))
+        break
+      case 'notPublished':
+        this.unPublishedCoursesTablePaginationDetails = JSON.parse(JSON.stringify(pagination))
+        break
+    }
   }
 
   contentEvents(event: any, content: any) {
@@ -271,57 +482,70 @@ export class ContentUploadComponent implements OnInit {
         break
       case 'delete':
         console.log(event, content)
+        this.deletedSelectedCourses(event)
         break
     }
   }
 
   onDrop(file: File) {
-    this.contentFileUploadCondition = {
-      fileName: false,
-      eval: false,
-      externalReference: false,
-      iframe: false,
-      isSubmitPressed: false,
-      preview: false,
-      url: '',
-    }
+    // this.contentFileUploadCondition = {
+    //   fileName: false,
+    //   eval: false,
+    //   externalReference: false,
+    //   iframe: false,
+    //   isSubmitPressed: false,
+    //   preview: false,
+    //   url: '',
+    // }
     this.fileName = file.name.replace(/[^A-Za-z0-9_.]/g, '')
     if (!(this.fileName.toLowerCase().endsWith('.csv') || this.fileName.toLowerCase().endsWith('.xlsx'))) {
-      this.showSnackBar('Please upload csv or xlsx file')
+      this.showSnackBar('Unsupported File Format. Please upload a CSV or XLSX file.')
     } else if (file.size > this.FILE_UPLOAD_MAX_SIZE) {
-      this.showSnackBar('file size should not be more than 100 MB')
+      this.showSnackBar('Please upload a file less than 100 MB')
     } else {
       this.contentFile = file
-      this.contentFileUploaded = true
+      // this.contentFileUploaded = true
       this.fileUploadedDate = this.datePipe.transform(new Date(), 'dd/MM/yyyy')
+      this.uploadFile()
+      // this.showSnackBar('File uploaded')
     }
   }
 
   uploadFile() {
-    this.openFileUploadPopup() // need to remove
     if (this.contentFile) {
       this.openFileUploadPopup()
-      const formdata = new FormData()
-      formdata.append(
+      const formData = new FormData()
+      formData.append(
         'content',
         this.contentFile as Blob,
         (this.contentFile as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
       )
 
-      this.marketPlaceSvc.uploadContent(formdata, this.providerDetails.contentPartnerName).subscribe({
+      // const formData = new FormData()
+      // formData.append('file', this.contentFile)
+
+      // const formData = new FileReader()
+      // formData.readAsText(this.contentFile, 'UTF-8')
+
+      this.marketPlaceSvc.uploadContent(formData, this.providerDetails.providerName).subscribe({
         next: (res: any) => {
           if (res) {
             console.log('file uploaded', res)
+            this.showSnackBar('File imported successfully')
             this.dialogRef.close()
-            // this.getContentList()
+            this.getContentList()
+            this.getUnPublishedCoursesList()
+            this.getPublishedCoursesList()
           }
         },
         error: (error: HttpErrorResponse) => {
-          const errmsg = _.get(error, 'error.params.errMsg')
+          const errmsg = _.get(error, 'error.code')
           this.dialogRef.close()
           this.showSnackBar(errmsg)
         }
       })
+    } else {
+      this.showSnackBar('Please upload a file to import')
     }
   }
 
@@ -346,24 +570,26 @@ export class ContentUploadComponent implements OnInit {
       maxWidth: '80vw',
       maxHeight: '90vh',
       height: '427px',
-      // disableClose: true,
+      disableClose: true,
     })
   }
 
   deletedSelectedCourses(event: any) {
-    if (event && event.row) {
-      const deletionSubscritionList: any = []
-      event.rows.forEach((row: any) => {
-        deletionSubscritionList.push(this.marketPlaceSvc.deleteCourse(row.id))
-      })
-      forkJoin(deletionSubscritionList).subscribe({
+    if (event && event.rows) {
+      const formBody = {
+        partnerName: this.providerDetails.providerName,
+        externalId: event.rows.map((item: any) => item.id)
+      }
+      this.marketPlaceSvc.deleteUnPublishedCourses(formBody).subscribe({
         next: (res: any) => {
           if (res) {
-            this.getCoursesList()
+            const msg = 'Selected courses are deleted successfully'
+            this.showSnackBar(msg)
+            this.getUnPublishedCoursesList()
           }
         },
         error: (error: HttpErrorResponse) => {
-          const errmsg = _.get(error, 'error.params.errMsg')
+          const errmsg = _.get(error, 'error.params.errMsg', 'some thing went wrong please try again')
           this.showSnackBar(errmsg)
         }
       })

@@ -1,15 +1,14 @@
 import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core'
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { ActivatedRoute, Router } from '@angular/router'
+import { Router } from '@angular/router'
 import * as _ from 'lodash'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { HttpErrorResponse } from '@angular/common/http'
 import { MatSnackBar } from '@angular/material'
 import { LoaderService } from '../../../../services/loader.service'
 import { DatePipe } from '@angular/common'
-import { forkJoin } from 'rxjs'
-import { map } from 'rxjs/operators'
-import { ConfigurationsService } from '@sunbird-cb/utils'
+import { forkJoin, of } from 'rxjs'
+import { mergeMap } from 'rxjs/operators'
 
 @Component({
   selector: 'ws-app-provider-details',
@@ -36,15 +35,6 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   imageUrl!: string
   thumbnailFile: any
-  pdfFileUploadCondition = {
-    fileName: false,
-    eval: false,
-    externalReference: false,
-    iframe: false,
-    isSubmitPressed: false,
-    preview: false,
-    url: '',
-  }
   FILE_UPLOAD_MAX_SIZE = 100 * 1024 * 1024
   pdfUploaded = false
   pdfFile: any
@@ -61,9 +51,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     private marketPlaceSvc: MarketplaceService,
     private snackBar: MatSnackBar,
     private loaderService: LoaderService,
-    private datePipe: DatePipe,
-    private configService: ConfigurationsService,
-    private activatedRoute: ActivatedRoute
+    private datePipe: DatePipe
   ) {
     this.initialization()
   }
@@ -74,9 +62,10 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   initialization() {
     this.providerFormGroup = this.formBuilder.group({
+      orgId: new FormControl('', [Validators.required]),
       contentPartnerName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
       websiteUrl: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
-      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(600)]),
+      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(500)]),
       providerTips: this.formBuilder.array([])
     })
   }
@@ -102,6 +91,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   patchProviderDetails(providerDetails: any) {
     this.providerFormGroup.setValue({
+      orgId: _.get(providerDetails, 'orgId', ''),
       contentPartnerName: _.get(providerDetails, 'contentPartnerName', ''),
       websiteUrl: _.get(providerDetails, 'websiteUrl', ''),
       description: _.get(providerDetails, 'description', ''),
@@ -132,9 +122,6 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   }
 
   //#region (thumnail upload)
-  // uploadThumbnail() {
-  //   this.thumbNailInput.nativeElement.click()
-  // }
 
   onThumbNailSelected(event: any): void {
     this.thumbnailFile = event
@@ -187,15 +174,6 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   //#endregion
 
   onDrop(file: File) {
-    this.pdfFileUploadCondition = {
-      fileName: false,
-      eval: false,
-      externalReference: false,
-      iframe: false,
-      isSubmitPressed: false,
-      preview: false,
-      url: '',
-    }
     const fileName = file.name.replace(/[^A-Za-z0-9_.]/g, '')
     if (!fileName.toLowerCase().endsWith('.pdf')) {
       this.showSnackBar('Please upload PDF file')
@@ -210,119 +188,71 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   }
 
   submit() {
-    // if (this.providerFormGroup.valid && this.imageUrl) {
-    this.createContentsToUpload()
-    // }
+    if (this.providerFormGroup.valid && this.imageUrl) {
+      this.createContentsToUpload()
+    }
   }
 
   createContentsToUpload() {
-    const userProfileConfig = this.configService.userProfileV2
-    const userProfile = _.get(this.activatedRoute, 'snapshot.parent.data.configService.userProfile')
-    console.log('user profile', userProfile)
-    console.log('user profile config', userProfileConfig)
-    // const resourceCreationSubscriptions: any = []
+    const resourceCreationSubscriptions: any = []
 
-    // if (this.thumbnailFile) {
-    //   const req = {
-    //     request: {
-    //       content: {
-    //         code: "8296417517328792",//
-    //         contentType: "Resource",
-    //         createdBy: "25311a4f-fa42-4cf7-882a-5e79198edfcb",//
-    //         createdFor: [
-    //           "01376822290813747263"// org id
-    //         ],
-    //         creator: "SPV Admin",
-    //         framework: "igot",
-    //         mimeType: "application/pdf",
-    //         name: "", // name
-    //         organisation: [
-    //           "TarentoCBP" //org name
-    //         ],
-    //         isExternal: false,
-    //         primaryCategory: "Learning Resource",
-    //         license: "CC BY 4.0",
-    //         ownershipType: [
-    //           "createdFor"
-    //         ],
-    //         visibility: "Default",
-    //         language: [
-    //           "English"
-    //         ],
-    //         resourceType: "PDF",
-    //       }
-    //     }
-    //   }
-    //   resourceCreationSubscriptions.push(
-    //     this.marketPlaceSvc.createResource(req).pipe(
-    //       map(responce => {
-    //         const uploadedFile = this.trigerUpload(this.thumbnailFile, _.get(responce, 'result.identifier'))
-    //         const formatedResponce = {
-    //           resourceType: 'thumbnail',
-    //           responce: uploadedFile
-    //         }
-    //         return formatedResponce
-    //       })
-    //     )
-    //   )
-    // }
-    // if (this.pdfFile) {
-    //   const req = {
-    //     request: {
-    //       content: {
-    //         code: this.genrateRandomNumber,
-    //         contentType: 'Resource',
-    //         createdBy: '',//
-    //         createdFor: '',//
-    //         creator: 'PROGRAM COORDINATOR',
-    //         description: '',
-    //         framework: 'igot',
-    //         mimeType: this.pdfFile.type,
-    //         name: this.fileName,
-    //         organisation: '',//
-    //         isExternal: false,
-    //         primaryCategory: 'Session Handout',
-    //         license: '',//
-    //         ownershipType: ['createdFor'],
-    //         purpose: '',
-    //         visibility: 'Default',
-    //       },
-    //     },
-    //   }
-    //   resourceCreationSubscriptions.push(
-    //     this.marketPlaceSvc.createResource(req).pipe(
-    //       map(responce => {
-    //         const uploadedFile = this.trigerUpload(this.pdfFile, _.get(responce, 'result.identifier'))
-    //         const formatedResponce = {
-    //           resourceType: 'pdfFile',
-    //           responce: uploadedFile
-    //         }
-    //         return formatedResponce
-    //       })
-    //     )
-    //   )
-    // }
+    if (this.thumbnailFile) {
+      const formData = new FormData()
+      formData.append(
+        'content',
+        this.thumbnailFile as Blob,
+        (this.thumbnailFile as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
+      )
+      resourceCreationSubscriptions.push(
+        this.marketPlaceSvc.uploadThumbNail(formData).pipe(
+          mergeMap((res: any) => {
+            return of({
+              fileType: 'thumbnail',
+              result: res.result
+            })
+          })
+        )
+      )
+    }
+    if (this.pdfFile) {
+      const formData = new FormData()
+      formData.append(
+        'content',
+        this.pdfFile as Blob,
+        (this.pdfFile as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
+      )
+      resourceCreationSubscriptions.push(
+        this.marketPlaceSvc.uploadCIOSContract(formData).pipe(
+          mergeMap((res: any) => {
+            return of({
+              fileType: 'ciosFile',
+              result: res.result
+            })
+          })
+        )
+      )
+    }
 
-    // forkJoin(resourceCreationSubscriptions).subscribe({
-    //   next: (responcess) => {
-    //     responcess.forEach((responce: any) => {
-    //       const identifier = _.get(responce, 'result.identifier')
-    //       if (responce.resourceType === 'thumbnail') {
-    //         this.thumbnailResourceId = identifier
-    //       } else if (responce.resourceType === 'pdfFile') {
-    //         this.pdfResourceId = identifier
-    //       }
-    //     })
-    //     this.saveProviderDetails()
-    //   },
-    //   error: (errorMsg: HttpErrorResponse) => {
-    //     console.log(errorMsg)
-    //   }
-    // })
+    forkJoin(resourceCreationSubscriptions).subscribe({
+      next: (responcess) => {
+        responcess.forEach((responce: any) => {
+          const identifier = _.get(responce, 'result.url')
+          if (responce.resourceType === 'thumbnail') {
+            this.thumbnailResourceId = identifier
+          } else if (responce.resourceType === 'ciosFile') {
+            this.pdfResourceId = identifier
+          }
+        })
+        this.saveProviderDetails()
+      },
+      error: (errorMsg: HttpErrorResponse) => {
+        console.log(errorMsg)
+      }
+    })
 
-    // if (resourceCreationSubscriptions.length === 0 && this.providerDetails.id) {
-    //   this.saveProviderDetails()
-    // }
+    if (resourceCreationSubscriptions.length === 0 && this.providerDetails.id) {
+      this.saveProviderDetails()
+    }
   }
 
   get genrateRandomNumber(): string {
@@ -333,26 +263,16 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     return randomNumber
   }
 
-  trigerUpload(fileToUpload: any, resourceId: any) {
-    const formdata = new FormData()
-    formdata.append(
-      'content',
-      fileToUpload as Blob,
-      (fileToUpload as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
-    )
-
-    return this.marketPlaceSvc.upload(formdata, resourceId)
-  }
-
   saveProviderDetails() {
     if (this.providerFormGroup.valid && this.imageUrl) {
       const formBody: any = {
+        orgId: this.providerFormGroup.get('orgId')!.value,
         websiteUrl: this.providerFormGroup.get('websiteUrl')!.value,
         isActive: true,
         description: this.providerFormGroup.get('description')!.value,
         contentPartnerName: this.providerFormGroup.get('contentPartnerName')!.value,
         providerTips: this.providerFormGroup.get('providerTips')!.value,
-        thumbnailUrl: this.thumbNailUrl,
+        link: this.thumbNailUrl,
         documentUrl: this.uploadedPdfUrl,
       }
 

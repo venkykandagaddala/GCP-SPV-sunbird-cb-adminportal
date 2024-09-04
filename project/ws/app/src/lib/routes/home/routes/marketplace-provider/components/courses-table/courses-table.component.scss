@@ -60,9 +60,129 @@
   pointer-events: none;
 }
 
+.cell-gray-text {
+  color: #0000008A !important;
+}
+
+.cources-table-cell {
+  color: #000000DE;
+  font: 400 14px Lato;
+  width: 150px;
+}
+
+.text-overflow-elipse {
+  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.header-info-icon {
+  color: #FFFFFF00;
+  font-size: 14px;
+  height: 14px;
+  width: 14px;
+}
+
+.authenticated {
+  background-color: #1D8923;
+  height: 26px;
+  width: 124px;
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: #FFFFFF;
+  font: 400 14px Lato;
+
+  .checkCircle{
+    color: #E8EAED;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.not-authenticated {
+  background-color: #D13924;
+  height: 26px;
+  width: 124px;
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: #FFFFFF;
+  font: 400 14px Lato;
+
+  .pending-img{
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.statusLive {
+  height: 33px;
+  width: 58px;
+  background-color: #1D892333;
+  font: 700 14px Lato;
+  color: #1D8923;
+  border-radius: 4px;
+}
+
+.statusFailed {
+  height: 33px;
+  border-radius: 4px;
+  background-color: #D1392466;
+  padding: 0px 16px;
+  font: 700 14px Lato;
+  color: #D13924;
+}
+
+.horizontalMenu {
+  color: #00000099;
+  cursor: pointer;
+}
+
+.item-btn {
+  color: #00000099 !important;
+  font: 400 14px Lato;
+  width: 160px;
+
+  .menu-item-icon {
+    color: #00000099;
+    margin-right: 5px;
+  }
+}
+
+.table-checkbox-column {
+  flex: 0 0 120px;
+  justify-content: center;
+  padding-left: 0px;
+}
+
+.table-menu-column {
+  flex: 0 0 200px;
+}
+
+.coursesTableLoader {
+  height: calc(100vh - 300px);
+
+  .coursesTableSpinner {
+    position: unset !important;
+    margin: 0px !important;
+  }
+}
+
+
+:host ::ng-deep .courses-table {
+  .mat-header-row {
+    background-color: #F5F5F5 !important;
+  }
+}
+
 :host ::ng-deep .disableCheckBosx {
   .mat-checkbox-inner-container-no-side-margin {
     background-color: #D9D9D9;
+  }
+
+  .theme-igot.day-mode .mat-header-cell {
+    color: #0000008A;
+    font: 400 14px Lato
   }
 }
 

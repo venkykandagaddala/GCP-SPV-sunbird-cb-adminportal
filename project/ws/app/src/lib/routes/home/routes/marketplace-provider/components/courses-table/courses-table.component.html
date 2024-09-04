@@ -1,12 +1,13 @@
 <div class="courses-table flex flex-column gap-4">
   <div class="flex justify-between">
-    <div class="search">
-      <div class=rsearch>
-        <mat-icon class="color-60 search-icon">search</mat-icon>
-        <input class="sinput color-60" type="Standard" label="" (input)="applyFilter($event.target.value)"
-          placeholder="Search">
+    <ng-container *ngIf="showSearchBox">
+      <div class="search">
+        <div class=rsearch>
+          <mat-icon class="search-icon">search</mat-icon>
+          <input class="sinput" type="Standard" label="" [formControl]="searchControl" placeholder="Search">
+        </div>
       </div>
-    </div>
+    </ng-container>
 
     <ng-container *ngIf="showDeleteAll">
       <button mat-button class="delete-all" (click)="deleteAllSelected()">
@@ -18,65 +19,128 @@
   </div>
 
   <div class="example-table-container">
+    <ng-container *ngIf="!showLoader; else tableLoader">
+      <mat-table #table matSort [dataSource]="dataSource" class="example-table table1 responsiveTable"
+        *ngIf="dataSource.filteredData.length > 0">
 
-    <mat-table #table matSort [dataSource]="dataSource" class="example-table table1 responsiveTable"
-      *ngIf="dataSource.filteredData.length > 0">
+        <ng-container matColumnDef="{{col.key}}" *ngFor="let col of tableColumns">
+          <ng-container [ngSwitch]="col.cellType">
+            <ng-container *ngSwitchCase="'select'">
+              <mat-header-cell *matHeaderCellDef mat-sort-header class="table-checkbox-column">
+                <mat-checkbox [(ngModel)]="allSelected" (change)="selectAll()">
+                </mat-checkbox>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="table-checkbox-column">
+                <mat-checkbox [(ngModel)]="element['isChecked']" (change)="onCheckboxChange(element)">
+                </mat-checkbox>
+              </mat-cell>
+            </ng-container>
 
-      <ng-container matColumnDef="{{col.key}}" *ngFor="let col of tableData!.columns">
-        <ng-container [ngSwitch]="col.cellType">
-          <ng-container *ngSwitchCase="'select'">
-            <mat-header-cell *matHeaderCellDef mat-sort-header class=".h-400-r-14-l color-60">
-              <mat-checkbox [(ngModel)]="allSelected" (change)="selectAll()">
-              </mat-checkbox>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <mat-checkbox [(ngModel)]="element['isChecked']" (change)="onCheckboxChange(element)"
-                [disabled]="element['isActive']" [ngClass]="{'disableCheckBosx': element['isActive']}">
-              </mat-checkbox>
-            </mat-cell>
+            <ng-container *ngSwitchCase="'text'">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> {{col.displayName}}
+              </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="py-2">
+                <ng-container *ngIf="col.imageKey">
+                  <img class="imageCell" [src]="element[col.imageKey]">
+                </ng-container>
+                <span [ngClass]="col.cellClass" class="cources-table-cell">
+                  {{element[col.key]}}
+                </span>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'authentication'">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> {{col.displayName}}
+                <mat-icon class="header-info-icon">info</mat-icon>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <ng-container *ngIf="element[col.key]; else notAuthenticated">
+                  <div class="authenticated flex gap-2 justify-between items-center">
+                    Authenticated
+                    <mat-icon class="checkCircle">check_circle_outline</mat-icon>
+                  </div>
+                </ng-container>
+                <ng-template #notAuthenticated>
+                  <div class="not-authenticated flex gap-2 justify-between items-center">
+                    Pending
+                    <img class="pending-img" src="/assets/icons/deactivate.svg">
+                    <!-- <mat-icon class="pending-icon">check_circle</mat-icon> -->
+                  </div>
+                </ng-template>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'status'">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> {{col.displayName}}
+              </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <div class="flex justify-center items-center"
+                  [ngClass]="element[col.key] === 'Live' ? 'statusLive' : 'statusFailed'">
+                  {{element[col.key]}}
+                </div>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'delete-btn'">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> {{col.displayName}}
+              </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <button mat-button class="delete-btn" [ngClass]="{'disable-delete': element['isActive'] }"
+                  (click)="buttonClick('delete', [element])">
+                  <mat-icon class="delete-icon">delete</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'menu'">
+              <mat-header-cell *matHeaderCellDef mat-sort-header class="justify-center table-menu-column">
+              </mat-header-cell>
+              <mat-cell *matCellDef="let element" class="justify-center table-menu-column">
+                <mat-icon mat-icon-button i18n-aria-label aria-label="action items" [matMenuTriggerFor]="cardMenu"
+                  class="horizontalMenu"> more_horiz
+                </mat-icon>
+                <mat-menu #cardMenu="matMenu">
+                  <ng-template matMenuContent>
+                    <ng-container *ngFor="let item of menuItems">
+                      <div mat-menu-item class="" (click)="buttonClick(item.action, element)">
+                        <button class="flex item-btn items-center" mat-icon-button i18n-aria-label
+                          aria-label="Analytics">
+                          <mat-icon *ngIf="item.icon" class="menu-item-icon">{{item.icon}}</mat-icon>
+                          {{item.btnText}}
+                        </button>
+                      </div>
+                    </ng-container>
+                  </ng-template>
+                </mat-menu>
+              </mat-cell>
+            </ng-container>
+
           </ng-container>
-
-          <ng-container *ngSwitchCase="'text'">
-            <mat-header-cell *matHeaderCellDef mat-sort-header class=".h-400-r-14-l color-60"> {{col.displayName}}
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <ng-container *ngIf="col.imageKey">
-                <img class="imageCell" [src]="element[col.imageKey]">
-              </ng-container>
-              <span class="h-400-r-14-l textclass color-87 ">
-                {{element[col.key]}}
-              </span>
-            </mat-cell>
-          </ng-container>
-
-          <ng-container *ngSwitchCase="'delete-btn'">
-            <mat-header-cell *matHeaderCellDef mat-sort-header class=".h-400-r-14-l color-60"> {{col.displayName}}
-            </mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <button mat-button class="delete-btn" [ngClass]="{'disable-delete': element['isActive'] }"
-                (click)="buttonClick('delete', [element])">
-                <mat-icon class="delete-icon">delete</mat-icon>
-              </button>
-            </mat-cell>
-          </ng-container>
-
         </ng-container>
-      </ng-container>
 
-      <mat-header-row *matHeaderRowDef="columnsList"></mat-header-row>
+        <mat-header-row *matHeaderRowDef="columnsList"></mat-header-row>
 
-      <mat-row *matRowDef="let row; columns: columnsList">
-      </mat-row>
+        <mat-row *matRowDef="let row; columns: columnsList">
+        </mat-row>
 
-    </mat-table>
-    <div class="no-cbp-data" *ngIf="dataSource.filteredData.length === 0 && searchKey">
-      <div><img src="/assets/images/no-content-data-search.svg"></div>
-      <div class="mat-subheading-1 margin-remove">No results found</div>
-      <div>Try adjusting your search to find what you are looking for.</div>
-    </div>
-    <mat-card class="flex-1" role="none" *ngIf="dataSource.filteredData.length === 0">
-      <span class="mat-subtitle">No data found</span>
-    </mat-card>
+      </mat-table>
+      <div class="no-cbp-data" *ngIf="dataSource.filteredData.length === 0 && searchControl.value">
+        <div><img src="/assets/images/no-content-data-search.svg"></div>
+        <div class="mat-subheading-1 margin-remove">No results found</div>
+        <div>Try adjusting your search to find what you are looking for.</div>
+      </div>
+      <mat-card class="flex-1" role="none" *ngIf="dataSource.filteredData.length === 0 && !searchControl.value">
+        <span class="mat-subtitle">{{noDataMessage}}</span>
+      </mat-card>
+    </ng-container>
+    <ng-template #tableLoader>
+      <div class="w-full flex items-center justify-center coursesTableLoader">
+        <mat-spinner [diameter]="50" class="coursesTableSpinner"></mat-spinner>
+      </div>
+    </ng-template>
   </div>
-  <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
-  </mat-paginator>
+  <ng-container *ngIf="showPagination">
+    <mat-paginator [length]="paginationDetails.totalCount" [pageSize]="paginationDetails.pageSize"
+      [pageSizeOptions]="pageSizeOptions" [pageIndex]="paginationDetails.pageIndex" (page)="onChangePage($event)">
+    </mat-paginator>
+  </ng-container>
