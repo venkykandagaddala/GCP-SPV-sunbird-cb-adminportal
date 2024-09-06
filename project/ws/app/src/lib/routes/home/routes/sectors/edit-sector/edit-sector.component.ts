@@ -27,6 +27,8 @@ export class EditSectorComponent implements OnInit {
   id: any
   loading = false
 
+  noHtmlCharacter = new RegExp(/<[^>]*>|(function[^\s]+)|(javascript:[^\s]+)/i)
+
   constructor(
     public dialog: MatDialog,
     private configSvc: ConfigurationsService,
@@ -129,5 +131,14 @@ export class EditSectorComponent implements OnInit {
       return this.sanitizer.bypassSecurityTrustResourceUrl(this.sectorsService.getChangedArtifactUrl(url))
     }
     return '/assets/instances/eagle/app_logos/default.png'
+  }
+
+  validateInput(event: string) {
+    const regexMatch = event.match(this.noHtmlCharacter)
+    if (regexMatch) {
+      this.myForm.controls['textboxes'].setErrors({ required: true })
+      this.snackBar.open('HTML or Js is not allowed')
+    }
+
   }
 }

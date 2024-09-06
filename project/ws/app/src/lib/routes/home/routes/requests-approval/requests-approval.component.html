@@ -102,8 +102,14 @@
                       <mat-form-field appearance="outline" class="margin-top-xs">
                         <textarea matInput #desc formControlName="description" maxlength="500" i18n-placeholder
                           placeholder="Type here" type="text" rows="3"></textarea>
-                        <mat-error i18n="Name Error|Explains name is required">
+                        <mat-error i18n="Name Error|Explains name is required"
+                          *ngIf="positionForm?.controls['description'].errors?.required">
                           Description is not valid
+                        </mat-error>
+                        <mat-error [hidden]="false" *ngIf="positionForm?.controls['description'].errors?.noHtml"
+                          i18n-aria-label
+                          aria-label="First name Error|Name fields cannot contain numbers and special characters except">
+                          HTML or Js is not allowed
                         </mat-error>
                       </mat-form-field>
                     </div>

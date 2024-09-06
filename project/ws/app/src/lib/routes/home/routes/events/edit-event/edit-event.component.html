@@ -135,8 +135,14 @@
                                 <mat-error [hidden]="false" i18n="description Error|Explains description is required"
                                     i18n-aria-label aria-label="description Error|Explains description is required "
                                     *ngIf="createEventForm?.controls['description']?.touched &&
-                                                                                    createEventForm?.controls['description'].errors?.required">
+                                        createEventForm?.controls['description'].errors?.required">
                                     Description is mandatory
+                                </mat-error>
+                                <mat-error [hidden]="false" i18n="description Error|Explains description is required"
+                                    i18n-aria-label aria-label="description Error|Explains description is required "
+                                    *ngIf="createEventForm?.controls['description']?.touched &&
+                                    createEventForm?.controls['description'].errors?.noHtml">
+                                    HTML and javascript is not allowed
                                 </mat-error>
                                 <mat-hint>{{description.value.length}}/1000 characters</mat-hint>
                             </mat-form-field>
@@ -154,6 +160,10 @@
                                 <mat-error [hidden]="false"
                                     *ngIf="createEventForm?.controls['agenda']?.touched && createEventForm?.controls['agenda'].errors?.required">
                                     Agenda is mandatory
+                                </mat-error>
+                                <mat-error [hidden]="false"
+                                    *ngIf="createEventForm?.controls['agenda']?.touched && createEventForm?.controls['agenda'].errors?.noHtml">
+                                    HTML or Js is not allowed
                                 </mat-error>
                                 <mat-hint>{{agenda.value.length}}/500 characters</mat-hint>
                             </mat-form-field>
