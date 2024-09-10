@@ -27,9 +27,9 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     header: 'Provider Details: Video Guides and Tips',
     guideNotes: [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.'
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
     ],
-    helpVideoLink: 'url'
+    helpVideoLink: 'url',
   }
   providerFormGroup!: FormGroup
 
@@ -66,7 +66,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       contentPartnerName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
       websiteUrl: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(500)]),
-      providerTips: this.formBuilder.array([])
+      providerTips: this.formBuilder.array([]),
     })
   }
 
@@ -83,8 +83,9 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           this.patchProviderDetails(responce.result)
         },
         error: (error: HttpErrorResponse) => {
-          console.log('error: ', error)
-        }
+          const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
+          this.showSnackBar(errmsg)
+        },
       })
     }
   }
@@ -95,10 +96,10 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       contentPartnerName: _.get(providerDetails, 'contentPartnerName', ''),
       websiteUrl: _.get(providerDetails, 'websiteUrl', ''),
       description: _.get(providerDetails, 'description', ''),
-      providerTips: []
+      providerTips: [],
     })
     if (this.providerFormGroup && this.providerFormGroup.get('orgId')) {
-      this.providerFormGroup.get('orgId')!.disable()
+      this.providerFormGroup.controls.orgId.disable()
     }
     this.imageUrl = _.get(providerDetails, 'link')
     this.thumbNailUrl = this.imageUrl
@@ -163,14 +164,14 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     if (ctx) {
       ctx.drawImage(image, startX, startY, width, height, 0, 0, width, height)
     }
-    canvas.toBlob((blob) => {
+    canvas.toBlob(blob => {
       if (blob) {
         this.thumbnailFile = new File([blob], this.thumbnailFile.name, {
           type: 'image/png',
           lastModified: Date.now(),
         })
       }
-    }, 'image/png')
+    },            'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -211,7 +212,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           mergeMap((res: any) => {
             return of({
               fileType: 'thumbnail',
-              result: res.result
+              result: res.result,
             })
           })
         )
@@ -229,7 +230,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           mergeMap((res: any) => {
             return of({
               fileType: 'ciosFile',
-              result: res.result
+              result: res.result,
             })
           })
         )
@@ -237,7 +238,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     }
 
     forkJoin(resourceCreationSubscriptions).subscribe({
-      next: (responcess) => {
+      next: responcess => {
         responcess.forEach((responce: any) => {
           const url = _.get(responce, 'result.url')
             .replace('https://storage.googleapis.com/igot', 'https://portal.dev.karmayogibharat.net/content-store')
@@ -249,9 +250,10 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         })
         this.saveProviderDetails()
       },
-      error: (errorMsg: HttpErrorResponse) => {
-        console.log(errorMsg)
-      }
+      error: (error: HttpErrorResponse) => {
+        const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
+        this.showSnackBar(errmsg)
+      },
     })
 
     if (resourceCreationSubscriptions.length === 0 && this.providerDetails.id) {
@@ -261,31 +263,16 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   saveProviderDetails() {
     if (this.providerFormGroup.valid && this.imageUrl) {
+      const formDetails = this.providerFormGroup.value
       const formBody: any = {
-        orgId: this.providerFormGroup.get('orgId')!.value,
-        websiteUrl: this.providerFormGroup.get('websiteUrl')!.value,
+        orgId: formDetails.orgId,
+        websiteUrl: formDetails.websiteUrl,
         isActive: true,
-        description: this.providerFormGroup.get('description')!.value,
-        contentPartnerName: this.providerFormGroup.get('contentPartnerName')!.value,
-        providerTips: this.providerFormGroup.get('providerTips')!.value,
+        description: formDetails.description,
+        contentPartnerName: formDetails.contentPartnerName,
+        providerTips: formDetails.providerTips,
         link: this.thumbNailUrl,
         documentUrl: this.uploadedPdfUrl,
-        "trasformContentJson": [
-          {
-            "spec": {
-              "imageUrl": "content.appIcon",
-              "lessonCode": "content.externalId",
-              "lessonLink": "content.redirectUrl",
-              "lessonName": "content.name",
-              "lessonTopic": "content.topic",
-              "lessonDuration": "content.duration",
-              "lessonObjectives": "content.objectives",
-              "lessonDescription": "content.description",
-              "lessonSource": "content.source"
-            },
-            "operation": "shift"
-          }
-        ],
       }
 
       if (this.providerDetails && this.providerDetails.id) {
@@ -301,9 +288,9 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           }
         },
         error: (error: HttpErrorResponse) => {
-          const errmsg = _.get(error, 'error.params.errMsg')
+          const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
           this.showSnackBar(errmsg)
-        }
+        },
       })
     }
   }

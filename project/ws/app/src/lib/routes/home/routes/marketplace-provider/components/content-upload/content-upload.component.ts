@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core'
+import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core'
 import { MatDialog, MatSnackBar } from '@angular/material'
 import { Router } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
@@ -12,9 +12,9 @@ import { ConformationPopupComponent } from '../../dialogs/conformation-popup/con
   selector: 'ws-app-content-upload',
   templateUrl: './content-upload.component.html',
   styleUrls: ['./content-upload.component.scss'],
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
-export class ContentUploadComponent implements OnInit {
+export class ContentUploadComponent implements OnInit, OnChanges {
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>
 
@@ -24,38 +24,13 @@ export class ContentUploadComponent implements OnInit {
     header: 'Content Upload Details: Video Guides and Tips',
     guideNotes: [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.'
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
     ],
-    helpVideoLink: 'url'
+    helpVideoLink: 'url',
   }
 
   contentTableData: any
-  uploadedContentList = [
-    {
-      status: 'Live',
-      name: '1710482612470_1710214198937_users-file-upload-sample (15).xlsx',
-      intiatedOn: '15 Mar 2024 11:33 AM',
-      completedOn: '15 Mar 2024 11:33 AM',
-    },
-    {
-      status: 'Live',
-      name: '1710482612470_1710214198937_users-file-upload-sample (15).xlsx',
-      intiatedOn: '15 Mar 2024 11:33 AM',
-      completedOn: '15 Mar 2024 11:33 AM',
-    },
-    {
-      status: 'Failed',
-      name: '1710482612470_1710214198937_users-file-upload-sample (15).xlsx',
-      intiatedOn: '15 Mar 2024 11:33 AM',
-      completedOn: '15 Mar 2024 11:33 AM',
-    },
-    {
-      status: 'Deleted',
-      name: '1710482612470_1710214198937_users-file-upload-sample (15).xlsx',
-      intiatedOn: '15 Mar 2024 11:33 AM',
-      completedOn: '15 Mar 2024 11:33 AM',
-    },
-  ]
+  uploadedContentList = []
   showUploadedStatusLoader = false
   contenetMenuItems: {
     icon: string,
@@ -66,154 +41,13 @@ export class ContentUploadComponent implements OnInit {
   contentTablePaginationDetails: any
 
   publishedCoursesTableData: any
-  publishedCoursesList: any = [
-    {
-      id: 1,
-      courseName: 'AI Accelerator Bootcamp..',
-      courseImg: '/assets/icons/csv.svg',
-      source: 'file 1',
-      courseStatus: 'Published',
-      publishedOn: 'Sep 13, 2024',
-      listedOn: 'Sep 13, 2024',
-      isActive: false,
-    },
-    {
-      id: 2,
-      courseName: 'AI Accelerator Bootcamp..',
-      source: 'file 1',
-      courseStatus: 'Published',
-      publishedOn: 'Sep 13, 2024',
-      listedOn: 'Sep 13, 2024',
-      courseImg: '/assets/icons/csv.svg',
-      isActive: true,
-    },
-    {
-      id: 3,
-      courseName: 'AI Accelerator Bootcamp..',
-      source: 'file 1',
-      courseStatus: 'Published',
-      publishedOn: 'Sep 13, 2024',
-      listedOn: 'Sep 13, 2024',
-      courseImg: '/assets/icons/csv.svg',
-      isActive: false,
-    },
-    {
-      id: 4,
-      courseName: 'AI Accelerator Bootcamp..',
-      isActive: false,
-      source: 'file 1',
-      courseStatus: 'Not Published',
-      publishedOn: 'N/A',
-      listedOn: 'Sep 13, 2024',
-      courseImg: '/assets/icons/csv.svg',
-    },
-    {
-      id: 5,
-      courseName: 'AI Accelerator Bootcamp..',
-      source: 'file 1',
-      courseStatus: 'Not Published',
-      publishedOn: 'N/A',
-      listedOn: 'Sep 13, 2024',
-      courseImg: '/assets/icons/csv.svg',
-      isActive: true,
-    },
-    {
-      id: 6,
-      courseName: 'AI Accelerator Bootcamp..',
-      source: 'file 1',
-      courseStatus: 'Not Published',
-      publishedOn: 'N/A',
-      listedOn: 'Sep 13, 2024',
-      courseImg: '/assets/icons/csv.svg',
-      isActive: false,
-    },
-    {
-      id: 7,
-      courseName: 'AI Accelerator Bootcamp..',
-      courseImg: '/assets/icons/csv.svg',
-      source: 'file 1',
-      courseStatus: 'Published',
-      publishedOn: 'Sep 13, 2024',
-      listedOn: 'Sep 13, 2024',
-      isActive: false,
-    }
-  ]
+  publishedCoursesList: any = []
   showPublishedCoursesLoader = false
   publishedCoursesSerachKey = ''
   publishedCoursesTablePaginationDetails: any
 
   unPublishedCoursesTableData: any
   unPublishedCoursesList: any = [
-    {
-      id: 1,
-      courseName: 'AI Accelerator Bootcamp..',
-      courseImg: '/assets/icons/csv.svg',
-      source: 'file 1',
-      courseStatus: 'Published',
-      publishedOn: 'Sep 13, 2024',
-      listedOn: 'Sep 13, 2024',
-      isActive: false,
-    },
-    {
-      id: 2,
-      courseName: 'AI Accelerator Bootcamp..',
-      source: 'file 1',
-      courseStatus: 'Published',
-      publishedOn: 'Sep 13, 2024',
-      listedOn: 'Sep 13, 2024',
-      courseImg: '/assets/icons/csv.svg',
-      isActive: true,
-    },
-    {
-      id: 3,
-      courseName: 'AI Accelerator Bootcamp..',
-      source: 'file 1',
-      courseStatus: 'Published',
-      publishedOn: 'Sep 13, 2024',
-      listedOn: 'Sep 13, 2024',
-      courseImg: '/assets/icons/csv.svg',
-      isActive: false,
-    },
-    {
-      id: 4,
-      courseName: 'AI Accelerator Bootcamp..',
-      isActive: false,
-      source: 'file 1',
-      courseStatus: 'Not Published',
-      publishedOn: 'N/A',
-      listedOn: 'Sep 13, 2024',
-      courseImg: '/assets/icons/csv.svg',
-    },
-    {
-      id: 5,
-      courseName: 'AI Accelerator Bootcamp..',
-      source: 'file 1',
-      courseStatus: 'Not Published',
-      publishedOn: 'N/A',
-      listedOn: 'Sep 13, 2024',
-      courseImg: '/assets/icons/csv.svg',
-      isActive: true,
-    },
-    {
-      id: 6,
-      courseName: 'AI Accelerator Bootcamp..',
-      source: 'file 1',
-      courseStatus: 'Not Published',
-      publishedOn: 'N/A',
-      listedOn: 'Sep 13, 2024',
-      courseImg: '/assets/icons/csv.svg',
-      isActive: false,
-    },
-    {
-      id: 7,
-      courseName: 'AI Accelerator Bootcamp..',
-      courseImg: '/assets/icons/csv.svg',
-      source: 'file 1',
-      courseStatus: 'Published',
-      publishedOn: 'Sep 13, 2024',
-      listedOn: 'Sep 13, 2024',
-      isActive: false,
-    }
   ]
   showUnpublishedCoursesLoader = false
   unpublishedCoursesMenuItems: {
@@ -228,7 +62,7 @@ export class ContentUploadComponent implements OnInit {
   // contentFileUploadCondition: any
   FILE_UPLOAD_MAX_SIZE: number = 100 * 1024 * 1024
   contentFile: any
-  fileName: string = ''
+  fileName = ''
   fileUploadedDate: string | null = ''
   dialogRef: any
   defaultPagination = {
@@ -236,7 +70,7 @@ export class ContentUploadComponent implements OnInit {
     lastIndes: 20,
     pageSize: 20,
     pageIndex: 0,
-    totalCount: 20
+    totalCount: 20,
   }
   selectedIndex = 0
 
@@ -274,7 +108,7 @@ export class ContentUploadComponent implements OnInit {
             this.showUploadedStatusLoader = false
             const errmsg = _.get(error, 'error.params.errMsg', 'Some thing went wrong please try again')
             this.showSnackBar(errmsg)
-          }
+          },
         })
     }
   }
@@ -306,13 +140,13 @@ export class ContentUploadComponent implements OnInit {
         size: this.publishedCoursesTablePaginationDetails.pageSize,
         page: this.publishedCoursesTablePaginationDetails.pageIndex,
         isActive: true,
-        keyword: this.publishedCoursesSerachKey
+        keyword: this.publishedCoursesSerachKey,
       }
       this.marketPlaceSvc.getCoursesList(formBody)
         .pipe(map((responce: any) => {
           const formatedData = {
             totalCount: _.get(responce, 'totalElements', 0),
-            formatedList: this.formateCoursesList(_.get(responce, 'result', []))
+            formatedList: this.formateCoursesList(_.get(responce, 'result', [])),
           }
           return formatedData
         }))
@@ -326,7 +160,7 @@ export class ContentUploadComponent implements OnInit {
             const errmsg = _.get(error, 'error.params.errMsg', 'Some thing went wrong please try again')
             this.showPublishedCoursesLoader = false
             this.showSnackBar(errmsg)
-          }
+          },
         })
     }
   }
@@ -340,13 +174,13 @@ export class ContentUploadComponent implements OnInit {
         size: this.unPublishedCoursesTablePaginationDetails.pageSize,
         page: this.unPublishedCoursesTablePaginationDetails.pageIndex,
         isActive: false,
-        keyword: this.unPublishedCoursesSearchKey
+        keyword: this.unPublishedCoursesSearchKey,
       }
       this.marketPlaceSvc.getCoursesList(formBody)
         .pipe(map((responce: any) => {
           const formatedData = {
             totalCount: _.get(responce, 'totalElements', 0),
-            formatedList: this.formateCoursesList(_.get(responce, 'result', []))
+            formatedList: this.formateCoursesList(_.get(responce, 'result', [])),
           }
           return formatedData
         }))
@@ -360,7 +194,7 @@ export class ContentUploadComponent implements OnInit {
             const errmsg = _.get(error, 'error.params.errMsg', 'Some thing went wrong please try again')
             this.showPublishedCoursesLoader = false
             this.showSnackBar(errmsg)
-          }
+          },
         })
     }
   }
@@ -377,7 +211,7 @@ export class ContentUploadComponent implements OnInit {
         publishedOn: course.publishedOn ? (this.datePipe.transform(new Date(course.publishedOn), 'MMM dd, yyyy')) : 'N/A',
         listedOn: course.createdDate ? (this.datePipe.transform(new Date(course.createdDate), 'MMM dd, yyyy')) : 'N/A',
         isActive: course.isActive,
-        isChecked: false
+        isChecked: false,
       }
       formatedList.push(formateCourse)
     })
@@ -421,13 +255,13 @@ export class ContentUploadComponent implements OnInit {
       needCheckBox: false,
       showDeleteAll: false,
       showSearchBox: false,
-      showPagination: false
+      showPagination: false,
     }
     this.contenetMenuItems = [
       {
         icon: '',
         btnText: 'Download Log',
-        action: 'downloadLog'
+        action: 'downloadLog',
       },
     ]
 
@@ -435,17 +269,17 @@ export class ContentUploadComponent implements OnInit {
       columns: [
         { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg', cellClass: 'text-overflow-elipse' },
         { displayName: 'Source', key: 'source', cellType: 'text' },
-        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' }
+        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' },
 
       ],
       needCheckBox: true,
-      showDeleteAll: true
+      showDeleteAll: true,
     }
     this.unpublishedCoursesMenuItems = [
       {
         icon: '',
         btnText: 'Delete',
-        action: 'delete'
+        action: 'delete',
       },
     ]
     this.setPagination('notPublished', this.defaultPagination)
@@ -459,7 +293,7 @@ export class ContentUploadComponent implements OnInit {
 
       ],
       needCheckBox: false,
-      showDeleteAll: false
+      showDeleteAll: false,
     }
     this.setPagination('published', this.defaultPagination)
   }
@@ -534,7 +368,7 @@ export class ContentUploadComponent implements OnInit {
           const errmsg = _.get(error, 'error.code', 'Some thig went wrong while uploading. Please try again')
           this.dialogRef.close()
           this.showSnackBar(errmsg)
-        }
+        },
       })
     } else {
       this.showSnackBar('Please upload a file to import')
@@ -570,7 +404,7 @@ export class ContentUploadComponent implements OnInit {
     if (event && event.rows) {
       const formBody = {
         partnerName: this.providerDetails.providerName,
-        externalId: typeof event.rows === 'object' ? [event.rows.id] : event.rows.map((item: any) => item.id)
+        externalId: typeof event.rows === 'object' ? [event.rows.id] : event.rows.map((item: any) => item.id),
       }
       this.marketPlaceSvc.deleteUnPublishedCourses(formBody).subscribe({
         next: (res: any) => {
@@ -583,7 +417,7 @@ export class ContentUploadComponent implements OnInit {
         error: (error: HttpErrorResponse) => {
           const errmsg = _.get(error, 'error.params.errMsg', 'Some thing went wrong please try again')
           this.showSnackBar(errmsg)
-        }
+        },
       })
     }
   }

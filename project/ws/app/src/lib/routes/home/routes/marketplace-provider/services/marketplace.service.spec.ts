@@ -1,12 +1,12 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing'
 
-import { MarketplaceService } from './marketplace.service';
+import { MarketplaceService } from './marketplace.service'
 
 describe('MarketplaceService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() => TestBed.configureTestingModule({}))
 
   it('should be created', () => {
-    const service: MarketplaceService = TestBed.get(MarketplaceService);
-    expect(service).toBeTruthy();
-  });
-});
+    const service: MarketplaceService = TestBed.get(MarketplaceService)
+    expect(service).toBeTruthy()
+  })
+})

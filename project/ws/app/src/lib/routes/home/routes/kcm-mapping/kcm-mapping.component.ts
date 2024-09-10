@@ -36,7 +36,7 @@ export class KCMMappingComponent implements OnInit {
   callResizeEvent(_event: any) {
     setTimeout(() => {
       window.dispatchEvent(new Event('resize'))
-    }, 100)
+    },         100)
   }
 
   openVideoPopup() {

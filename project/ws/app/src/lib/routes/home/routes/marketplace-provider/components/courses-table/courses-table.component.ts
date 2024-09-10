@@ -7,7 +7,7 @@ import { debounceTime } from 'rxjs/operators'
 @Component({
   selector: 'ws-app-courses-table',
   templateUrl: './courses-table.component.html',
-  styleUrls: ['./courses-table.component.scss']
+  styleUrls: ['./courses-table.component.scss'],
 })
 export class CoursesTableComponent implements OnInit, OnChanges {
   @Input() tableData!: any
@@ -17,7 +17,7 @@ export class CoursesTableComponent implements OnInit, OnChanges {
     lastIndes: 20,
     pageSize: 20,
     pageIndex: 0,
-    totalCount: 20
+    totalCount: 20,
   }
   @Input() menuItems = []
   @Input() showLoader = false
@@ -25,7 +25,7 @@ export class CoursesTableComponent implements OnInit, OnChanges {
   @Output() searchKey = new EventEmitter<string>()
   @Output() pageChange = new EventEmitter<any>()
 
-  searchControl = new FormControl();
+  searchControl = new FormControl()
   showSearchBox = true
   displayedColumns: any
   dataSource!: any

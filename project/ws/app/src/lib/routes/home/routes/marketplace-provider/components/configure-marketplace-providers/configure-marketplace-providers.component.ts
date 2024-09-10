@@ -19,7 +19,7 @@ export class ConfigureMarketplaceProvidersComponent implements OnInit {
   routerParams: any
   tabIdsList = [
     'provider',
-    'contentUpload'
+    'contentUpload',
   ]
   selectedIndex = 0
   providerDetails = ''
@@ -33,31 +33,28 @@ export class ConfigureMarketplaceProvidersComponent implements OnInit {
     this.getRouterParams()
   }
 
-
   getRouterParams() {
     const navigation = this.router.getCurrentNavigation()
     this.routerParams = _.get(navigation, 'extras.state')
     if (this.routerParams) {
       this.providerDetails = _.get(this.routerParams, 'providerDetails')
-      this.setCurrentTab(this.routerParams!.tab)
+      this.setCurrentTab(this.routerParams.tab)
     } else {
       this.navigateToProviderDashboard()
     }
   }
 
   navigateToProviderDashboard() {
-    this.routerParams
     this.router.navigate(['/app/home/marketplace-providers'])
   }
 
   setCurrentTab(tab: any) {
-    const tabIndex = this.tabIdsList.findIndex((tabId) => tabId === tab)
+    const tabIndex = this.tabIdsList.findIndex(tabId => tabId === tab)
     if (tabIndex >= 0) {
       this.selectedIndex = tabIndex
     } else {
       this.navigateToProviderDashboard()
     }
   }
-
 
 }

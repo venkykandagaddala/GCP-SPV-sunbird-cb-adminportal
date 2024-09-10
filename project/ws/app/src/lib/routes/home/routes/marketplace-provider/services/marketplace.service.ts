@@ -16,7 +16,7 @@ const API_END_POINTS = {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MarketplaceService {
 
@@ -34,7 +34,7 @@ export class MarketplaceService {
     icon: any
   ): Observable<any> {
     const file = icon.get('content') as File
-    let fileName = file.name
+    const fileName = file.name
     const newFormData = new FormData()
     newFormData.append('file', file, fileName)
     const url = `${API_END_POINTS.UPLOAD_THUMBNAIL}`
@@ -48,7 +48,7 @@ export class MarketplaceService {
     data: any
   ): Observable<any> {
     const file = data.get('content') as File
-    let fileName = file.name
+    const fileName = file.name
     const newFormData = new FormData()
     newFormData.append('file', file, fileName)
     const url = `${API_END_POINTS.UPLOAD_CIOS_CONTRACT}`
@@ -79,7 +79,7 @@ export class MarketplaceService {
     partnerName: string
   ): Observable<any> {
     const file = data.get('content') as File
-    let fileName = file.name
+    const fileName = file.name
     const newFormData = new FormData()
     newFormData.append('file', file, fileName)
     const url = `${API_END_POINTS.UPLOAD_CONTENT}${partnerName}`

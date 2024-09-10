@@ -72,11 +72,11 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatProgressBarModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   providers: [DatePipe],
   entryComponents: [
-    ConformationPopupComponent
+    ConformationPopupComponent,
   ],
   exports: [RouterModule],
 })

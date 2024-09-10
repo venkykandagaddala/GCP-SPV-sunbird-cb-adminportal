@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material'
 @Component({
   selector: 'ws-app-courses-preview',
   templateUrl: './courses-preview.component.html',
-  styleUrls: ['./courses-preview.component.scss']
+  styleUrls: ['./courses-preview.component.scss'],
 })
 export class CoursesPreviewComponent implements OnInit {
   selectedCourse: any
@@ -75,7 +75,7 @@ export class CoursesPreviewComponent implements OnInit {
       publishedOn: 'Sep 13, 2024',
       listedOn: 'Sep 13, 2024',
       isActive: false,
-    }
+    },
   ]
 
   constructor(
@@ -89,7 +89,6 @@ export class CoursesPreviewComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.selectedCourse)
     this.setTabledata()
   }
 
@@ -105,7 +104,7 @@ export class CoursesPreviewComponent implements OnInit {
 
       ],
       needCheckBox: true,
-      disableOn: 'isActive'
+      disableOn: 'isActive',
     }
     this.dataSource = new MatTableDataSource(this.coursesList)
   }

@@ -19,16 +19,16 @@ export class MarketPlaceDashboardComponent implements OnInit {
     header: 'SPV Help Center: Video Guides and Tips',
     guideNotes: [
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.'
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
     ],
-    helpVideoLink: 'url'
+    helpVideoLink: 'url',
   }
 
   providersList: any = []
   apiSubscription: any
   displayLoader = false
   tabledata: any
-  searchKey: string = ''
+  searchKey = ''
   paginationDetails: any
   menuItems: {
     icon: string,
@@ -57,14 +57,14 @@ export class MarketPlaceDashboardComponent implements OnInit {
         { displayName: 'Authentication', key: 'isAuthenticate', cellType: 'authentication' },
       ],
       needCheckBox: false,
-      showDeleteAll: false
+      showDeleteAll: false,
     }
 
     this.menuItems = [
       {
         icon: 'edit',
         btnText: 'Configure',
-        action: 'configure'
+        action: 'configure',
       },
       // {
       //   icon: 'power_settings_new',
@@ -78,7 +78,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
       lastIndes: 20,
       pageSize: 20,
       pageIndex: 0,
-      totalCount: 20
+      totalCount: 20,
     }
     this.getProviders()
   }
@@ -88,15 +88,15 @@ export class MarketPlaceDashboardComponent implements OnInit {
     this.providersList = []
     const formBody: any = {
       filterCriteriaMap: {
-        isActive: true
+        isActive: true,
       },
       pageNumber: this.paginationDetails.pageIndex,
       pageSize: this.paginationDetails.pageSize,
       facets: [
-        "contentPartnerName"
+        'contentPartnerName',
       ],
-      orderBy: "createdOn",
-      orderDirection: "desc"
+      orderBy: 'createdOn',
+      orderDirection: 'desc',
     }
 
     if (this.searchKey) {
@@ -111,7 +111,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
       .pipe(map((responce: any) => {
         const providersDetails = {
           providersList: this.formateProvidersList(_.get(responce, 'result.data', [])),
-          totalCount: _.get(responce, 'result.totalCount', 0)
+          totalCount: _.get(responce, 'result.totalCount', 0),
         }
         return providersDetails
       }))
@@ -125,7 +125,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
           this.displayLoader = false
           const errmsg = _.get(error, 'error.params.errMsg')
           this.showSnackBar(errmsg)
-        }
+        },
       })
   }
 
@@ -164,7 +164,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
 
   navigateToConfiguration(tab: string = 'provider', providerDetails?: any) {
     this.router.navigate(['/app/home/marketplace-providers/onboard-partner'],
-      { state: { tab: tab, providerDetails: providerDetails } })
+                         { state: { tab, providerDetails } })
   }
 
   openConformationPopup(provider: any) {
@@ -219,7 +219,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
         if (res) {
           setTimeout(() => {
             this.getProviders()
-          }, 2000)
+          },         2000)
         } else {
           this.displayLoader = false
         }
@@ -228,7 +228,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
         this.displayLoader = false
         const errmsg = _.get(error, 'error.params.errMsg', 'Something went wrong')
         this.showSnackBar(errmsg)
-      }
+      },
     })
   }
 
