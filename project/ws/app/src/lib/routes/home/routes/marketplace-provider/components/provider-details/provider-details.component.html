@@ -19,7 +19,7 @@
             (change)="onThumbNailSelected($event.target.files[0]); thumbNailInput.value = null" accept="image/*">
           <canvas #canvas class="inputfile"></canvas>
           <ng-container *ngIf="imageUrl">
-            <img class="thumbnailImg" [src]="imageUrl" alt="Cropped Image Preview" width="300px" height="auto">
+            <img class="thumbnailImg" [src]="imageUrl" alt="uploaded file" width="300px" height="auto">
           </ng-container>
         </div>
       </div>
@@ -35,7 +35,6 @@
         <div class="flex flex-column gap-1 w-full">
           <div class="flex items-center gap-1 required">
             <span class="lable">Contact Partner Name</span>
-            <!-- <mat-icon class="info-icon" matTooltip="" >info_outline</mat-icon> -->
           </div>
           <mat-form-field class="w-full provider-input-form">
             <input formControlName="contentPartnerName" matInput placeholder="Type here">
@@ -48,7 +47,6 @@
         <div class="flex flex-column gap-1 w-full">
           <div class="flex items-center gap-1 required">
             <span class="lable">Website URL</span>
-            <!-- <mat-icon class="info-icon">info_outline</mat-icon> -->
           </div>
           <mat-form-field class="w-full provider-input-form">
             <input formControlName="websiteUrl" matInput placeholder="Type here">
@@ -105,14 +103,14 @@
       </div>
 
       <div class="flex flex-column gap-1 w-full">
-        <div class="flex items-center gap-1 required">
+        <div class="flex items-center gap-1">
           <span class="lable">File Upload</span>
           <mat-icon class="info-icon">info_outline</mat-icon>
         </div>
         <div class="fileUploadCard w-full flex justify-center items-center flex-column gap-2" wsAuthDragDrop
           (fileDropped)="onDrop($event)">
           <ng-container *ngIf="!pdfUploaded; else fileUploaded">
-            <img src="/assets/icons/pdf.svg" class="pdfImg">
+            <img src="/assets/icons/pdf.svg" alt="pdf icon" class="pdfImg">
             <a class="browseFileText mt-5" (click)="fileInput.click()">Browse files</a>
             <span class="fileUploadDescription">or</span>
             <span class="fileUploadDescription">Drag file to upload</span>
@@ -123,7 +121,7 @@
           </ng-container>
           <ng-template #fileUploaded>
             <div class="flex items-center my-2">
-              <img src="/assets/icons/samplePdf.svg" class="samplePdf">
+              <img src="/assets/icons/samplePdf.svg" alt="uploaded pdf" class="samplePdf">
               <div class="flex flex-column justify-between pdfDetails">
                 <span class="pdfName">{{fileName}}</span>
                 <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>

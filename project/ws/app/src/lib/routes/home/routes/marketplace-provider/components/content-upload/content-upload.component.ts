@@ -272,7 +272,7 @@ export class ContentUploadComponent implements OnInit {
           },
           error: (error: HttpErrorResponse) => {
             this.showUploadedStatusLoader = false
-            const errmsg = _.get(error, 'error.params.errMsg')
+            const errmsg = _.get(error, 'error.params.errMsg', 'Some thing went wrong please try again')
             this.showSnackBar(errmsg)
           }
         })
@@ -323,7 +323,7 @@ export class ContentUploadComponent implements OnInit {
             this.showPublishedCoursesLoader = false
           },
           error: (error: HttpErrorResponse) => {
-            const errmsg = _.get(error, 'error.params.errMsg')
+            const errmsg = _.get(error, 'error.params.errMsg', 'Some thing went wrong please try again')
             this.showPublishedCoursesLoader = false
             this.showSnackBar(errmsg)
           }
@@ -357,7 +357,7 @@ export class ContentUploadComponent implements OnInit {
             this.showUnpublishedCoursesLoader = false
           },
           error: (error: HttpErrorResponse) => {
-            const errmsg = _.get(error, 'error.params.errMsg')
+            const errmsg = _.get(error, 'error.params.errMsg', 'Some thing went wrong please try again')
             this.showPublishedCoursesLoader = false
             this.showSnackBar(errmsg)
           }
@@ -481,7 +481,6 @@ export class ContentUploadComponent implements OnInit {
         this.navigateToPreview(content)
         break
       case 'delete':
-        console.log(event, content)
         this.deletedSelectedCourses(event)
         break
     }
@@ -521,16 +520,9 @@ export class ContentUploadComponent implements OnInit {
         (this.contentFile as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
       )
 
-      // const formData = new FormData()
-      // formData.append('file', this.contentFile)
-
-      // const formData = new FileReader()
-      // formData.readAsText(this.contentFile, 'UTF-8')
-
       this.marketPlaceSvc.uploadContent(formData, this.providerDetails.providerName).subscribe({
         next: (res: any) => {
           if (res) {
-            console.log('file uploaded', res)
             this.showSnackBar('File imported successfully')
             this.dialogRef.close()
             this.getContentList()
@@ -539,7 +531,7 @@ export class ContentUploadComponent implements OnInit {
           }
         },
         error: (error: HttpErrorResponse) => {
-          const errmsg = _.get(error, 'error.code')
+          const errmsg = _.get(error, 'error.code', 'Some thig went wrong while uploading. Please try again')
           this.dialogRef.close()
           this.showSnackBar(errmsg)
         }
@@ -578,7 +570,7 @@ export class ContentUploadComponent implements OnInit {
     if (event && event.rows) {
       const formBody = {
         partnerName: this.providerDetails.providerName,
-        externalId: event.rows.map((item: any) => item.id)
+        externalId: typeof event.rows === 'object' ? [event.rows.id] : event.rows.map((item: any) => item.id)
       }
       this.marketPlaceSvc.deleteUnPublishedCourses(formBody).subscribe({
         next: (res: any) => {
@@ -589,7 +581,7 @@ export class ContentUploadComponent implements OnInit {
           }
         },
         error: (error: HttpErrorResponse) => {
-          const errmsg = _.get(error, 'error.params.errMsg', 'some thing went wrong please try again')
+          const errmsg = _.get(error, 'error.params.errMsg', 'Some thing went wrong please try again')
           this.showSnackBar(errmsg)
         }
       })

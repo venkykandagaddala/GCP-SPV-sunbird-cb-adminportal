@@ -51,7 +51,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
   intializeTableData() {
     this.tabledata = {
       columns: [
-        { displayName: 'Content Provider Name', key: 'contentPartnerName', cellType: 'text', imageKey: 'thumbnailUrl' },
+        { displayName: 'Content Provider Name', key: 'contentPartnerName', cellType: 'text', imageKey: 'link' },
         { displayName: 'Onboarded On', key: 'createdOn', cellType: 'text', cellClass: 'cell-gray-text' },
         { displayName: 'Last Updated On', key: 'updatedOn', cellType: 'text', cellClass: 'cell-gray-text' },
         { displayName: 'Authentication', key: 'isAuthenticate', cellType: 'authentication' },
@@ -151,7 +151,8 @@ export class MarketPlaceDashboardComponent implements OnInit {
       case 'configure':
         const providerDetails = {
           id: _.get(event.rows, 'id'),
-          providerName: _.get(event.rows, 'contentPartnerName')
+          providerName: _.get(event.rows, 'contentPartnerName'),
+          isAuthenticated: _.get(event.rows, 'isAuthenticate'),
         }
         this.navigateToConfiguration(event.mode, providerDetails)
         break

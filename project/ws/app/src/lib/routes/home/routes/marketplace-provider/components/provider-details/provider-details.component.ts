@@ -97,7 +97,10 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       description: _.get(providerDetails, 'description', ''),
       providerTips: []
     })
-    this.imageUrl = _.get(providerDetails, 'thumbnailUrl')
+    if (this.providerFormGroup && this.providerFormGroup.get('orgId')) {
+      this.providerFormGroup.get('orgId')!.disable()
+    }
+    this.imageUrl = _.get(providerDetails, 'link')
     this.thumbNailUrl = this.imageUrl
     this.uploadedPdfUrl = _.get(providerDetails, 'documentUrl')
     _.get(providerDetails, 'providerTips', []).forEach((tip: string) => {
@@ -236,11 +239,12 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     forkJoin(resourceCreationSubscriptions).subscribe({
       next: (responcess) => {
         responcess.forEach((responce: any) => {
-          const identifier = _.get(responce, 'result.url')
-          if (responce.resourceType === 'thumbnail') {
-            this.thumbnailResourceId = identifier
-          } else if (responce.resourceType === 'ciosFile') {
-            this.pdfResourceId = identifier
+          const url = _.get(responce, 'result.url')
+            .replace('https://storage.googleapis.com/igot', 'https://portal.dev.karmayogibharat.net/content-store')
+          if (responce.fileType === 'thumbnail') {
+            this.thumbNailUrl = url
+          } else if (responce.fileType === 'ciosFile') {
+            this.uploadedPdfUrl = url
           }
         })
         this.saveProviderDetails()
@@ -255,14 +259,6 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     }
   }
 
-  get genrateRandomNumber(): string {
-    let randomNumber = ''
-    for (let i = 0; i < 16; i++) {
-      randomNumber += Math.floor(Math.random() * 10)
-    }
-    return randomNumber
-  }
-
   saveProviderDetails() {
     if (this.providerFormGroup.valid && this.imageUrl) {
       const formBody: any = {
@@ -274,6 +270,22 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         providerTips: this.providerFormGroup.get('providerTips')!.value,
         link: this.thumbNailUrl,
         documentUrl: this.uploadedPdfUrl,
+        "trasformContentJson": [
+          {
+            "spec": {
+              "imageUrl": "content.appIcon",
+              "lessonCode": "content.externalId",
+              "lessonLink": "content.redirectUrl",
+              "lessonName": "content.name",
+              "lessonTopic": "content.topic",
+              "lessonDuration": "content.duration",
+              "lessonObjectives": "content.objectives",
+              "lessonDescription": "content.description",
+              "lessonSource": "content.source"
+            },
+            "operation": "shift"
+          }
+        ],
       }
 
       if (this.providerDetails && this.providerDetails.id) {
@@ -283,13 +295,9 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       this.marketPlaceSvc.createProvider(formBody).subscribe({
         next: (responce: any) => {
           if (responce) {
+            const successMsg = 'Successfully Onboarded'
+            this.showSnackBar(successMsg)
             this.navigateToProvidersDashboard()
-            // this.providerDetails = responce.result
-            // if (navigateToDashboard) {
-            //   this.navigateToProvidersDashboard()
-            // } else if (this.thumbnailFile || this.pdfFile) {
-            //   this.triggerPDFUpload()
-            // }
           }
         },
         error: (error: HttpErrorResponse) => {

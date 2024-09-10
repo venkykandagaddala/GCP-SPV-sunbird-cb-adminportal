@@ -68,6 +68,7 @@
     border: 1px dotted #00000029;
     min-height: 240px;
     border-radius: 5px;
+    width: 177px;
 
     .pdfImg {
       height: 40px;
@@ -236,5 +237,20 @@
       margin-right: 5px;
       color: #1D8923;
     }
+  }
+}
+
+.providerLoader {
+  height: 100vh;
+    position: fixed;
+    top: 0px;
+    width: 100vw;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99999999999999999999999999999999999999;
+
+  .providerSpinner {
+    position: unset !important;
+    margin: 0px !important;
   }
 }

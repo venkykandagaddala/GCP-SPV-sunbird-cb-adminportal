@@ -64,7 +64,7 @@
   <div class="provider-card flex flex-column gap-4">
     <div class="flex justify-between">
       <div class="flex gap-3 items-center mb-2">
-        <img class="providers-icon" src="/assets/icons/empty_shelf.svg">
+        <img class="providers-icon" src="/assets/icons/empty_shelf.svg" alt="no data">
         <span class="provider-name">{{cardDetails?.contentPartnerName}}</span>
       </div>
       <div>
@@ -136,12 +136,6 @@
           <span>{{cardDetails?.contentUploadLastUpdatedDate ? 'Update' : 'Configure'}}</span>
           <mat-icon class="right-arrow-icon">keyboard_arrow_right</mat-icon>
         </div>
-        <!-- need to remove below and uncomment above -->
-        <!-- <div class="flex items-center justify-center gap-3"
-          (click)="buttonClick(cardDetails?.contentUploadLastUpdatedDate ? 'update' : 'Configure', 'contentUpload')">
-          <span>{{cardDetails?.contentUploadLastUpdatedDate ? 'Update' : 'Configure'}}</span>
-          <mat-icon class="right-arrow-icon">keyboard_arrow_right</mat-icon>
-        </div> -->
         <ng-container *ngIf="cardDetails?.contentUploadLastUpdatedDate">
           <div class="flex gap-2">
             <mat-icon class="update-icon">update</mat-icon>

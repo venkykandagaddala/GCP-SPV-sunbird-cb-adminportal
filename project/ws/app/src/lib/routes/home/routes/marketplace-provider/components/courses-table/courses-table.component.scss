@@ -157,6 +157,9 @@
 
 .table-menu-column {
   flex: 0 0 200px;
+  .disableMenu {
+    opacity: 0.5;
+  }
 }
 
 .coursesTableLoader {

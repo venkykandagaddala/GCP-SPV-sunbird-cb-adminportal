@@ -46,14 +46,14 @@
       font: 400 14px Lato;
     }
 
-    .download-btn {
-      border: 1px solid #1B4CA1;
-      width: 95px;
-      height: 30px;
-      border-radius: 4px;
-      color: #1B4CA1;
-      font: 700 14px Lato;
-    }
+    // .download-btn {
+    //   border: 1px solid #1B4CA1;
+    //   width: 95px;
+    //   height: 30px;
+    //   border-radius: 4px;
+    //   color: #1B4CA1;
+    //   font: 700 14px Lato;
+    // }
 
     .file-icon {
       width: 40px;
@@ -141,5 +141,17 @@
   .dataSpinner {
     position: unset !important;
     margin: 0px !important;
+  }
+}
+
+.cantUploadBox{
+  height: 61px;
+  padding-left: 20px;
+  background-color: #FFF7ED;
+  border: 1px solid #DCDCDC;
+
+  .cantUploadMsg{
+    font: 400 14px Inter;
+    color: #525252;
   }
 }

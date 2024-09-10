@@ -10,15 +10,15 @@
   </div>
 
   <!-- <ng-container *ngIf="!displayLoader; else showLoader"> -->
-  <!-- <ng-container *ngIf="providersList && providersList.length > 0; else noContent"> -->
-  <div class="flex gap-4 flex-column">
-    <div>
-      <ws-app-courses-table [tableData]="tabledata" [data]="providersList" [menuItems]="menuItems"
-        [paginationDetails]="paginationDetails" [showLoader]="displayLoader" (searchKey)="onSearch($event)"
-        (actionsClick)="providerEvents($event)" (pageChange)="onPageChange($event)"></ws-app-courses-table>
+  <ng-container *ngIf="providersList && providersList.length > 0 || searchKey; else noContent">
+    <div class="flex gap-4 flex-column">
+      <div>
+        <ws-app-courses-table [tableData]="tabledata" [data]="providersList" [menuItems]="menuItems"
+          [paginationDetails]="paginationDetails" [showLoader]="displayLoader" (searchKey)="onSearch($event)"
+          (actionsClick)="providerEvents($event)" (pageChange)="onPageChange($event)"></ws-app-courses-table>
+      </div>
     </div>
-  </div>
-  <!-- </ng-container> -->
+  </ng-container>
   <ng-template #noContent>
     <div class="w-full flex flex-column items-center justify-center gap-6">
       <img class="emptyShelf-img" src="/assets/icons/empty_shelf.svg">

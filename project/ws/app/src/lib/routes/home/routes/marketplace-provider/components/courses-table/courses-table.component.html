@@ -41,7 +41,7 @@
               </mat-header-cell>
               <mat-cell *matCellDef="let element" class="py-2">
                 <ng-container *ngIf="col.imageKey">
-                  <img class="imageCell" [src]="element[col.imageKey]">
+                  <img class="imageCell" [src]="element[col.imageKey]" alt="logo">
                 </ng-container>
                 <span [ngClass]="col.cellClass" class="cources-table-cell">
                   {{element[col.key]}}
@@ -63,8 +63,7 @@
                 <ng-template #notAuthenticated>
                   <div class="not-authenticated flex gap-2 justify-between items-center">
                     Pending
-                    <img class="pending-img" src="/assets/icons/deactivate.svg">
-                    <!-- <mat-icon class="pending-icon">check_circle</mat-icon> -->
+                    <img class="pending-img" src="/assets/icons/deactivate.svg" alt="pending">
                   </div>
                 </ng-template>
               </mat-cell>
@@ -86,7 +85,7 @@
               </mat-header-cell>
               <mat-cell *matCellDef="let element">
                 <button mat-button class="delete-btn" [ngClass]="{'disable-delete': element['isActive'] }"
-                  (click)="buttonClick('delete', [element])">
+                  (click)="buttonClick('delete', element)">
                   <mat-icon class="delete-icon">delete</mat-icon>
                 </button>
               </mat-cell>
@@ -102,7 +101,8 @@
                 <mat-menu #cardMenu="matMenu">
                   <ng-template matMenuContent>
                     <ng-container *ngFor="let item of menuItems">
-                      <div mat-menu-item class="" (click)="buttonClick(item.action, element)">
+                      <div mat-menu-item [ngClass]="{'disableMenu': element['disableMenu']}"
+                        [disabled]="element['disableMenu'] === true" (click)="buttonClick(item.action, element)">
                         <button class="flex item-btn items-center" mat-icon-button i18n-aria-label
                           aria-label="Analytics">
                           <mat-icon *ngIf="item.icon" class="menu-item-icon">{{item.icon}}</mat-icon>
@@ -125,11 +125,11 @@
 
       </mat-table>
       <div class="no-cbp-data" *ngIf="dataSource.filteredData.length === 0 && searchControl.value">
-        <div><img src="/assets/images/no-content-data-search.svg"></div>
+        <!-- <div><img src="/assets/images/no-content-data-search.svg"></div> -->
         <div class="mat-subheading-1 margin-remove">No results found</div>
         <div>Try adjusting your search to find what you are looking for.</div>
       </div>
-      <mat-card class="flex-1" role="none" *ngIf="dataSource.filteredData.length === 0 && !searchControl.value">
+      <mat-card class="flex-1" *ngIf="dataSource.filteredData.length === 0 && !searchControl.value">
         <span class="mat-subtitle">{{noDataMessage}}</span>
       </mat-card>
     </ng-container>
