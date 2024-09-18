@@ -6,7 +6,7 @@
   <mat-accordion [multi]="true">
     <mat-expansion-panel class="user-card" *ngFor="let user of usersData; let i = index" #panel
       (opened)="closeOtherPanels(panel)" [hideToggle]="forMentor ? true : false" [disabled]="forMentor ? true : false">
-      <mat-expansion-panel-header (click)="getUerData(user, panel, index)">
+      <mat-expansion-panel-header (click)="getUerData(user, panel, i)">
         <div class="float-left width88 flex" (click)="$event.stopPropagation();">
           <div class="initialcircle display-inline-block margin-right-m">
             <!-- <span>AB</span> -->
@@ -75,13 +75,12 @@
           <div class="inner-body">
             Primary Details <mat-icon class="ws-mat-black40-text custominfo">info_outline</mat-icon>
             <p class="float-right mat-body-2" *ngIf="user?.profileDetails?.profileStatus === 'VERIFIED'">
-              <mat-slide-toggle (change)="confirmUserRequest(updateconfirm,'NOT-VERIFIED', user, $event)">Mark this user
+              <mat-slide-toggle>Mark this user
                 as
                 non-verified</mat-slide-toggle>
             </p>
             <p class="float-right mat-body-2" *ngIf="user?.profileDetails?.profileStatus === 'NOT-VERIFIED'">
-              <mat-slide-toggle (change)="confirmUserRequest(updateconfirm,'NOT-MY-USER', user, $event)"
-                [checked]="true">This is my
+              <mat-slide-toggle [checked]="true">This is my
                 user</mat-slide-toggle>
             </p>
             <div class="flex flex-row margin-top-m">
@@ -372,9 +371,8 @@
             </div>
 
             <div class="flex flex-row margin-top-l">
-              <button mat-raised-button type="submit"
-                (click)="confirmUpdate(updateconfirm, updateUserDataForm, user, panel)"
-                class="margin-right-m btn-success btn-responsive successbtn" [disabled]="updateUserDataForm?.invalid">
+              <button mat-raised-button type="submit" class="margin-right-m btn-success btn-responsive successbtn"
+                [disabled]="updateUserDataForm?.invalid">
                 <span class="text-white">
                   Update
                 </span>

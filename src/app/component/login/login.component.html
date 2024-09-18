@@ -18,18 +18,18 @@
     <h3 *ngIf="subTitle?.length" class="px-4 my-0 ws-mat-primary-text text-center">
       {{ subTitle }}
     </h3>
-
+    <!-- (click)="login((loginConfig?.loginButtons)[key])" -->
     <div class="flex justify-center flex-col login-btn">
       <div *ngIf="loginConfig && loginConfig?.loginButtons">
         <button name="login_btn_{{ (loginConfig?.loginButtons)[key] }}"
-          *ngFor="let key of objectKeys(loginConfig?.loginButtons)" color="primary" mat-raised-button
-          (click)="login((loginConfig?.loginButtons)[key])" class="log-btn">
+          *ngFor="let key of objectKeys(loginConfig?.loginButtons)" color="primary" mat-raised-button class="log-btn">
           <span class="mat-title">{{ key }}</span>
         </button>
       </div>
 
-      <button *ngIf="isClientLogin" name="login_client_button" color="primary" mat-raised-button (click)="login('S')"
-        class="log-btn">
+      <!-- (click)="login('S')" -->
+
+      <button *ngIf="isClientLogin" name="login_client_button" color="primary" mat-raised-button class="log-btn">
         <span class="mat-title">Login</span>
       </button>
     </div>

@@ -23,16 +23,82 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 // HAMMER_GESTURE_CONFIG
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { WidgetResolverModule } from '@sunbird-cb/resolver'
 import {
   StickyHeaderModule,
-  BtnFeatureModule,
-  ErrorResolverModule,
   TourModule,
-  WIDGET_REGISTERED_MODULES,
-  WIDGET_REGISTRATION_CONFIG,
   PipeContentRoutePipe,
+  AvatarPhotoModule,
+  AuthorCardModule,
+  AtGlanceModule,
+  BtnAppsModule,
+  BtnCallModule,
+  BtnCatalogModule,
+  BtnChannelAnalyticsModule,
+  BtnContentDownloadModule,
+  BtnContentFeedbackModule,
+  BtnContentLikeModule,
+  BtnContentMailMeModule,
+  BtnContentShareModule,
+  BtnFullscreenModule,
+  BtnGoalsModule,
+  BtnMailUserModule,
+  BtnPageBackNavModule,
+  BtnPageBackModule,
+  BtnPlaylistModule,
+  BtnPreviewModule,
+  BtnSettingsModule,
+  CardBreadcrumbModule,
+  CardContentModule,
+  CardChannelModule,
+  CardWelcomeModule,
+  CardNetworkModule,
+  ChannelHubModule,
+  CardHomeTopModule,
+  CardBrowseCourseModule,
+  CardTableModule,
+  ContentStripMultipleModule,
+  ContentStripSingleModule,
+  // ContentStripVerticalModule,
+  GraphGeneralModule,
+  LayoutLinearModule,
+  LayoutTabModule,
+  PickerContentModule,
+  PlayerAmpModule,
+  PlayerAudioModule,
+  PlayerPdfModule,
+  PlayerSlidesModule,
+  PlayerVideoModule,
+  PlayerWebPagesModule,
+  PlayerYoutubeModule,
+  ReleaseNotesModule,
+  SlidersModule,
+  ElementHtmlModule,
+  TreeModule,
+  TreeCatalogModule,
+  PageModule,
+  EmbeddedPageModule,
+  SelectorResponsiveModule,
+  DiscussionForumModule,
+  GridLayoutModule,
+  ErrorResolverModule,
+  BtnFeatureModule,
+  GalleryViewModule,
+  ImageMapResponsiveModule,
+  IntranetSelectorModule,
+  SlidersMobModule,
+  CardHubsListModule,
+  CardNetworkHomeModule,
+  CardActivityModule,
+  // ActivityStripMultipleModule,
+  UIAdminTableModule,
+  LeftMenuModule,
+  UIORGTableModule,
+  BreadcrumbsOrgModule,
+  BtnPageBackModuleAdmin,
+  WIDGET_REGISTRATION_CONFIG
 } from '@sunbird-cb/collection'
-import { WidgetResolverModule } from '@sunbird-cb/resolver'
+// import { WidgetResolverModule } from '@sunbird-cb/resolver'
 import { LoggerService, PipeSafeSanitizerModule } from '@sunbird-cb/utils'
 import { SearchModule } from '@ws/app/src/public-api'
 import 'hammerjs'
@@ -63,6 +129,75 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { environment } from '../environments/environment'
 import { PublicLogoutModule } from './routes/public/public-logout/public-logout.module'
 import { PublicHomeComponent } from './routes/public/public-home/public-home.component'
+
+/** Improt from Sunbird Collection */
+
+// import { AvatarPhotoModule } from '@sunbird-cb/collection'
+// import { AuthorCardModule } from '@sunbird-cb/collection'
+// import { AtGlanceModule } from '@sunbird-cb/collection'
+// import { BtnAppsModule } from '@sunbird-cb/collection'
+// import { BtnCallModule } from '@sunbird-cb/collection'
+// import { BtnCatalogModule } from '@sunbird-cb/collection'
+// import { BtnChannelAnalyticsModule } from '@sunbird-cb/collection'
+// import { BtnContentDownloadModule } from '@sunbird-cb/collection'
+// import { BtnContentFeedbackModule } from '@sunbird-cb/collection'
+// import { BtnContentLikeModule } from '@sunbird-cb/collection'
+// import { BtnContentMailMeModule } from '@sunbird-cb/collection'
+// import { BtnContentShareModule } from '@sunbird-cb/collection'
+// import { BtnFullscreenModule } from '@sunbird-cb/collection'
+// import { BtnGoalsModule } from '@sunbird-cb/collection'
+// import { BtnMailUserModule } from '@sunbird-cb/collection'
+// import { BtnPageBackNavModule } from '@sunbird-cb/collection'
+// import { BtnPageBackModule } from '@sunbird-cb/collection'
+// import { BtnPlaylistModule } from '@sunbird-cb/collection'
+// import { BtnPreviewModule } from '@sunbird-cb/collection'
+// import { BtnSettingsModule } from '@sunbird-cb/collection'
+// import { CardBreadcrumbModule } from '@sunbird-cb/collection'
+// import { CardContentModule } from '@sunbird-cb/collection'
+// import { CardChannelModule } from '@sunbird-cb/collection'
+// import { CardWelcomeModule } from '@sunbird-cb/collection'
+// import { CardNetworkModule } from '@sunbird-cb/collection'
+// import { ChannelHubModule } from '@sunbird-cb/collection'
+// import { CardHomeTopModule } from '@sunbird-cb/collection'
+// import { CardBrowseCourseModule } from '@sunbird-cb/collection'
+// import { CardTableModule } from '@sunbird-cb/collection'
+// import { ContentStripMultipleModule } from '@sunbird-cb/collection'
+// import { ContentStripSingleModule } from '@sunbird-cb/collection'
+// // import { ContentStripVerticalModule } from '@sunbird-cb/collection'
+// import { GraphGeneralModule } from '@sunbird-cb/collection'
+// import { LayoutLinearModule } from '@sunbird-cb/collection'
+// import { LayoutTabModule } from '@sunbird-cb/collection'
+// import { PickerContentModule } from '@sunbird-cb/collection'
+// import { PlayerAmpModule } from '@sunbird-cb/collection'
+// import { PlayerAudioModule } from '@sunbird-cb/collection'
+// import { PlayerPdfModule } from '@sunbird-cb/collection'
+// import { PlayerSlidesModule } from '@sunbird-cb/collection'
+// import { PlayerVideoModule } from '@sunbird-cb/collection'
+// import { PlayerWebPagesModule } from '@sunbird-cb/collection'
+// import { PlayerYoutubeModule } from '@sunbird-cb/collection'
+// import { ReleaseNotesModule } from '@sunbird-cb/collection'
+// import { SlidersModule } from '@sunbird-cb/collection'
+// import { ElementHtmlModule } from '@sunbird-cb/collection'
+// import { TreeModule } from '@sunbird-cb/collection'
+// import { TreeCatalogModule } from '@sunbird-cb/collection'
+// import { PageModule } from '@sunbird-cb/collection'
+// import { EmbeddedPageModule } from '@sunbird-cb/collection'
+// import { SelectorResponsiveModule } from '@sunbird-cb/collection'
+// import { DiscussionForumModule } from '@sunbird-cb/collection'
+// import { GridLayoutModule } from '@sunbird-cb/collection'
+// import { ErrorResolverModule } from '@sunbird-cb/collection'
+// import { BtnFeatureModule } from '@sunbird-cb/collection'
+// import { GalleryViewModule } from '@sunbird-cb/collection'
+// import { ImageMapResponsiveModule } from '@sunbird-cb/collection'
+// import { IntranetSelectorModule } from '@sunbird-cb/collection'
+// import { SlidersMobModule } from '@sunbird-cb/collection'
+// import { CardHubsListModule } from '@sunbird-cb/collection'
+// import { CardNetworkHomeModule } from '@sunbird-cb/collection'
+// import { CardActivityModule } from '@sunbird-cb/collection'
+// import { LeftMenuModule } from '@sunbird-cb/collection'
+// import { UIORGTableModule } from '@sunbird-cb/collection'
+// import { BreadcrumbsOrgModule } from '@sunbird-cb/collection'
+// import { BtnPageBackModuleAdmin } from '@sunbird-cb/collection'
 // import { ServiceWorkerModule } from '@angular/service-worker'
 // import { environment } from '../environments/environment'
 
@@ -109,8 +244,76 @@ const getBaseHref = (platformLocation: PlatformLocation): string => {
     BrowserAnimationsModule,
     KeycloakAngularModule,
     AppRoutingModule,
-    ...WIDGET_REGISTERED_MODULES,
-    WidgetResolverModule.forRoot(WIDGET_REGISTRATION_CONFIG),
+    AvatarPhotoModule,
+    AuthorCardModule,
+    AtGlanceModule,
+    BtnAppsModule,
+    BtnCallModule,
+    BtnCatalogModule,
+    BtnChannelAnalyticsModule,
+    BtnContentDownloadModule,
+    BtnContentFeedbackModule,
+    BtnContentLikeModule,
+    BtnContentMailMeModule,
+    BtnContentShareModule,
+    BtnFullscreenModule,
+    BtnGoalsModule,
+    BtnMailUserModule,
+    BtnPageBackNavModule,
+    BtnPageBackModule,
+    BtnPlaylistModule,
+    BtnPreviewModule,
+    BtnSettingsModule,
+    CardBreadcrumbModule,
+    CardContentModule,
+    CardChannelModule,
+    CardWelcomeModule,
+    CardNetworkModule,
+    ChannelHubModule,
+    CardHomeTopModule,
+    CardBrowseCourseModule,
+    CardTableModule,
+    ContentStripMultipleModule,
+    ContentStripSingleModule,
+    // ContentStripVerticalModule,
+    GraphGeneralModule,
+    LayoutLinearModule,
+    LayoutTabModule,
+    PickerContentModule,
+    PlayerAmpModule,
+    PlayerAudioModule,
+    PlayerPdfModule,
+    PlayerSlidesModule,
+    PlayerVideoModule,
+    PlayerWebPagesModule,
+    PlayerYoutubeModule,
+    ReleaseNotesModule,
+    SlidersModule,
+    ElementHtmlModule,
+    TreeModule,
+    TreeCatalogModule,
+    PageModule,
+    EmbeddedPageModule,
+    SelectorResponsiveModule,
+    DiscussionForumModule,
+    GridLayoutModule,
+    ErrorResolverModule,
+    BtnFeatureModule,
+    GalleryViewModule,
+    ImageMapResponsiveModule,
+    IntranetSelectorModule,
+    SlidersMobModule,
+    CardHubsListModule,
+    CardNetworkHomeModule,
+    CardActivityModule,
+    // ActivityStripMultipleModule,
+    UIAdminTableModule,
+    LeftMenuModule,
+    UIORGTableModule,
+    BreadcrumbsOrgModule,
+    BtnPageBackModuleAdmin,
+    // ...WIDGET_REGISTERED_MODULES,
+    // WidgetResolverModule.forRoot(WIDGET_REGISTRATION_CONFIG),
     StickyHeaderModule,
     ErrorResolverModule,
     // Material Imports
@@ -137,6 +340,7 @@ const getBaseHref = (platformLocation: PlatformLocation): string => {
     PublicLogoutModule,
     PipeSafeSanitizerModule,
     TourModule,
+    WidgetResolverModule.forRoot(WIDGET_REGISTRATION_CONFIG)
     // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   exports: [

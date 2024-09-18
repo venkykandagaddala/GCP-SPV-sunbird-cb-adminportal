@@ -186,10 +186,10 @@
                   </table>
                 </div>
               </div>
+              <!-- (click)="!requestForm.invalid ? data.emit('save') : showToasterMessage('mandatoryFields')" -->
               <div class="" *ngIf="showSaveButton()">
                 <button mat-raised-button type="button" style="line-height: 48px;"
-                  class="ws-mat-default-text ws-mat-accent-border-active"
-                  (click)="!requestForm.invalid ? data.emit('save') : showToasterMessage('mandatoryFields')">
+                  class="ws-mat-default-text ws-mat-accent-border-active">
                   <span class="mat-subheading-2 padding-xs" style="vertical-align: unset;">Save</span>
                 </button>
               </div>
@@ -245,7 +245,7 @@
 
                   <mat-select-trigger [ngClass]="{'disbaledSelect':isHideData}">
                     <mat-chip-list>
-                      <mat-chip *ngFor="let item of requestForm.get('providers').value" [removable]="true"
+                      <mat-chip *ngFor="let item of requestForm.get('providers')?.value" [removable]="true"
                         (removed)="onProviderRemoved(item)">
                         {{ item.orgName }}
                         <mat-icon matChipRemove>cancel</mat-icon>

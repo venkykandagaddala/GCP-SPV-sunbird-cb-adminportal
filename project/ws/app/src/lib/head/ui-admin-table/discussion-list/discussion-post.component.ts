@@ -59,6 +59,7 @@ export class UIDiscussionPostComponent implements OnInit, OnChanges {
   SYSTEM: any
   content: any
   imagePath: string
+  primary = 'primary'
   // id: any
   // profaneString: any
   // text: any

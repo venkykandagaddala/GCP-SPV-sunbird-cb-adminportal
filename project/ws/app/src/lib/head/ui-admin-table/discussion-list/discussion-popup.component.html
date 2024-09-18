@@ -43,7 +43,7 @@
     rejecting
     this content.</label>
   <section aria-labelledby="profane-category" class="profane-radio-group" [formGroup]="profaneGroup">
-    <mat-checkbox [color]="primary" class="profane-radio-button mat-body-2"
+    <mat-checkbox color="primary" class="profane-radio-button mat-body-2"
       *ngFor="let category of data.profaneCategories" [formControlName]="category">
       {{category}}
 

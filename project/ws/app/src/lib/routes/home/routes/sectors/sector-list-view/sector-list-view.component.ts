@@ -25,6 +25,7 @@ export class SectorListViewComponent implements OnInit {
   length!: number
   pageSize = sectorConstants.pageSize
   pageSizeOptions = sectorConstants.pageOptions
+  cardMenu: any
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null
   @ViewChild(MatSort) set matSort(sort: MatSort) {
     if (!this.dataSource.sort) {

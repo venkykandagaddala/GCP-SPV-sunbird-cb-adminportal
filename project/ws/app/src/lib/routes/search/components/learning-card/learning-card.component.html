@@ -41,7 +41,8 @@
               | <span class="ws-mat-primary-text font-normal">Paid Content</span></span>
           </div>
           <div>
-            <span *ngIf="content.duration">{{ content.duration | pipeDurationTransform }} | </span>
+            <span *ngIf="content.duration">{{ content.duration | pipeDurationTransform:
+              'time24' }} | </span>
             <!-- | pipeDurationTransform -->
             <span *ngIf="content.lastUpdatedOn" class="hidden-inline-s">{{
               content.lastUpdatedOn | date: "MMM'' yy"

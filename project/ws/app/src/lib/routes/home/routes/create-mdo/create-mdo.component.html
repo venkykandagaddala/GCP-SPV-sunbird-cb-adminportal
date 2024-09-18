@@ -11,7 +11,7 @@
           <h2 class="cb-title">Basic information</h2>
           <div class="flex-container">
             <div class="flex-container-div">
-              <form [formGroup]="contentForm" (ngSubmit)="onSubmit() && contentForm.valid" class="min-width">
+              <form [formGroup]="contentForm" (ngSubmit)="onSubmit()" class="min-width">
                 <div class="mobile-break mat-app-background">
                   <div class="margin-top-s">
                     <div class="margin-top-xs">
@@ -94,7 +94,7 @@
           <h2 class="cb-title">Basic information</h2>
           <div class="flex-container">
             <div class="flex-container-div flex-div">
-              <form [formGroup]="stateForm" (ngSubmit)="onSubmitState() && stateForm.valid" class="min-width">
+              <form [formGroup]="stateForm" (ngSubmit)="onSubmitState()" class="min-width">
                 <div class="input-wrapper margin-top-s mb-5">
                   <label for="State" class=" margin-remove-bottom form-label required" aria-label="State Field label">
                     State
@@ -151,8 +151,7 @@
           <div class="flex-container">
             <div class="flex-container-div">
               <ng-container *ngIf="!isStateAdmin">
-                <form [formGroup]="departmentForm" (ngSubmit)="onSubmitDepartment() && departmentForm.valid"
-                  class="min-width">
+                <form [formGroup]="departmentForm" (ngSubmit)="onSubmitDepartment()" class="min-width">
                   <div class="input-wrapper margin-top-s">
                     <label for="Ministry" class=" margin-remove-bottom form-label required"
                       aria-label="Ministry Field label ">
@@ -280,8 +279,7 @@
                 </form>
               </ng-container>
               <ng-container *ngIf="isStateAdmin">
-                <form [formGroup]="departmentForm" (ngSubmit)="onSubmitDepartment() && departmentForm.valid"
-                  class="min-width">
+                <form [formGroup]="departmentForm" (ngSubmit)="onSubmitDepartment()" class="min-width">
                   <div class="input-wrapper margin-top-s">
                     <label for="State" class=" margin-remove-bottom form-label required"
                       aria-label="Ministry Field label">
@@ -301,9 +299,10 @@
                         You must enter value from suggested list only.
                       </mat-error>
                     </mat-form-field>
+                    <!-- (change)="onChange($event)" -->
                     <mat-autocomplete #ministryAutocomplete="matAutocomplete" autoActiveFirstOption="true"
                       aria-label="Ministry list masterMinistry" [displayWith]="displayFnState"
-                      (optionSelected)="ministrySelected($event.option.value)" (change)="onChange($event)">
+                      (optionSelected)="ministrySelected($event.option.value)">
                       <mat-option *ngFor="let option of masterMinisteries| async | acsendingOrder:'asc':'orgName'"
                         [value]="option" aria-label="Ministry list autocomplete option">
                         {{ option.orgName }}
@@ -349,9 +348,9 @@
                     </label>
                     <mat-form-field appearance="outline" class="margin-top-s w-full">
                       <input id="Organisation" matInput tab-directive type="text" placeholder="Select your organisation"
-                        (keyup)="specialCharachters($event)"="Organisation" formControlName="organisation"
-                        [matAutocomplete]="organisationAutocomplete" aria-label="Organisation" #organisation
-                        aria-label="Organisation Field input" />
+                        (keyup)="specialCharachters($event,'organization')"="Organisation"
+                        formControlName="organisation" [matAutocomplete]="organisationAutocomplete"
+                        aria-label="Organisation" #organisation aria-label="Organisation Field input" />
                       <mat-error [hidden]="false" *ngIf="departmentForm?.controls['organisation'].errors?.required"
                         aria-label="Organisation is mandatory">
                         Organisation is mandatory

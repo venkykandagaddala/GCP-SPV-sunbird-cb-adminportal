@@ -47,7 +47,7 @@
               <mat-chip [removable]="removable">
                 {{translatedFilters[filter?.displayName]?.value[content?.displayName] || content?.displayName}}
                 <mat-icon matChipRemove
-                  (click)="appFilterDisplay.removeFilter({ key : filter?.type, value :content?.type})"
+                  (click)="appFilterDisplay?.removeFilter({ key : filter?.type, value :content?.type})"
                   *ngIf="removable">cancel</mat-icon>
               </mat-chip>
             </span>
@@ -56,7 +56,7 @@
                 <span *ngIf="children?.checked">
                   <mat-chip [removable]="removable">{{children?.displayName}}
                     <mat-icon matChipRemove
-                      (click)="appFilterDisplay.removeFilter({ key : filter?.type, value :children?.type})"
+                      (click)="appFilterDisplay?.removeFilter({ key : filter?.type, value :children?.type})"
                       *ngIf="removable">cancel</mat-icon>
                   </mat-chip>
                 </span>
