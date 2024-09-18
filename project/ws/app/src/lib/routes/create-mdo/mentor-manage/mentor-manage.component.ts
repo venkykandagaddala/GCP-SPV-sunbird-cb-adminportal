@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router'
 import _ from 'lodash'
 /* tslint:enable */
 // import { environment } from 'src/environments/environment'
-import { PageEvent } from '@angular/material'
+import { PageEvent } from '@angular/material/paginator'
 import { EventService } from '@sunbird-cb/utils'
 import { NsContent } from '@sunbird-cb/collection'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
@@ -58,14 +58,14 @@ export class MentorManageComponent implements OnInit, OnDestroy {
   searchQuery = ''
   rootOrgId: any
   currentUserStatus: any
-  filetrGroup = []
-  filterDesignation = []
-  filterRoles = []
-  filterTags = []
+  filetrGroup: any = []
+  filterDesignation: any = []
+  filterRoles: any = []
+  filterTags: any = []
   sortOrder: any
   searchText = ''
-  filterFacets = []
-
+  filterFacets: any = []
+  showApproveALL = true
   constructor(
     public dialog: MatDialog,
     private route: ActivatedRoute,

@@ -4,7 +4,7 @@ import {
 } from '@angular/core'
 import { SelectionModel } from '@angular/cdk/collections'
 import { MatTableDataSource } from '@angular/material/table'
-import { MatPaginator } from '@angular/material'
+import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import * as _ from 'lodash'
 
@@ -19,7 +19,7 @@ import { environment } from '../../../../../../../../src/environments/environmen
   styleUrls: ['./directory-table.component.scss'],
 })
 export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChanges {
-  @ViewChild('searchInput', { static: false }) searchInput!: ElementRef
+  @ViewChild('searchInput') searchInput!: ElementRef
   @Input() tableData!: any
   @Input() data?: []
   @Input() selectedDepartment!: string

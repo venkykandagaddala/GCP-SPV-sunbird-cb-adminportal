@@ -1,11 +1,10 @@
-FROM node:12
+FROM node:20
 
 WORKDIR /app
 COPY . .
 
 #RUN npm i yarn
 #RUN yarn global add @angular/cli@latest
-
 RUN yarn && yarn add moment && yarn add vis-util && npm run build --prod --build-optimizer
 #RUN ng build --prod --outputPath=dist/www/en --baseHref=/ --i18nLocale=en --verbose=true
 RUN npm run compress:brotli

@@ -15,7 +15,7 @@ import { UIDirectoryTableComponent } from '../../../../head/ui-admin-table/direc
 })
 export class ReportsComponent implements OnInit {
 
-  @ViewChild(UIDirectoryTableComponent, { static: false })
+  @ViewChild(UIDirectoryTableComponent)
   searchInputvalue!: UIDirectoryTableComponent
 
   currentFilter = 'ministry'

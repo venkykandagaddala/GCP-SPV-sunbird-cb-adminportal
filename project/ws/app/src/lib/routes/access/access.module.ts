@@ -6,11 +6,9 @@ import { WidgetResolverModule } from '@sunbird-cb/resolver'
 import { HomeModule } from '../home/home.module'
 import { RouterModule } from '@angular/router'
 import { UsersService } from './services/users.service'
-import {
-  MatSidenavModule,
-  MatIconModule,
-  MatProgressBarModule,
-} from '@angular/material'
+import { MatIconModule } from '@angular/material/icon'
+import { MatProgressBarModule } from '@angular/material/progress-bar'
+import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatCardModule } from '@angular/material/card'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 

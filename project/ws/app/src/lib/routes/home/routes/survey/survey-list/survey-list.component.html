@@ -12,8 +12,8 @@
     </div>
   </div> -->
   <ng-container *ngIf="data?.length > 0">
-    <ws-widget-ui-user-table [tableData]="tableData" [data]="data" (eOnRowClick)="onRoleClick($event)"
-      (actionsClick)="actionsClick($event)" [needAddAdmin]="false" [needCreateUser]="false">
+    <ws-widget-ui-user-table [tableData]="tableData" [data]="data" (actionsClick)="actionsClick($event)"
+      [needAddAdmin]="false" [needCreateUser]="false">
     </ws-widget-ui-user-table>
   </ng-container>
 

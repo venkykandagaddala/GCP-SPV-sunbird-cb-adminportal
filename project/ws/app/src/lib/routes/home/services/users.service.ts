@@ -99,7 +99,7 @@ export class UsersService {
   }
 
   searchMDOLeaders(userRootOrgId: string): Observable<any> {
-    const req = {
+    const req: any = {
       request: {
         filters: {
           status: 1,

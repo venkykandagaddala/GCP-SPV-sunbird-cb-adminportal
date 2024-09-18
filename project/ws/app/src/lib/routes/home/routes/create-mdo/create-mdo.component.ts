@@ -1,7 +1,8 @@
 import { DirectoryService } from '../../services/directory.services'
 import { Component, OnInit, Input } from '@angular/core'
 import { FormGroup, FormControl, ValidatorFn, AbstractControl, Validators } from '@angular/forms'
-import { MatDialog, MatSnackBar } from '@angular/material'
+import { MatDialog } from '@angular/material/dialog'
+import { MatSnackBar } from '@angular/material/snack-bar'
 import { UserPopupComponent } from '../user-popup/user-popup'
 
 import { LoaderService } from '../../services/loader.service'
@@ -438,65 +439,69 @@ export class CreateMdoComponent implements OnInit {
     this.deptSubType = val
   }
   onSubmit() {
-    this.disableCreateButton = true
-    this.displayLoader = true
-    if (!this.isUpdate) {
-      this.raiseTelemetry()
-      if (this.contentForm.value.name !== null
-        && this.contentForm.value.deptSubTypeId !== null) {
-        this.createMdoService.createDepartment(
-          this.contentForm.value,
-          this.deptType,
-          this.department,
-          this.loggedInUserId
-        ).subscribe(res => {
-          this.displayLoader = false
-          this.disableCreateButton = false
-          if (res.result.response === 'SUCCESS') {
-            this.submittedForm = false
-            const obj = {
-              id: res.result.organisationId,
-              depName: this.contentForm.value.name,
-              depType: this.department,
-            }
-            this.createdDepartment = obj
-            this.router.navigate([`/app/roles/${res.result.organisationId}/users`], { queryParams: { currentDept: this.department, roleId: res.result.organisationId, depatName: this.contentForm.value.name } })
-            this.openSnackbar(`Success`)
+    if (this.contentForm.valid) {
+      this.disableCreateButton = true
+      this.displayLoader = true
+      if (!this.isUpdate) {
+        this.raiseTelemetry()
+        if (this.contentForm.value.name !== null
+          && this.contentForm.value.deptSubTypeId !== null) {
+          this.createMdoService.createDepartment(
+            this.contentForm.value,
+            this.deptType,
+            this.department,
+            this.loggedInUserId
+          ).subscribe(res => {
+            this.displayLoader = false
+            this.disableCreateButton = false
+            if (res.result.response === 'SUCCESS') {
+              this.submittedForm = false
+              const obj = {
+                id: res.result.organisationId,
+                depName: this.contentForm.value.name,
+                depType: this.department,
+              }
+              this.createdDepartment = obj
+              this.router.navigate([`/app/roles/${res.result.organisationId}/users`], { queryParams: { currentDept: this.department, roleId: res.result.organisationId, depatName: this.contentForm.value.name } })
+              this.openSnackbar(`Success`)
 
-            // this.router.navigate([`/app/home/directory`])
+              // this.router.navigate([`/app/home/directory`])
+            }
+          },          (error: any) => {
+            this.openSnackbar(`Something went wrong, please try again later`)
+            this.disableStateCreateButton = false
+            this.displayLoader = false
+            // tslint:disable-next-line: no-console
+            console.log('Error :', error)
+          })
+        }
+      } else {
+        this.raiseTelemetry()
+        if (this.contentForm.value.name !== null
+          && this.contentForm.value.deptSubTypeId !== null) {
+          if (this.deptType) {
+            this.deptType = this.deptType.toLowerCase()
           }
-        },          (error: any) => {
-          this.openSnackbar(`Something went wrong, please try again later`)
-          this.disableStateCreateButton = false
-          this.displayLoader = false
-          // tslint:disable-next-line: no-console
-          console.log('Error :', error)
-        })
+          this.createMdoService.updateDepartment(
+            this.updateId,
+            this.deptType,
+            this.department,
+            this.loggedInUserId,
+            this.contentForm.value
+          ).subscribe(res => {
+            this.displayLoader = false
+            this.disableCreateButton = false
+            if (res.result.response === 'SUCCESS') {
+              this.openSnackbar(`Success`)
+              this.disableCreateButton = false
+              this.router.navigate([`/app/home/directory`])
+            }
+          }
+          )
+        }
       }
     } else {
-      this.raiseTelemetry()
-      if (this.contentForm.value.name !== null
-        && this.contentForm.value.deptSubTypeId !== null) {
-        if (this.deptType) {
-          this.deptType = this.deptType.toLowerCase()
-        }
-        this.createMdoService.updateDepartment(
-          this.updateId,
-          this.deptType,
-          this.department,
-          this.loggedInUserId,
-          this.contentForm.value
-        ).subscribe(res => {
-          this.displayLoader = false
-          this.disableCreateButton = false
-          if (res.result.response === 'SUCCESS') {
-            this.openSnackbar(`Success`)
-            this.disableCreateButton = false
-            this.router.navigate([`/app/home/directory`])
-          }
-        }
-        )
-      }
+      this.snackBar.open('Form is not valid')
     }
 
   }
@@ -620,36 +625,73 @@ export class CreateMdoComponent implements OnInit {
   }
 
   onSubmitState() {
-    this.disableStateCreateButton = true
-    this.displayLoader = true
-    if (!this.isUpdate) {
-      this.raiseTelemetry()
-      if (this.stateForm.value.state !== null) {
-        const stateFromValue = this.stateForm.value.state
-        if (stateFromValue.sbOrgId) {
-          this.disableStateCreateButton = true
-          this.displayLoader = false
-          this.openSnackbar(`Selected State is already onboarded!`)
-        } else {
+    if (this.stateForm.valid) {
+      this.disableStateCreateButton = true
+      this.displayLoader = true
+      if (!this.isUpdate) {
+        this.raiseTelemetry()
+        if (this.stateForm.value.state !== null) {
+          const stateFromValue = this.stateForm.value.state
+          if (stateFromValue.sbOrgId) {
+            this.disableStateCreateButton = true
+            this.displayLoader = false
+            this.openSnackbar(`Selected State is already onboarded!`)
+          } else {
+            const req = {
+              orgName: stateFromValue.orgName ? stateFromValue.orgName : stateFromValue,
+              channel: stateFromValue.orgName ? stateFromValue.orgName : stateFromValue,
+              // organisationType: (stateFromValue.sbOrgType || '').toLowerCase(),
+              // organisationSubType: (stateFromValue.sbOrgType || '').toLowerCase(),
+              organisationType: stateFromValue.sbOrgType ? (stateFromValue.sbOrgType || '').toLowerCase() : 'state',
+              organisationSubType: stateFromValue.sbsuborgtype ? (stateFromValue.sbsuborgtype || '').toLowerCase() : 'mdo',
+              // mapId: stateFromValue.mapid ? stateFromValue.mapid : "00",
+              isTenant: true,
+              requestedBy: this.loggedInUserId,
+            }
+            this.createMdoService.createStateOrMinistry(req).subscribe(
+              res => {
+                this.disableStateCreateButton = false
+                this.displayLoader = false
+                if (res.responseCode) {
+                  this.submittedForm = false
+                  this.openSnackbar(`State is successfully on-boarded. Check again after few minutes for newly on-boarded State details`)
+                  this.router.navigate([`/app/home/directory`])
+                }
+              },
+              err => {
+                this.disableStateCreateButton = false
+                this.displayLoader = false
+                this.openSnackbar(`Something went wrong, please try again later`)
+                // tslint:disable-next-line: no-console
+                console.log('Error :', err)
+              }
+            )
+          }
+        }
+      } else {
+        this.raiseTelemetry()
+        if (this.stateForm.value.state !== null) {
+          const stateFromValue = this.stateForm.value.state
           const req = {
-            orgName: stateFromValue.orgName ? stateFromValue.orgName : stateFromValue,
-            channel: stateFromValue.orgName ? stateFromValue.orgName : stateFromValue,
-            // organisationType: (stateFromValue.sbOrgType || '').toLowerCase(),
-            // organisationSubType: (stateFromValue.sbOrgType || '').toLowerCase(),
-            organisationType: stateFromValue.sbOrgType ? (stateFromValue.sbOrgType || '').toLowerCase() : 'state',
-            organisationSubType: stateFromValue.sbsuborgtype ? (stateFromValue.sbsuborgtype || '').toLowerCase() : 'mdo',
-            // mapId: stateFromValue.mapid ? stateFromValue.mapid : "00",
+            orgName: stateFromValue.orgName,
+            channel: stateFromValue.orgName,
+            organisationType: (stateFromValue.sbOrgType || '').toLowerCase(),
+            organisationSubType: (stateFromValue.sbsuborgtype || '').toLowerCase(),
+            // mapId: stateFromValue.mapid,
             isTenant: true,
             requestedBy: this.loggedInUserId,
           }
-          this.createMdoService.createStateOrMinistry(req).subscribe(
+          this.createMdoService.updateStateOrMinistry(req).subscribe(
             res => {
               this.disableStateCreateButton = false
               this.displayLoader = false
-              if (res.responseCode) {
-                this.submittedForm = false
-                this.openSnackbar(`State is successfully on-boarded. Check again after few minutes for newly on-boarded State details`)
-                this.router.navigate([`/app/home/directory`])
+              if (res.result.response === 'SUCCESS') {
+                if (res.result.response === 'SUCCESS') {
+                  this.disableStateCreateButton = false
+                  this.displayLoader = false
+                  this.openSnackbar(`Success`)
+                  this.router.navigate([`/app/home/directory`])
+                }
               }
             },
             err => {
@@ -663,189 +705,162 @@ export class CreateMdoComponent implements OnInit {
         }
       }
     } else {
-      this.raiseTelemetry()
-      if (this.stateForm.value.state !== null) {
-        const stateFromValue = this.stateForm.value.state
-        const req = {
-          orgName: stateFromValue.orgName,
-          channel: stateFromValue.orgName,
-          organisationType: (stateFromValue.sbOrgType || '').toLowerCase(),
-          organisationSubType: (stateFromValue.sbsuborgtype || '').toLowerCase(),
-          // mapId: stateFromValue.mapid,
-          isTenant: true,
-          requestedBy: this.loggedInUserId,
-        }
-        this.createMdoService.updateStateOrMinistry(req).subscribe(
-          res => {
-            this.disableStateCreateButton = false
-            this.displayLoader = false
-            if (res.result.response === 'SUCCESS') {
-              if (res.result.response === 'SUCCESS') {
-                this.disableStateCreateButton = false
-                this.displayLoader = false
-                this.openSnackbar(`Success`)
-                this.router.navigate([`/app/home/directory`])
-              }
-            }
-          },
-          err => {
-            this.disableStateCreateButton = false
-            this.displayLoader = false
-            this.openSnackbar(`Something went wrong, please try again later`)
-            // tslint:disable-next-line: no-console
-            console.log('Error :', err)
-          }
-        )
-      }
+      this.snackBar.open('State Form is not valid')
     }
+
   }
   onSubmitDepartment() {
-    this.disableCreateButton = true
-    this.displayLoader = true
-    if (!this.isUpdate) {
-      this.raiseTelemetry()
-      let hierarchyObj
-      // getRawValue() is used since the ministry field is disabled and form.value doesn't give the value
-      // if (this.departmentForm.getRawValue().ministry) {
-      //   console.log('this.departmentForm.getRawValue()', this.departmentForm.getRawValue())
-      //   hierarchyObj = this.departmentForm.getRawValue().ministry
-      //   if (this.departmentForm.value.department) {
-      //     hierarchyObj = this.departmentForm.value.department
-      //     if (this.departmentForm.value.organisation) {
-      //       hierarchyObj = this.departmentForm.value.organisation
-      //     }
-      //   }
-      // }
-      hierarchyObj = this.departmentForm.getRawValue()
-      if (hierarchyObj) {
-        if (hierarchyObj.ministry && hierarchyObj.ministry.sbOrgId && hierarchyObj.department && hierarchyObj.department.sbOrgId
-          && hierarchyObj.organisation && hierarchyObj.organisation.sbOrgId) {
-          this.openSnackbar(`Selected Org is already onboarded!`)
-          this.disableCreateButton = true
-          this.displayLoader = false
-        } else {
-          if (this.departmentForm.getRawValue().ministry && !this.departmentForm.value.department && !this.departmentForm.value.organisation) {
+    if (this.departmentForm.valid) {
+      this.disableCreateButton = true
+      this.displayLoader = true
+      if (!this.isUpdate) {
+        this.raiseTelemetry()
+        let hierarchyObj
+        // getRawValue() is used since the ministry field is disabled and form.value doesn't give the value
+        // if (this.departmentForm.getRawValue().ministry) {
+        //   console.log('this.departmentForm.getRawValue()', this.departmentForm.getRawValue())
+        //   hierarchyObj = this.departmentForm.getRawValue().ministry
+        //   if (this.departmentForm.value.department) {
+        //     hierarchyObj = this.departmentForm.value.department
+        //     if (this.departmentForm.value.organisation) {
+        //       hierarchyObj = this.departmentForm.value.organisation
+        //     }
+        //   }
+        // }
+        hierarchyObj = this.departmentForm.getRawValue()
+        if (hierarchyObj) {
+          if (hierarchyObj.ministry && hierarchyObj.ministry.sbOrgId && hierarchyObj.department && hierarchyObj.department.sbOrgId
+            && hierarchyObj.organisation && hierarchyObj.organisation.sbOrgId) {
+            this.openSnackbar(`Selected Org is already onboarded!`)
+            this.disableCreateButton = true
+            this.displayLoader = false
+          } else {
+            if (this.departmentForm.getRawValue().ministry && !this.departmentForm.value.department && !this.departmentForm.value.organisation) {
+              this.req = {
+                orgName: hierarchyObj.ministry && hierarchyObj.ministry.orgName ? hierarchyObj.ministry.orgName : hierarchyObj.ministry,
+                channel: hierarchyObj.ministry && hierarchyObj.ministry.orgName ? hierarchyObj.ministry.orgName : hierarchyObj.ministry,
+                organisationType: hierarchyObj.ministry && hierarchyObj.ministry.sbOrgType ? (hierarchyObj.ministry.sbOrgType || '').toLowerCase() : 'ministry',
+                organisationSubType: hierarchyObj.ministry && hierarchyObj.ministry.sbsuborgtype ? (hierarchyObj.ministry.sbsuborgtype || '').toLowerCase() : 'mdo',
+                isTenant: true,
+                ...(this.isStateAdmin && { sbRootOrgId: _.get(this.activatedRoute, 'snapshot.parent.data.configService.unMappedUser.rootOrgId') }),
+                requestedBy: this.loggedInUserId,
+              }
+            } else if (this.departmentForm.getRawValue().ministry && this.departmentForm.value.department && !this.departmentForm.value.organisation) {
+              this.req = {
+                orgName: hierarchyObj.department && hierarchyObj.department.orgName ? hierarchyObj.department.orgName : hierarchyObj.department,
+                channel: hierarchyObj.department && hierarchyObj.department.orgName ? hierarchyObj.department.orgName : hierarchyObj.department,
+                organisationType: hierarchyObj.ministry.sbsuborgtype ? (hierarchyObj.ministry.sbsuborgtype || '').toLowerCase() : 'mdo',
+                organisationSubType: 'department',
+                isTenant: true,
+                ...(this.isStateAdmin && { sbRootOrgId: _.get(this.activatedRoute, 'snapshot.parent.data.configService.unMappedUser.rootOrgId') }),
+                requestedBy: this.loggedInUserId,
+                parentMapId: hierarchyObj.ministry.mapId,
+              }
+            } else if (this.departmentForm.getRawValue().ministry && this.departmentForm.value.department && this.departmentForm.value.organisation) {
+              this.req = {
+                orgName: hierarchyObj.organisation && hierarchyObj.organisation.orgName ? hierarchyObj.organisation.orgName : hierarchyObj.organisation,
+                channel: hierarchyObj.organisation && hierarchyObj.organisation.orgName ? hierarchyObj.organisation.orgName : hierarchyObj.organisation,
+                organisationType: hierarchyObj.ministry.sbsuborgtype ? (hierarchyObj.ministry.sbsuborgtype || '').toLowerCase() : 'mdo',
+                organisationSubType: 'board',
+                isTenant: true,
+                ...(this.isStateAdmin && { sbRootOrgId: _.get(this.activatedRoute, 'snapshot.parent.data.configService.unMappedUser.rootOrgId') }),
+                requestedBy: this.loggedInUserId,
+                parentMapId: hierarchyObj.department.mapId,
+              }
+            }
+            this.createMdoService.createStateOrMinistry(this.req).subscribe(
+              res => {
+                this.displayLoader = false
+                this.disableCreateButton = false
+                this.req = ''
+                if (res.responseCode) {
+                  this.submittedForm = false
+                  this.openSnackbar(`MDO is successfully on-boarded. Check again after few minutes for newly on-boarded MDO details`)
+
+                  this.router.navigate([`/app/home/directory`])
+                }
+              },
+              err => {
+                this.displayLoader = false
+                this.disableCreateButton = false
+                this.openSnackbar(`Something went wrong, please try again later`)
+
+                // tslint:disable-next-line: no-console
+                console.log('Error :', err)
+              }
+            )
+          }
+        }
+      } else {
+        this.raiseTelemetry()
+        let hierarchyObj
+        // if (this.departmentForm.value.ministry) {
+        //   hierarchyObj = this.departmentForm.value.ministry
+        //   if (this.departmentForm.value.department) {
+        //     hierarchyObj = this.departmentForm.value.department
+        //     if (this.departmentForm.value.organisation) {
+        //       hierarchyObj = this.departmentForm.value.organisation
+        //     }
+        //   }
+        // }
+        // if (hierarchyObj) {
+        //   if (hierarchyObj.sborgid) {
+        hierarchyObj = this.departmentForm.getRawValue()
+        if (hierarchyObj) {
+          if (hierarchyObj.ministry && hierarchyObj.ministry.sbOrgId && hierarchyObj.department && hierarchyObj.department.sbOrgId
+            && hierarchyObj.organisation && hierarchyObj.organisation.sbOrgId) {
+            this.displayLoader = false
+            this.disableCreateButton = false
+            this.openSnackbar(`Selected Org is already onboarded!`)
+          } else {
+            // this.req = {
+            //   orgName: hierarchyObj.orgname,
+            //   channel: hierarchyObj.orgname,
+            //   // organisationType: hierarchyObj.sbOrgType.toLowerCase(),
+            //   // organisationSubType: hierarchyObj.sbsuborgtype.toLowerCase(),
+            //   organisationType: hierarchyObj.sbOrgType ? (hierarchyObj.sbOrgType || '').toLowerCase() : 'mdo',
+            //   organisationSubType: hierarchyObj.sbsuborgtype ? (hierarchyObj.sbsuborgtype || '').toLowerCase() : 'dept',
+            //   mapId: hierarchyObj.mapId,
+            //   isTenant: true,
+            //   requestedBy: this.loggedInUserId,
+            // }
+
             this.req = {
               orgName: hierarchyObj.ministry && hierarchyObj.ministry.orgName ? hierarchyObj.ministry.orgName : hierarchyObj.ministry,
               channel: hierarchyObj.ministry && hierarchyObj.ministry.orgName ? hierarchyObj.ministry.orgName : hierarchyObj.ministry,
               organisationType: hierarchyObj.ministry && hierarchyObj.ministry.sbOrgType ? (hierarchyObj.ministry.sbOrgType || '').toLowerCase() : 'ministry',
               organisationSubType: hierarchyObj.ministry && hierarchyObj.ministry.sbsuborgtype ? (hierarchyObj.ministry.sbsuborgtype || '').toLowerCase() : 'mdo',
               isTenant: true,
+              mapId: hierarchyObj.ministry.mapId,
               ...(this.isStateAdmin && { sbRootOrgId: _.get(this.activatedRoute, 'snapshot.parent.data.configService.unMappedUser.rootOrgId') }),
               requestedBy: this.loggedInUserId,
             }
-          } else if (this.departmentForm.getRawValue().ministry && this.departmentForm.value.department && !this.departmentForm.value.organisation) {
-            this.req = {
-              orgName: hierarchyObj.department && hierarchyObj.department.orgName ? hierarchyObj.department.orgName : hierarchyObj.department,
-              channel: hierarchyObj.department && hierarchyObj.department.orgName ? hierarchyObj.department.orgName : hierarchyObj.department,
-              organisationType: hierarchyObj.ministry.sbsuborgtype ? (hierarchyObj.ministry.sbsuborgtype || '').toLowerCase() : 'mdo',
-              organisationSubType: 'department',
-              isTenant: true,
-              ...(this.isStateAdmin && { sbRootOrgId: _.get(this.activatedRoute, 'snapshot.parent.data.configService.unMappedUser.rootOrgId') }),
-              requestedBy: this.loggedInUserId,
-              parentMapId: hierarchyObj.ministry.mapId,
-            }
-          } else if (this.departmentForm.getRawValue().ministry && this.departmentForm.value.department && this.departmentForm.value.organisation) {
-            this.req = {
-              orgName: hierarchyObj.organisation && hierarchyObj.organisation.orgName ? hierarchyObj.organisation.orgName : hierarchyObj.organisation,
-              channel: hierarchyObj.organisation && hierarchyObj.organisation.orgName ? hierarchyObj.organisation.orgName : hierarchyObj.organisation,
-              organisationType: hierarchyObj.ministry.sbsuborgtype ? (hierarchyObj.ministry.sbsuborgtype || '').toLowerCase() : 'mdo',
-              organisationSubType: 'board',
-              isTenant: true,
-              ...(this.isStateAdmin && { sbRootOrgId: _.get(this.activatedRoute, 'snapshot.parent.data.configService.unMappedUser.rootOrgId') }),
-              requestedBy: this.loggedInUserId,
-              parentMapId: hierarchyObj.department.mapId,
-            }
-          }
-          this.createMdoService.createStateOrMinistry(this.req).subscribe(
-            res => {
-              this.displayLoader = false
-              this.disableCreateButton = false
-              this.req = ''
-              if (res.responseCode) {
-                this.submittedForm = false
-                this.openSnackbar(`MDO is successfully on-boarded. Check again after few minutes for newly on-boarded MDO details`)
+            this.createMdoService.updateStateOrMinistry(this.req).subscribe(
+              res => {
+                this.displayLoader = false
+                this.disableCreateButton = false
+                this.req = ''
+                if (res.responseCode) {
+                  this.openSnackbar(`Success`)
 
-                this.router.navigate([`/app/home/directory`])
+                  this.router.navigate([`/app/home/directory`])
+                }
+              },
+              err => {
+                this.displayLoader = false
+                this.openSnackbar(`Something went wrong, please try again later`)
+                this.disableCreateButton = false
+                // tslint:disable-next-line: no-console
+                console.log('Error :', err)
               }
-            },
-            err => {
-              this.displayLoader = false
-              this.disableCreateButton = false
-              this.openSnackbar(`Something went wrong, please try again later`)
-
-              // tslint:disable-next-line: no-console
-              console.log('Error :', err)
-            }
-          )
+            )
+          }
         }
       }
     } else {
-      this.raiseTelemetry()
-      let hierarchyObj
-      // if (this.departmentForm.value.ministry) {
-      //   hierarchyObj = this.departmentForm.value.ministry
-      //   if (this.departmentForm.value.department) {
-      //     hierarchyObj = this.departmentForm.value.department
-      //     if (this.departmentForm.value.organisation) {
-      //       hierarchyObj = this.departmentForm.value.organisation
-      //     }
-      //   }
-      // }
-      // if (hierarchyObj) {
-      //   if (hierarchyObj.sborgid) {
-      hierarchyObj = this.departmentForm.getRawValue()
-      if (hierarchyObj) {
-        if (hierarchyObj.ministry && hierarchyObj.ministry.sbOrgId && hierarchyObj.department && hierarchyObj.department.sbOrgId
-          && hierarchyObj.organisation && hierarchyObj.organisation.sbOrgId) {
-          this.displayLoader = false
-          this.disableCreateButton = false
-          this.openSnackbar(`Selected Org is already onboarded!`)
-        } else {
-          // this.req = {
-          //   orgName: hierarchyObj.orgname,
-          //   channel: hierarchyObj.orgname,
-          //   // organisationType: hierarchyObj.sbOrgType.toLowerCase(),
-          //   // organisationSubType: hierarchyObj.sbsuborgtype.toLowerCase(),
-          //   organisationType: hierarchyObj.sbOrgType ? (hierarchyObj.sbOrgType || '').toLowerCase() : 'mdo',
-          //   organisationSubType: hierarchyObj.sbsuborgtype ? (hierarchyObj.sbsuborgtype || '').toLowerCase() : 'dept',
-          //   mapId: hierarchyObj.mapId,
-          //   isTenant: true,
-          //   requestedBy: this.loggedInUserId,
-          // }
-
-          this.req = {
-            orgName: hierarchyObj.ministry && hierarchyObj.ministry.orgName ? hierarchyObj.ministry.orgName : hierarchyObj.ministry,
-            channel: hierarchyObj.ministry && hierarchyObj.ministry.orgName ? hierarchyObj.ministry.orgName : hierarchyObj.ministry,
-            organisationType: hierarchyObj.ministry && hierarchyObj.ministry.sbOrgType ? (hierarchyObj.ministry.sbOrgType || '').toLowerCase() : 'ministry',
-            organisationSubType: hierarchyObj.ministry && hierarchyObj.ministry.sbsuborgtype ? (hierarchyObj.ministry.sbsuborgtype || '').toLowerCase() : 'mdo',
-            isTenant: true,
-            mapId: hierarchyObj.ministry.mapId,
-            ...(this.isStateAdmin && { sbRootOrgId: _.get(this.activatedRoute, 'snapshot.parent.data.configService.unMappedUser.rootOrgId') }),
-            requestedBy: this.loggedInUserId,
-          }
-          this.createMdoService.updateStateOrMinistry(this.req).subscribe(
-            res => {
-              this.displayLoader = false
-              this.disableCreateButton = false
-              this.req = ''
-              if (res.responseCode) {
-                this.openSnackbar(`Success`)
-
-                this.router.navigate([`/app/home/directory`])
-              }
-            },
-            err => {
-              this.displayLoader = false
-              this.openSnackbar(`Something went wrong, please try again later`)
-              this.disableCreateButton = false
-              // tslint:disable-next-line: no-console
-              console.log('Error :', err)
-            }
-          )
-        }
-      }
+      this.snackBar.open('Department Form not valid')
     }
+
   }
 
   getMdoSubDepartmennt(id: number) {

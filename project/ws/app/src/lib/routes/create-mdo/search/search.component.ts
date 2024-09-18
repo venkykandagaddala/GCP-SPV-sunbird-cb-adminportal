@@ -5,7 +5,7 @@ import _ from 'lodash'
 /* tslint:enable */
 import { UsersService } from '../../../routes/home/services/users.service'
 import { LoaderService } from '../../../routes/home/services/loader.service'
-import { MatDialog } from '@angular/material'
+import { MatDialog } from '@angular/material/dialog'
 @Component({
   selector: 'ws-app-searchuser',
   templateUrl: './search.component.html',
@@ -79,7 +79,7 @@ export class SearchComponent implements OnInit {
       applyFilterObj = {}
       /* tslint:enable */
     }
-    const filterObj = {
+    const filterObj: any = {
       request: {
         filters: {},
         offset: this.pageIndex,

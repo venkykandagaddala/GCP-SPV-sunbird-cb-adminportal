@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { RequestServiceService } from '../request-service.service'
 import { ActivatedRoute, Router } from '@angular/router'
-import { MatDialog, MatSnackBar } from '@angular/material'
+import { MatDialog } from '@angular/material/dialog'
+import { MatSnackBar } from '@angular/material/snack-bar'
 import { CompetencyViewComponent } from '../competency-view/competency-view.component'
 import { ConfirmationPopupComponent } from '../confirmation-popup/confirmation-popup.component'
 /* tslint:disable */
@@ -69,7 +70,7 @@ export class RequestCopyDetailsComponent implements OnInit {
   competencyArea!: FormControl
   competencyTheme!: FormControl
   competencySubtheme!: FormControl
-
+  data: any
   constructor(private formBuilder: FormBuilder,
               private requestService: RequestServiceService,
               private activatedRouter: ActivatedRoute,

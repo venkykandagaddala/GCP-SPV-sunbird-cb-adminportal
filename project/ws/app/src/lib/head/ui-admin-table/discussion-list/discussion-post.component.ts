@@ -6,7 +6,7 @@ import {
 import { SelectionModel } from '@angular/cdk/collections'
 import { MatTableDataSource } from '@angular/material/table'
 // import { MatCardModule } from '@angular/material'
-import { MatPaginator } from '@angular/material'
+import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import * as _ from 'lodash'
 import { RejectPublishService } from '../reject-publish.service'
@@ -59,6 +59,7 @@ export class UIDiscussionPostComponent implements OnInit, OnChanges {
   SYSTEM: any
   content: any
   imagePath: string
+  primary = 'primary'
   // id: any
   // profaneString: any
   // text: any

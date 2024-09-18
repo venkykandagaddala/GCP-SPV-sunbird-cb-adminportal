@@ -6,7 +6,7 @@ import { startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators'
 import { NsAppsConfig, ConfigurationsService, NsPage, LogoutComponent, SubapplicationRespondService, ValueService } from '@sunbird-cb/utils'
 import { NsWidgetResolver } from '@sunbird-cb/resolver'
 import { ROOT_WIDGET_CONFIG, CustomTourService } from '@sunbird-cb/collection'
-import { MatDialog } from '@angular/material'
+import { MatDialog } from '@angular/material/dialog'
 // import { AccessControlService } from '../../../../project/ws/author/src/public-api'
 interface IGroupWithFeatureWidgets extends NsAppsConfig.IGroup {
   featureWidgets: NsWidgetResolver.IRenderConfigWithTypedData<NsPage.INavLink>[]
