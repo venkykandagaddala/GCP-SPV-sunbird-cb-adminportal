@@ -1,11 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 import { SectorListViewComponent } from './sector-list-view.component'
 
 describe('SectorListViewComponent', () => {
   let component: SectorListViewComponent
   let fixture: ComponentFixture<SectorListViewComponent>
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [SectorListViewComponent],
     })

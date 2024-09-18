@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { RequestsService } from '../../services/onboarding-requests.service'
 import * as _ from 'lodash'
-import { PageEvent } from '@angular/material'
+import { PageEvent } from '@angular/material/paginator'
 
 @Component({
   selector: 'ws-app-email-domains',

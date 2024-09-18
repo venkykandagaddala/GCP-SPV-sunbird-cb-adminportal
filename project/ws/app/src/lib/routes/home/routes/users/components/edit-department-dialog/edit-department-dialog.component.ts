@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core'
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material'
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
+import { MatSnackBar } from '@angular/material/snack-bar'
 import { FormGroup, Validators, FormControl } from '@angular/forms'
 import { TenantAdminService } from '../../../../services/tenant-admin.service'
 
@@ -13,7 +14,7 @@ export class EditDepartmentDialogComponent implements OnInit {
   editForm: FormGroup
   uploadSaveData = false
   processing = false
-  departments = []
+  departments: any = []
   userDepartment = ''
   @ViewChild('toastSuccess', { static: true }) toastSuccess!: ElementRef<any>
   @ViewChild('toastError', { static: true }) toastError!: ElementRef<any>

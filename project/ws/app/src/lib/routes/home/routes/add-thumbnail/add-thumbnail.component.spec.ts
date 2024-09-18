@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 
 import { AddThumbnailComponent } from './add-thumbnail.component'
 
@@ -6,7 +6,7 @@ describe('AddThumbnailComponent', () => {
   let component: AddThumbnailComponent
   let fixture: ComponentFixture<AddThumbnailComponent>
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [AddThumbnailComponent],
     })

@@ -2,7 +2,7 @@ import { CreateMDOService } from './../../services/create-mdo.services'
 import { Component, OnInit } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { UsersService } from '../../services/users.service'
-import { MatSnackBar } from '@angular/material'
+import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute, Router } from '@angular/router'
 import { DirectoryService } from '../../services/directory.services'
 import * as _ from 'lodash'
@@ -33,7 +33,7 @@ export class CreateUserComponent implements OnInit {
   currentDept: any
   createdDepartment!: any
   selected!: string
-  roles = []
+  roles: any = []
   selectedRoles: string[] = []
   exact!: string[]
   exactPath!: String

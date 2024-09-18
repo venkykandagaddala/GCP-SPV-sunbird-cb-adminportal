@@ -17,7 +17,7 @@ import { UIDirectoryTableComponent } from '../../../../head/ui-admin-table/direc
   /* tslint:enable */
 })
 export class DirectoryViewComponent implements OnInit {
-  @ViewChild(UIDirectoryTableComponent, { static: false })
+  @ViewChild(UIDirectoryTableComponent)
   searchInputvalue!: UIDirectoryTableComponent
 
   currentFilter = 'mdo'

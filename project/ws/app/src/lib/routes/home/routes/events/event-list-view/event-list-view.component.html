@@ -45,7 +45,7 @@
 
                 </mat-header-cell>
                 <mat-cell *matCellDef="let row" class="action-cell">
-                    <button type="button" mat-icon-button i18n-aria-label aria-label="action items"
+                    <button type="button" mat-icon-button aria-label="action items"
                         *ngIf="currentFilter !== 'archive' && row && row.canArchive" [matMenuTriggerFor]="cardMenu"
                         [matMenuTriggerData]="{'data':row}" class="action-btn">
                         <mat-icon>more_horiz</mat-icon>
@@ -74,11 +74,11 @@
 <mat-menu #cardMenu="matMenu">
     <ng-template matMenuContent let-rowData="data">
         <button *ngIf="rowData && rowData.canArchive" (click)="buttonClick('update event',rowData)" mat-menu-item
-            name="channel-analytics-button" class="ws-mat-primary-text" i18n-aria-label aria-label="Analytics">
+            name="channel-analytics-button" class="ws-mat-primary-text" aria-label="Analytics">
             <mat-icon class="margin-right-xs">create</mat-icon><span>Update event</span>
         </button>
         <button *ngIf="rowData && rowData.canArchive" (click)="buttonClick('archive',rowData)" mat-menu-item
-            name="channel-analytics-button" class="ws-mat-primary-text" i18n-aria-label aria-label="Analytics">
+            name="channel-analytics-button" class="ws-mat-primary-text" aria-label="Analytics">
             <mat-icon class="margin-right-xs">archive</mat-icon><span>Archive event</span>
         </button>
     </ng-template>

@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { MAT_DIALOG_DATA, MatDialogRef, MatPaginator, MatTableDataSource } from '@angular/material'
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
+import { MatPaginator } from '@angular/material/paginator'
+import { MatTableDataSource } from '@angular/material/table'
 import { ConfigResolveService } from '../../../resolvers/config-resolver.service'
 import { RequestServiceService } from '../request-service.service'
 
@@ -26,8 +28,8 @@ export class SingleAssignPopupComponent implements OnInit {
   isDisable  = false
   // @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   dataSource = new MatTableDataSource<any>([])
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator | null = null
-  @ViewChild(MatPaginator, { static: false }) set matPaginator(paginator: MatPaginator) {
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     this.paginator = paginator
     this.setDataSourceAttributes()
   }

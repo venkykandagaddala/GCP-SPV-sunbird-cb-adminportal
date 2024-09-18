@@ -4,7 +4,7 @@ import {
 } from '@angular/core'
 import { SelectionModel } from '@angular/cdk/collections'
 import { MatTableDataSource } from '@angular/material/table'
-import { MatPaginator } from '@angular/material'
+import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import * as _ from 'lodash'
 import { ITableData, IColums } from '../interface/interfaces'
@@ -132,7 +132,7 @@ export class UIUserTablePopUpComponent implements OnInit, AfterViewInit, OnChang
     })
 
   }
-  getAllUserByKey(userObj: any) {
+  getAllUserByKey(userObj: any): any {
     if (userObj && userObj !== null && userObj !== undefined) {
       this.dataSource.data = []
       this.createMDOService2.searchedUserdata.next(userObj)

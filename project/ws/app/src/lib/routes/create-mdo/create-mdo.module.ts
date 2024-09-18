@@ -8,16 +8,21 @@ import { RouterModule } from '@angular/router'
 import { UsersComponent } from './routes/users/users.component'
 import { UsersService } from './services/users.service'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import {
-  MatExpansionModule, MatSlideToggleModule, MatOptionModule, MatFormFieldModule, MatPaginatorModule,
-  MatSelectModule, MatChipsModule, MatDatepickerModule, MatAutocompleteModule,
-  MatSidenavModule,
-  MatIconModule,
-  MatProgressSpinnerModule,
-  MatListModule,
-  MatRadioModule,
-  MatDialogModule,
-} from '@angular/material'
+import { MatAutocompleteModule } from '@angular/material/autocomplete'
+import { MatChipsModule } from '@angular/material/chips'
+import { MatOptionModule } from '@angular/material/core'
+import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MatDialogModule } from '@angular/material/dialog'
+import { MatExpansionModule } from '@angular/material/expansion'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatIconModule } from '@angular/material/icon'
+import { MatListModule } from '@angular/material/list'
+import { MatPaginatorModule } from '@angular/material/paginator'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatRadioModule } from '@angular/material/radio'
+import { MatSelectModule } from '@angular/material/select'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 import { MatCardModule } from '@angular/material/card'
 import { RolesAccessComponent } from '../access/routes/roles-access/roles-access.component'
 import { WidgetResolverModule } from '@sunbird-cb/resolver'

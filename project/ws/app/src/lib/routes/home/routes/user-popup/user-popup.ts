@@ -16,7 +16,7 @@ export class UserPopupComponent implements OnInit {
 
   selectedUser: any = []
   dataSources: any
-  finalArray = []
+  finalArray: any = []
   tabledata: any = []
   dataTable: any = []
   score: any

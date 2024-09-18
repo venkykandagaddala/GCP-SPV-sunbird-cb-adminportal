@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Inject, Output, EventEmitter } from '@angular/core'
 import { Subscription } from 'rxjs'
 import { FormGroup, FormBuilder } from '@angular/forms'
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material'
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { DomSanitizer } from '@angular/platform-browser'
 /* tslint:disable */
 import _ from 'lodash'

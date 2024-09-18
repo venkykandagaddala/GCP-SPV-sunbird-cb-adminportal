@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 
 import { SingleAssignPopupComponent } from './single-assign-popup.component'
 
@@ -6,7 +6,7 @@ describe('SingleAssignPopupComponent', () => {
   let component: SingleAssignPopupComponent
   let fixture: ComponentFixture<SingleAssignPopupComponent>
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [SingleAssignPopupComponent],
     })

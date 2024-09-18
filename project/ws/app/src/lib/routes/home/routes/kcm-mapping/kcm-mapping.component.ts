@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { environment } from '../../../../../../../../../src/environments/environment'
 import { ActivatedRoute } from '@angular/router'
-import { MatDialog } from '@angular/material'
+import { MatDialog } from '@angular/material/dialog'
 import { DemoVideoPopupComponent } from '../../components/demo-video-popup/demo-video-popup.component'
 import * as _ from 'lodash'
 
@@ -36,7 +36,7 @@ export class KCMMappingComponent implements OnInit {
   callResizeEvent(_event: any) {
     setTimeout(() => {
       window.dispatchEvent(new Event('resize'))
-    },         100)
+    }, 100)
   }
 
   openVideoPopup() {
