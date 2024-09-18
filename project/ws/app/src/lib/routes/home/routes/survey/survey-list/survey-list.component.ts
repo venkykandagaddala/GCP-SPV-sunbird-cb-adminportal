@@ -4,14 +4,15 @@ import {
 } from '@angular/core'
 import { SelectionModel } from '@angular/cdk/collections'
 import { MatTableDataSource } from '@angular/material/table'
-import { MatPaginator, MatSnackBar } from '@angular/material'
+import { MatPaginator } from '@angular/material/paginator'
+import { MatSnackBar } from '@angular/material/snack-bar'
 import { MatSort } from '@angular/material/sort'
 import * as _ from 'lodash'
 import { ITableData, IColums, IAction } from './../interfaces/interfaces'
 // Router
 import { ActivatedRoute } from '@angular/router'
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog'
-import { EventService } from '@sunbird-cb/utils'
+import { MAT_DIALOG_DATA } from '@angular/material/dialog'
+// import { EventService } from '@sunbird-cb/utils'
 import { NsContent } from '@sunbird-cb/collection'
 // import * as moment from 'moment'
 import { environment } from '../../../../../../../../../../src/environments/environment'
@@ -61,8 +62,8 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
 
   constructor(
     // private router: Router,
-    private matDialog: MatDialog,
-    private events: EventService,
+    // private matDialog: MatDialog,
+    // private events: EventService,
     // private telemetrySvc: TelemetryService,
     private snackbar: MatSnackBar,
     private route: ActivatedRoute,

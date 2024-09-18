@@ -25,9 +25,9 @@ export class AssignListPopupComponent implements OnInit {
   currentUser: any
 
   constructor(private fb: FormBuilder,
-    private requestService: RequestServiceService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<AssignListPopupComponent>,
+              private requestService: RequestServiceService,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              public dialogRef: MatDialogRef<AssignListPopupComponent>,
   ) {
     this.requestForm = this.fb.group({
       assignee: new FormControl('', Validators.required),
@@ -118,7 +118,7 @@ export class AssignListPopupComponent implements OnInit {
           this.dialogRef.close({ data: 'confirmed' })
         }
 
-      }, (error: any) => {
+      },                                                 (error: any) => {
         this.dialogRef.close({ error })
 
       }
