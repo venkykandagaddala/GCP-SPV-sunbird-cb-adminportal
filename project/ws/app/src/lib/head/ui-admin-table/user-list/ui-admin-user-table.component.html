@@ -54,7 +54,6 @@
         <div class="search">
 
         </div>
-
         <mat-table #table matSort [ngStyle]="{'height': bodyHeight}" [matSortActive]="tableData!.sortColumn"
             [matSortDirection]="tableData!.sortState" [dataSource]="dataSource"
             class=" example-table table1 responsiveTable">
@@ -66,8 +65,16 @@
                         [matTooltip]="(element[col.key]).split('<br />').join(', ')">
                         <div innerHTML="{{element[col.key]}}"></div>
                     </span>
-                    <span *ngIf="!col.isList" class="textclass mat-body-2">
+                    <span *ngIf="!col.isList && !col.datePipe" class="textclass mat-body-2">
                         {{element[col.key]}} {{col.isList}}
+                    </span>
+                    <span *ngIf="col.datePipe" class="textclass mat-body-2">
+                        <ng-container
+                            *ngIf="element[col.key] !== 'None' && element[col.key] !== null && element[col.key] !== undefined;else notValidDate">{{element[col.key]
+                            | date: 'MMM dd, yyyy'}}</ng-container>
+                        <ng-template #notValidDate>
+                            NA
+                        </ng-template>
                     </span>
                 </mat-cell>
             </ng-container>

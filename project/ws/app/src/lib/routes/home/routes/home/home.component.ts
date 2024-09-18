@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('stickyMenu', { static: true }) menuElement!: ElementRef
   elementPosition: any
   sticky = false
-  containerCustomCls: boolean = false
+  containerCustomCls = false
   // department: any = {}
   // departmentName = ''
   private defaultSideNavBarOpenedSubscription: any
@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         // for KCM mapping page
-        let urlData = _.get(this.activeRoute, 'snapshot._routerState.url')
+        const urlData = _.get(this.activeRoute, 'snapshot._routerState.url')
         this.containerCustomCls = urlData && urlData.includes('kcm-mapping') ? true : false
 
         if (this.containerCustomCls) {

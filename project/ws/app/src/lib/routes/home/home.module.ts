@@ -91,6 +91,9 @@ import { TaxonomyEditorModule } from '@sunbird-cb/taxonomy-editor'
 import { SingleAssignPopupComponent } from './routes/request/single-assign-popup/single-assign-popup.component'
 import { DemoVideoPopupComponent } from './components/demo-video-popup/demo-video-popup.component'
 import { PublicGcpUrlPipe } from './pipes/public-gcp-url.pipe'
+import { SurveyComponent } from './routes/survey/survey.component'
+import { SurveyListComponent } from './routes/survey/survey-list/survey-list.component'
+import { SolutionSurveyUploadComponent } from './components/solution-survey-upload/solution-survey-upload.component'
 @NgModule({
   declarations: [
     HomeComponent,
@@ -137,6 +140,9 @@ import { PublicGcpUrlPipe } from './pipes/public-gcp-url.pipe'
     SingleAssignPopupComponent,
     DemoVideoPopupComponent,
     PublicGcpUrlPipe,
+    SurveyComponent,
+    SurveyListComponent,
+    SolutionSurveyUploadComponent,
   ],
   imports: [
     CommonModule,
@@ -208,7 +214,8 @@ import { PublicGcpUrlPipe } from './pipes/public-gcp-url.pipe'
     SuccessComponent,
     AssignListPopupComponent,
     SingleAssignPopupComponent,
-    DemoVideoPopupComponent],
+    DemoVideoPopupComponent,
+    SolutionSurveyUploadComponent],
   providers: [
     // CKEditorService,
     // LoaderService,
