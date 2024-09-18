@@ -145,7 +145,7 @@ import { SolutionSurveyUploadComponent } from './components/solution-survey-uplo
     PublicGcpUrlPipe,
     SurveyComponent,
     SurveyListComponent,
-    SolutionSurveyUploadComponent
+    SolutionSurveyUploadComponent,
   ],
   imports: [
     CommonModule,

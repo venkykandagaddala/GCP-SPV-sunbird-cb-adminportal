@@ -6,7 +6,7 @@ import { Observable } from 'rxjs'
 // import { map } from 'rxjs/operators'
 const SLAG_V8 = '/apis/proxies/v8'
 const API_END_POINTS = {
-  SURVEY_LIST: `${SLAG_V8}/template/api/v1/survey/getSolutions`
+  SURVEY_LIST: `${SLAG_V8}/template/api/v1/survey/getSolutions`,
 }
 @Injectable({
   providedIn: 'root',

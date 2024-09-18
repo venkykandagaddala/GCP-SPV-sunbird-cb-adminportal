@@ -15,7 +15,6 @@ export class SolutionSurveyUploadComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public dialogData: any,
     private domSanitizer: DomSanitizer
   ) {
-    console.log('this.dialogData', this.dialogData)
     this.surveyFileUploadUrl = this.dialogData.surveyFileUploadUrl
   }
 

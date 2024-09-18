@@ -8,7 +8,7 @@ import { MatPaginator, MatSnackBar } from '@angular/material'
 import { MatSort } from '@angular/material/sort'
 import * as _ from 'lodash'
 import { ITableData, IColums, IAction } from './../interfaces/interfaces'
-//Router
+// Router
 import { ActivatedRoute } from '@angular/router'
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { EventService } from '@sunbird-cb/utils'
@@ -69,7 +69,6 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
     private cd: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public content: IContentShareData,
   ) {
-    console.log(this.matDialog, this.events)
     this.configSvc = this.route.parent && this.route.parent.snapshot.data.configService
     this.dataSource = new MatTableDataSource<any>()
     this.clicked = new EventEmitter()
@@ -100,7 +99,6 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
   }
 
   actionsClick($event: any) {
-    console.log('$event', $event)
     if ($event.action === 'ViewCount') {
       if ($event.row && $event.row.SOLUTION_ID) {
         this.copyText($event.row.SOLUTION_ID)
@@ -111,7 +109,7 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
   }
 
   copyText(val: string) {
-    let selBox = document.createElement('textarea')
+    const selBox = document.createElement('textarea')
     selBox.style.position = 'fixed'
     selBox.style.left = '0'
     selBox.style.top = '0'
