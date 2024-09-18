@@ -33,6 +33,7 @@ import { EditSectorComponent } from './routes/sectors/edit-sector/edit-sector.co
 import { AllRequestComponent } from './routes/request/all-request/all-request.component'
 import { RequestCopyDetailsComponent } from './routes/request/request-copy-details/request-copy-details.component'
 import { KCMMappingComponent } from './routes/kcm-mapping/kcm-mapping.component'
+import { SurveyComponent } from './routes/survey/survey.component'
 
 const routes: Routes = [
   {
@@ -391,6 +392,20 @@ const routes: Routes = [
           module: 'KCM-mapping',
           pageType: 'feature',
           pageKey: 'kcm',
+        },
+        resolve: {
+          configService: ConfigResolveService,
+          pageData: PageResolve,
+        },
+      },
+      {
+        path: 'survey',
+        component: SurveyComponent,
+        data: {
+          pageId: 'home/survey',
+          module: 'Survey',
+          pageType: 'feature',
+          pageKey: 'survey',
         },
         resolve: {
           configService: ConfigResolveService,
