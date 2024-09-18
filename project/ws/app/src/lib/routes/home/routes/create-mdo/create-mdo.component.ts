@@ -467,7 +467,7 @@ export class CreateMdoComponent implements OnInit {
 
               // this.router.navigate([`/app/home/directory`])
             }
-          }, (error: any) => {
+          },          (error: any) => {
             this.openSnackbar(`Something went wrong, please try again later`)
             this.disableStateCreateButton = false
             this.displayLoader = false
@@ -501,9 +501,8 @@ export class CreateMdoComponent implements OnInit {
         }
       }
     } else {
-      this.snackBar.open("Form is not valid")
+      this.snackBar.open('Form is not valid')
     }
-
 
   }
 

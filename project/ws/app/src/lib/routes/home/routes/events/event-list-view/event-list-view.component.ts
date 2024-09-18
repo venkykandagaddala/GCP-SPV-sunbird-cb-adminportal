@@ -32,7 +32,7 @@ export class EventListViewComponent implements OnInit, AfterViewInit, OnChanges,
   @Input() data?: []
   @Input() isUpload?: boolean
   @Input() isCreate?: boolean
-  @Input() currentFilter?: string = ''
+  @Input() currentFilter = ''
 
   @Input() columns?: IColums[]
   @Input() needCheckBox?: boolean
