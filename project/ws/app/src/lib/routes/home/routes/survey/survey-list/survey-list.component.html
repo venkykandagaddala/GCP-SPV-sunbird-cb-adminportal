@@ -1,0 +1,27 @@
+<div class="example-container mt-5">
+  <div class="example-loading-shade"></div>
+  <!-- <div class="example-table-container">
+    <div class="container-balanced">
+      <div class="flex flex-1 custom">
+        <div class="flex-2 right-align">
+          <button type="button" mat-button class="create-btn" *ngIf="isCreate" (click)="onCreateClick()">
+            Create new
+          </button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <ng-container *ngIf="data?.length > 0">
+    <ws-widget-ui-user-table [tableData]="tableData" [data]="data" (eOnRowClick)="onRoleClick($event)"
+      (actionsClick)="actionsClick($event)" [needAddAdmin]="false" [needCreateUser]="false">
+    </ws-widget-ui-user-table>
+  </ng-container>
+
+  <ng-container *ngIf="!(data?.length > 0)">
+    <div class="flex flex-1">
+      <mat-spinner strokeWidth="3" diameter="50"></mat-spinner>
+    </div>
+  </ng-container>
+
+
+</div>
