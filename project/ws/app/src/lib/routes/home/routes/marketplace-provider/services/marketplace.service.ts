@@ -76,13 +76,13 @@ export class MarketplaceService {
 
   uploadContent(
     data: any,
-    partnerName: string
+    partnerCode: string
   ): Observable<any> {
     const file = data.get('content') as File
     const fileName = file.name
     const newFormData = new FormData()
     newFormData.append('file', file, fileName)
-    const url = `${API_END_POINTS.UPLOAD_CONTENT}${partnerName}`
+    const url = `${API_END_POINTS.UPLOAD_CONTENT}${partnerCode}`
     return this.http.post<any>(
       url,
       newFormData

@@ -132,11 +132,11 @@ export class ContentUploadComponent implements OnInit, OnChanges {
 
   //#region (courses)
   getPublishedCoursesList() {
-    if (this.providerDetails && this.providerDetails.providerName) {
+    if (this.providerDetails && this.providerDetails.partnerCode) {
       this.showPublishedCoursesLoader = true
       this.publishedCoursesList = []
       const formBody = {
-        providerName: this.providerDetails.providerName,
+        partnerCode: this.providerDetails.partnerCode,
         size: this.publishedCoursesTablePaginationDetails.pageSize,
         page: this.publishedCoursesTablePaginationDetails.pageIndex,
         isActive: true,
@@ -166,11 +166,11 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   getUnPublishedCoursesList() {
-    if (this.providerDetails && this.providerDetails.providerName) {
+    if (this.providerDetails && this.providerDetails.partnerCode) {
       this.showUnpublishedCoursesLoader = true
       this.unPublishedCoursesList = []
       const formBody = {
-        providerName: this.providerDetails.providerName,
+        partnerCode: this.providerDetails.partnerCode,
         size: this.unPublishedCoursesTablePaginationDetails.pageSize,
         page: this.unPublishedCoursesTablePaginationDetails.pageIndex,
         isActive: false,
@@ -354,7 +354,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
         (this.contentFile as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
       )
 
-      this.marketPlaceSvc.uploadContent(formData, this.providerDetails.providerName).subscribe({
+      this.marketPlaceSvc.uploadContent(formData, this.providerDetails.partnerCode).subscribe({
         next: (res: any) => {
           if (res) {
             this.showSnackBar('File imported successfully')
@@ -403,8 +403,8 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   deletedSelectedCourses(event: any) {
     if (event && event.rows) {
       const formBody = {
-        partnerName: this.providerDetails.providerName,
-        externalId: typeof event.rows === 'object' ? [event.rows.id] : event.rows.map((item: any) => item.id),
+        partnerCode: this.providerDetails.partnerCode,
+        externalId: event.rows.length ? event.rows.map((item: any) => item.id) : [event.rows.id],
       }
       this.marketPlaceSvc.deleteUnPublishedCourses(formBody).subscribe({
         next: (res: any) => {

@@ -26,14 +26,6 @@
       <div class="w-full flex gap-6">
         <div class="flex flex-column gap-1 w-full">
           <div class="flex items-center gap-1 required">
-            <span class="lable">Organization Id</span>
-          </div>
-          <mat-form-field class="w-full provider-input-form">
-            <input formControlName="orgId" matInput placeholder="Type here">
-          </mat-form-field>
-        </div>
-        <div class="flex flex-column gap-1 w-full">
-          <div class="flex items-center gap-1 required">
             <span class="lable">Contact Partner Name</span>
           </div>
           <mat-form-field class="w-full provider-input-form">
@@ -107,9 +99,9 @@
           <span class="lable">File Upload</span>
           <mat-icon class="info-icon">info_outline</mat-icon>
         </div>
-        <div class="fileUploadCard w-full flex justify-center items-center flex-column gap-2" wsAuthDragDrop
-          (fileDropped)="onDrop($event)">
-          <ng-container *ngIf="!pdfUploaded; else fileUploaded">
+        <ng-container *ngIf="!pdfUploaded; else fileUploaded">
+          <div class="fileUploadCard w-full flex justify-center items-center flex-column gap-2" wsAuthDragDrop
+            (fileDropped)="onDrop($event)">
             <img src="/assets/icons/pdf.svg" alt="pdf icon" class="pdfImg">
             <a class="browseFileText mt-5" (click)="fileInput.click()">Browse files</a>
             <span class="fileUploadDescription">or</span>
@@ -118,28 +110,65 @@
               <span class="fileSizeText">Max file size: 100 MB</span>
               <span class="fileTypeText">Supported file types: <span class="fileType">PDF</span></span>
             </div>
-          </ng-container>
-          <ng-template #fileUploaded>
-            <div class="flex items-center my-2">
-              <img src="/assets/icons/samplePdf.svg" alt="uploaded pdf" class="samplePdf">
-              <div class="flex flex-column justify-between pdfDetails">
-                <span class="pdfName">{{fileName}}</span>
-                <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>
-                <span class="documentAttached flex items-center">
-                  <mat-icon class="greenTick">check_circle</mat-icon>
-                  Document attached
-                </span>
-              </div>
+          </div>
+          <input type="file" #fileInput class="inputfile" accept=".pdf"
+            (change)="onDrop($event.target.files[0]); fileInput.value = null" />
+        </ng-container>
+        <ng-template #fileUploaded>
+          <div class="flex items-center my-2 fileUploadedCard">
+            <img src="/assets/icons/samplePdf.svg" alt="uploaded pdf" class="samplePdf">
+            <div class="flex flex-column justify-between pdfDetails">
+              <span class="pdfName">{{fileName}}</span>
+              <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>
+              <span class="documentAttached flex items-center">
+                <mat-icon class="greenTick">check_circle</mat-icon>
+                Document attached
+              </span>
             </div>
-          </ng-template>
-        </div>
-        <input type="file" #fileInput class="inputfile" accept=".pdf"
-          (change)="onDrop($event.target.files[0]); fileInput.value = null" />
+          </div>
+        </ng-template>
       </div>
+
+      <ng-container *ngIf="providerDetails">
+        <form [formGroup]="transforamtionForm">
+          <div class=" mb-2"><span class="lable">Additional Properties</span></div>
+          <mat-accordion class="flex flex-column gap-2">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>Trasform Content</mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>
+                <json-editor [options]="contentEeditorOptions" formControlName="trasformContentJson"
+                  class="transformationEditor">
+                </json-editor>
+              </div>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>Transform Progress</mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>
+                <json-editor [options]="progressEditorOptions" formControlName="transformProgressJson"
+                  class="transformationEditor">
+                </json-editor>
+              </div>
+            </mat-expansion-panel><mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>Trasform Certificate</mat-panel-title>
+              </mat-expansion-panel-header>
+              <div>
+                <json-editor [options]="certificateEditorOptions" formControlName="trasformCertificateJson"
+                  class="transformationEditor">
+                </json-editor>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </form>
+      </ng-container>
 
       <div class="flex items-center gap-4">
         <button mat-button type="button" class="cancelBtn" (click)="navigateToProvidersDashboard()">Cancel</button>
-        <button mat-button type="submit" class="saveBtn">Save</button>
+        <button mat-button type="submit" class="saveBtn">{{providerDetails ? 'Update' : 'Save'}}</button>
       </div>
     </form>
   </mat-card-content>

@@ -14,6 +14,8 @@ import { ContentUploadComponent } from './components/content-upload/content-uplo
 import { CoursesTableComponent } from './components/courses-table/courses-table.component'
 import { CoursesPreviewComponent } from './components/courses-preview/courses-preview.component'
 import { DragDropDirective } from './directives/drag-drop.directive'
+import { PageResolve } from '@sunbird-cb/utils'
+import { NgJsonEditorModule } from 'ang-jsoneditor'
 
 const routes: Routes = [
   {
@@ -27,9 +29,12 @@ const routes: Routes = [
     component: ConfigureMarketplaceProvidersComponent,
     data: {
       pageId: 'app/home/marketplace-providers/onboard-partner',
-      module: 'MarketplaceProvider',
+      module: 'marketplace-providers',
       pageType: 'feature',
-      pageKey: 'onBoardPartner',
+      pageKey: 'marcket_place',
+    },
+    resolve: {
+      pageData: PageResolve,
     },
   },
   {
@@ -73,6 +78,7 @@ const routes: Routes = [
     MatCheckboxModule,
     MatProgressBarModule,
     MatTooltipModule,
+    NgJsonEditorModule,
   ],
   providers: [DatePipe],
   entryComponents: [

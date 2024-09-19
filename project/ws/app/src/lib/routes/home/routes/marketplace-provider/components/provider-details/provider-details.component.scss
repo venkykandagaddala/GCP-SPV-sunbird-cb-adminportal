@@ -101,6 +101,13 @@
     }
   }
 
+  .fileUploadedCard {
+    border: 1px dotted #00000029;
+    min-height: 240px;
+    border-radius: 5px;
+    width: 380px;
+  }
+
   .VisibleToLearner {
     font: 400 12px Lato;
     color: #212529;
@@ -168,6 +175,14 @@
 .addTips {
   color: #1B4CA1 !important;
   cursor: pointer;
+}
+
+:host ::ng-deep .transformationEditor {
+
+  textarea {
+    width: 100%;
+    min-height: 200px;
+  }
 }
 
 :host ::ng-deep .provider-input-form .mat-form-field-flex {

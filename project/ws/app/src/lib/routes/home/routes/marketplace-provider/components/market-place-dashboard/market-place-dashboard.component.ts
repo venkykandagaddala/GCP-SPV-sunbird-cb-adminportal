@@ -150,9 +150,10 @@ export class MarketPlaceDashboardComponent implements OnInit {
     switch (event.action) {
       case 'configure':
         const providerDetails = {
-          id: _.get(event.rows, 'id'),
-          providerName: _.get(event.rows, 'contentPartnerName'),
-          isAuthenticated: _.get(event.rows, 'isAuthenticate'),
+          id: _.get(event, 'rows.id'),
+          providerName: _.get(event, 'rows.contentPartnerName'),
+          isAuthenticated: _.get(event, 'rows.isAuthenticate', false),
+          partnerCode: _.get(event, 'rows.partnerCode', false),
         }
         this.navigateToConfiguration(event.mode, providerDetails)
         break
@@ -164,7 +165,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
 
   navigateToConfiguration(tab: string = 'provider', providerDetails?: any) {
     this.router.navigate(['/app/home/marketplace-providers/onboard-partner'],
-                         { state: { tab, providerDetails } })
+      { state: { tab, providerDetails } })
   }
 
   openConformationPopup(provider: any) {
@@ -219,7 +220,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
         if (res) {
           setTimeout(() => {
             this.getProviders()
-          },         2000)
+          }, 2000)
         } else {
           this.displayLoader = false
         }

@@ -1,20 +1,20 @@
 import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core'
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { Router } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import * as _ from 'lodash'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { HttpErrorResponse } from '@angular/common/http'
 import { MatSnackBar } from '@angular/material'
-import { LoaderService } from '../../../../services/loader.service'
 import { DatePipe } from '@angular/common'
 import { forkJoin, of } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
+import { JsonEditorOptions } from 'ang-jsoneditor'
+
 
 @Component({
   selector: 'ws-app-provider-details',
   templateUrl: './provider-details.component.html',
-  styleUrls: ['./provider-details.component.scss'],
-  providers: [LoaderService],
+  styleUrls: ['./provider-details.component.scss']
 })
 export class ProviderDetailsComponent implements OnInit, OnChanges {
   @ViewChild('thumbNailInput', { static: false }) thumbNailInput!: ElementRef<HTMLInputElement>
@@ -44,29 +44,66 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   fileUploadedDate: string | null = ''
   thumbnailResourceId = ''
   pdfResourceId = ''
+  providerConfiguration: any
+  partnerCode = ''
+  transforamtionForm!: FormGroup
+  public contentEeditorOptions: JsonEditorOptions | undefined
+  public progressEditorOptions: JsonEditorOptions | undefined
+  public certificateEditorOptions: JsonEditorOptions | undefined
+  public data: any
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private marketPlaceSvc: MarketplaceService,
     private snackBar: MatSnackBar,
-    private loaderService: LoaderService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private activateRoute: ActivatedRoute
   ) {
     this.initialization()
+    this.setJsonEditorOptions()
   }
 
-  ngOnInit() {
-    this.loaderService.changeLoad.next(true)
+  setJsonEditorOptions() {
+    this.contentEeditorOptions = this.getEditorOptions
+    this.progressEditorOptions = this.getEditorOptions
+    this.certificateEditorOptions = this.getEditorOptions
+  }
+
+  get getEditorOptions(): JsonEditorOptions {
+    const editorOptions = new JsonEditorOptions()
+    editorOptions.mode = 'text'
+    editorOptions.mainMenuBar = false // Hide the menu bar
+    editorOptions.navigationBar = false // Hide the navigation bar
+    editorOptions.statusBar = false // Hide the status bar at the bottom
+    editorOptions.enableSort = false // Disable sorting
+    editorOptions.enableTransform = false // Disable transformation
+    return editorOptions
   }
 
   initialization() {
     this.providerFormGroup = this.formBuilder.group({
-      orgId: new FormControl('', [Validators.required]),
       contentPartnerName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
       websiteUrl: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(500)]),
       providerTips: this.formBuilder.array([]),
+    })
+    this.transforamtionForm = this.formBuilder.group({
+      trasformContentJson: new FormControl(''),
+      transformProgressJson: new FormControl(''),
+      trasformCertificateJson: new FormControl('')
+    })
+  }
+
+  ngOnInit() {
+    this.getRoutesData()
+  }
+
+  getRoutesData() {
+    this.activateRoute.data.subscribe(data => {
+      if (data.pageData.data) {
+        this.providerConfiguration = data.pageData.data
+      }
     })
   }
 
@@ -92,21 +129,31 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   patchProviderDetails(providerDetails: any) {
     this.providerFormGroup.setValue({
-      orgId: _.get(providerDetails, 'orgId', ''),
-      contentPartnerName: _.get(providerDetails, 'contentPartnerName', ''),
-      websiteUrl: _.get(providerDetails, 'websiteUrl', ''),
-      description: _.get(providerDetails, 'description', ''),
+      contentPartnerName: _.get(providerDetails, 'data.contentPartnerName', ''),
+      websiteUrl: _.get(providerDetails, 'data.websiteUrl', ''),
+      description: _.get(providerDetails, 'data.description', ''),
       providerTips: [],
     })
-    if (this.providerFormGroup && this.providerFormGroup.get('orgId')) {
-      this.providerFormGroup.controls.orgId.disable()
-    }
-    this.imageUrl = _.get(providerDetails, 'link')
+    this.imageUrl = _.get(providerDetails, 'data.link')
     this.thumbNailUrl = this.imageUrl
-    this.uploadedPdfUrl = _.get(providerDetails, 'documentUrl')
-    _.get(providerDetails, 'providerTips', []).forEach((tip: string) => {
+    this.uploadedPdfUrl = _.get(providerDetails, 'data.documentUrl')
+    _.get(providerDetails, 'data.providerTips', []).forEach((tip: string) => {
       this.addTips(tip)
     })
+    this.setTransformationDetails(providerDetails)
+  }
+
+  setTransformationDetails(providerDetails: any) {
+    const providerName = _.get(providerDetails, 'data.contentPartnerName', '').toLowerCase()
+    if (providerName) {
+      const configuration = this.providerConfiguration[providerName]
+      this.partnerCode = _.get(providerDetails, 'partnerCode', _.get(configuration, 'partnerCode'))
+      this.transforamtionForm.setValue({
+        trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : _.get(configuration, 'trasformContentJson'),
+        transformProgressJson: providerDetails.transformProgressJson ? providerDetails.transformProgressJson : _.get(configuration, 'transformProgressJson'),
+        trasformCertificateJson: providerDetails.trasformCertificateJson ? providerDetails.trasformCertificateJson : _.get(configuration, 'trasformCertificateJson'),
+      })
+    }
   }
 
   get getTipsList() {
@@ -171,7 +218,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    },            'image/png')
+    }, 'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -191,6 +238,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     }
   }
 
+  //#region (submit details or update)
   submit() {
     if (this.providerFormGroup.valid && this.imageUrl) {
       this.createContentsToUpload()
@@ -265,26 +313,36 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     if (this.providerFormGroup.valid && this.imageUrl) {
       const formDetails = this.providerFormGroup.value
       const formBody: any = {
-        orgId: formDetails.orgId,
         websiteUrl: formDetails.websiteUrl,
         isActive: true,
         description: formDetails.description,
         contentPartnerName: formDetails.contentPartnerName,
         providerTips: formDetails.providerTips,
         link: this.thumbNailUrl,
-        documentUrl: this.uploadedPdfUrl,
+        documentUrl: this.uploadedPdfUrl
       }
 
-      if (this.providerDetails && this.providerDetails.id) {
-        formBody['id'] = this.providerDetails.id
+      if (this.providerDetails) {
+        if (this.providerDetails.id) {
+          formBody['id'] = this.providerDetails.id
+        }
+        if (this.partnerCode) {
+          formBody['partnerCode'] = this.partnerCode
+          const tranforamtions = this.transforamtionForm.value
+          formBody['trasformContentJson'] = tranforamtions.trasformContentJson
+          formBody['transformProgressJson'] = tranforamtions.transformProgressJson
+          formBody['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
+        }
       }
 
       this.marketPlaceSvc.createProvider(formBody).subscribe({
         next: (responce: any) => {
           if (responce) {
-            const successMsg = 'Successfully Onboarded'
-            this.showSnackBar(successMsg)
-            this.navigateToProvidersDashboard()
+            setTimeout(() => {
+              const successMsg = 'Successfully Onboarded'
+              this.showSnackBar(successMsg)
+              this.navigateToProvidersDashboard()
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -298,6 +356,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   navigateToProvidersDashboard() {
     this.router.navigateByUrl('/app/home/marketplace-providers')
   }
+  //#endregion
 
   showSnackBar(message: string) {
     this.snackBar.open(message)
