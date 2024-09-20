@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng serve --proxy-config proxy/localhost.proxy.json -o",
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider && node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng serve --proxy-config proxy/localhost.proxy.json -o",
     "dev": "npm run start:spv-dev",
     "prebuild": "npm run lint:fix",
     "build-dev": "export NODE_OPTIONS=--openssl-legacy-provider && node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build --configuration production --configuration=dev --outputPath=dist/www/en --baseHref=/ --subresource-integrity",
