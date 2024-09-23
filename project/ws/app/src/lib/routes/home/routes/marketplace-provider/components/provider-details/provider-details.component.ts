@@ -10,11 +10,10 @@ import { forkJoin, of } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
 import { JsonEditorOptions } from 'ang-jsoneditor'
 
-
 @Component({
   selector: 'ws-app-provider-details',
   templateUrl: './provider-details.component.html',
-  styleUrls: ['./provider-details.component.scss']
+  styleUrls: ['./provider-details.component.scss'],
 })
 export class ProviderDetailsComponent implements OnInit, OnChanges {
   @ViewChild('thumbNailInput', { static: false }) thumbNailInput!: ElementRef<HTMLInputElement>
@@ -91,7 +90,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     this.transforamtionForm = this.formBuilder.group({
       trasformContentJson: new FormControl(''),
       transformProgressJson: new FormControl(''),
-      trasformCertificateJson: new FormControl('')
+      trasformCertificateJson: new FormControl(''),
     })
   }
 
@@ -218,7 +217,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    }, 'image/png')
+    },            'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -319,7 +318,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         contentPartnerName: formDetails.contentPartnerName,
         providerTips: formDetails.providerTips,
         link: this.thumbNailUrl,
-        documentUrl: this.uploadedPdfUrl
+        documentUrl: this.uploadedPdfUrl,
       }
 
       if (this.providerDetails) {
@@ -342,7 +341,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            }, 1000)
+            },         1000)
           }
         },
         error: (error: HttpErrorResponse) => {
