@@ -192,7 +192,7 @@ export class CreateEventComponent implements OnInit {
       })
       this.newtimearray = timearray
       this.timeArr = alltimearray
-      this.todayTime = this.newtimearray[0].value
+      this.todayTime = _.get(this.newtimearray, '[0].value')
     }
   }
 
