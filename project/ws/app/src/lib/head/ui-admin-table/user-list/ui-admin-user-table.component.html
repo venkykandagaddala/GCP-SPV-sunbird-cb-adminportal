@@ -117,9 +117,8 @@
         <div class="no-information-found" *ngIf="dataSource.filteredData.length===0">No data found
         </div>
     </div>
-
     <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-        [showFirstLastButtons]="true">
+        [showFirstLastButtons]="showFirstLastButtonsFlag">
     </mat-paginator>
 </div>
 
