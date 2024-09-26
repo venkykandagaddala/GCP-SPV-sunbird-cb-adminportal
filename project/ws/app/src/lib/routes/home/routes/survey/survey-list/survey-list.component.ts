@@ -48,7 +48,7 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
   pageSize = 20
   pageSizeOptions = [20, 30, 40]
   finalImg: any
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator
   @ViewChild(MatSort, { static: false }) set matSort(sort: MatSort) {
     if (!this.dataSource.sort) {
       this.dataSource.sort = sort
@@ -59,6 +59,11 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
   dialogRef: any
   configSvc: any
   searchColumn!: string
+  limit = 20
+  pageIndex = 0
+  currentOffset = 0
+  pendingListRecord?: number | 0
+  totalRecords?: number | 0
 
   constructor(
     // private router: Router,
@@ -81,6 +86,10 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
       this.displayedColumns = this.tableData.columns
     }
     this.dataSource.data = this.data
+    if (this.data) {
+      this.pendingListRecord = this.data.length
+    }
+
   }
 
   ngOnChanges(data: SimpleChanges) {

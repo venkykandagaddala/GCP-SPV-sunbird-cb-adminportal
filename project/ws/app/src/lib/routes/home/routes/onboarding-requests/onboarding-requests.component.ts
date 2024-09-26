@@ -26,9 +26,9 @@ export class OnboardingRequestsComponent implements OnInit, AfterViewChecked {
   totalRecords?: number | 0
 
   constructor(private route: Router,
-              private activatedRoute: ActivatedRoute,
-              private requestService: RequestsService,
-              private cdr: ChangeDetectorRef) {
+    private activatedRoute: ActivatedRoute,
+    private requestService: RequestsService,
+    private cdr: ChangeDetectorRef) {
     // this.requestType = this.activatedRoute.snapshot.params.type
   }
 
@@ -196,7 +196,9 @@ export class OnboardingRequestsComponent implements OnInit, AfterViewChecked {
           && this.activatedRoute.snapshot.data.requestsList.data && this.requestType === 'organisation') {
           const resData = this.activatedRoute.snapshot.data.requestsList.data
           this.formatData(resData, 'pending')
+          alert(1)
         } else {
+          alert(2)
           this.getPendingList()
         }
         break

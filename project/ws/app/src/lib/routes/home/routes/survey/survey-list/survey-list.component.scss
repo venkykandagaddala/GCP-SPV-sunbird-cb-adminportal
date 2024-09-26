@@ -793,3 +793,10 @@ mat-header-row {
 .mat-header-cell {
   font-size: 14px!important;
 }
+
+::ng-deep .textclass {
+  padding-right: 24px !important;
+}
+  // ::ng-deep  mat-cell:first-of-type, mat-header-cell:first-of-type, mat-footer-cell:first-of-type {
+  //   padding: 0 24px !important
+  // }
