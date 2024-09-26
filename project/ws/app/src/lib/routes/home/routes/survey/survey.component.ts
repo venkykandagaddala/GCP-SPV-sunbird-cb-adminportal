@@ -119,7 +119,6 @@ export class SurveyComponent implements OnInit {
 
   formatData(resData: any) {
     resData.forEach((req: any) => {
-      console.log('req', req)
       if (req.START_DATE) {
         const date = ('0' + (new Date(req.START_DATE).getDate())).slice(-2)
         // const mm = new Date(val.createdOn).getMonth() + 1

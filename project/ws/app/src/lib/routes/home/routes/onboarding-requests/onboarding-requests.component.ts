@@ -26,9 +26,9 @@ export class OnboardingRequestsComponent implements OnInit, AfterViewChecked {
   totalRecords?: number | 0
 
   constructor(private route: Router,
-    private activatedRoute: ActivatedRoute,
-    private requestService: RequestsService,
-    private cdr: ChangeDetectorRef) {
+              private activatedRoute: ActivatedRoute,
+              private requestService: RequestsService,
+              private cdr: ChangeDetectorRef) {
     // this.requestType = this.activatedRoute.snapshot.params.type
   }
 
