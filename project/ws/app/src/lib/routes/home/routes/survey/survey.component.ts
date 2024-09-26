@@ -68,14 +68,14 @@ export class SurveyComponent implements OnInit {
       columns: [
         { displayName: 'Survey Id', key: 'SOLUTION_ID', defaultValue: 'NA' },
         { displayName: 'Survey Name', key: 'SOLUTION_NAME', defaultValue: 'NA' },
-        { displayName: 'Start Date', key: 'START_DATE', datePipe: true },
-        { displayName: 'End Date', key: 'END_DATE', datePipe: true },
+        { displayName: 'Start Date', key: 'START_DATE', datePipe: false },
+        { displayName: 'End Date', key: 'END_DATE', datePipe: false },
 
       ],
       needCheckBox: false,
       needHash: false,
       needUserMenus: false,
-      sortColumn: false,
+      sortColumn: true,
       sortState: 'asc',
       actionColumnName: 'Actions',
     }
@@ -106,14 +106,46 @@ export class SurveyComponent implements OnInit {
   getSurveysData() {
     const reqPayLoad = { "resourceType": "Survey" }
     this.surveyApiService.getSurveyResults(reqPayLoad).subscribe((response: any) => {
-      console.log('response', response.SolutionList)
       if (response && response.status === 200) {
         if (response && response.SolutionList && response.SolutionList.length) {
           this.data = response.SolutionList
+          this.formatData(this.data)
         } else {
           this.data = []
         }
       }
+    })
+  }
+
+  formatData(resData: any) {
+    resData.forEach((req: any) => {
+      if (req.START_DATE) {
+        const date = ('0' + (new Date(req.START_DATE).getDate())).slice(-2)
+        // const mm = new Date(val.createdOn).getMonth() + 1
+        // tslint:disable-next-line:prefer-template
+        const mm = ('0' + (new Date(req.START_DATE).getMonth() + 1)).slice(-2)
+        const year = new Date(req.START_DATE).getFullYear()
+        // tslint:disable-next-line:prefer-template
+        const createdDate = date + `-` + mm + `-` + year
+        req.START_DATE = createdDate
+      }
+
+      if (req.END_DATE) {
+        // tslint:disable-next-line:prefer-template
+        const udate = ('0' + (new Date(req.END_DATE).getDate())).slice(-2)
+        // tslint:disable-next-line:prefer-template
+        const umm = ('0' + (new Date(req.END_DATE).getMonth() + 1)).slice(-2)
+        const uyear = new Date(req.END_DATE).getFullYear()
+        // tslint:disable-next-line:prefer-template
+        const updatedDate = udate + `-` + umm + `-` + uyear
+        req.END_DATE = updatedDate
+
+        this.data.push(req)
+      }
+
+      // this.data.sort((a: any, b: any) => {
+      //   return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+      // })
     })
   }
 
