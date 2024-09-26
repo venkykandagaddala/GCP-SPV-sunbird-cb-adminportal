@@ -108,8 +108,8 @@ export class SurveyComponent implements OnInit {
     this.surveyApiService.getSurveyResults(reqPayLoad).subscribe((response: any) => {
       if (response && response.status === 200) {
         if (response && response.SolutionList && response.SolutionList.length) {
-          this.data = response.SolutionList
-          this.formatData(this.data)
+          //this.data = response.SolutionList
+          this.formatData(response.SolutionList)
         } else {
           this.data = []
         }
@@ -140,9 +140,9 @@ export class SurveyComponent implements OnInit {
         const updatedDate = udate + `-` + umm + `-` + uyear
         req.END_DATE = updatedDate
 
-        this.data.push(req)
-      }
 
+      }
+      this.data.push(req)
       // this.data.sort((a: any, b: any) => {
       //   return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
       // })
