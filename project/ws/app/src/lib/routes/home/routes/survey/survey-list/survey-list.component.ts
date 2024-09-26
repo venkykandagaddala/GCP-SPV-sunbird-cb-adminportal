@@ -48,7 +48,7 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
   pageSize = 20
   pageSizeOptions = [20, 30, 40]
   finalImg: any
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator
   @ViewChild(MatSort, { static: false }) set matSort(sort: MatSort) {
     if (!this.dataSource.sort) {
       this.dataSource.sort = sort
