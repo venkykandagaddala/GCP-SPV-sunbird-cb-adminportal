@@ -104,7 +104,6 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
       this.isReports = true
     }
 
-
   }
 
   ngOnChanges(data: SimpleChanges) {
