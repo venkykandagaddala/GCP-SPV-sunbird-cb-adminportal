@@ -103,6 +103,8 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
     if (environment.departments && environment.departments.includes(this.departmentRole) && this.reportsPath === 'reports') {
       this.isReports = true
     }
+
+
   }
 
   ngOnChanges(data: SimpleChanges) {
@@ -111,7 +113,16 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
     this.length = this.dataSource.data.length
   }
 
-  ngAfterViewInit() { }
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort
+    this.dataSource.sortingDataAccessor = (item: any, property: any) => {
+      switch (property) {
+        case 'START_DATE': return new Date(item.START_DATE).getTime() // new Date().getTime()
+        case 'END_DATE': return new Date(item.END_DATE).getTime() // new Date().getTime()
+        default: return item[property]
+      }
+    }
+  }
 
   applyFilter(filterValue: any) {
 

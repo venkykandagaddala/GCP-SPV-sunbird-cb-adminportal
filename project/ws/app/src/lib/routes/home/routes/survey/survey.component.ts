@@ -68,8 +68,8 @@ export class SurveyComponent implements OnInit {
       columns: [
         { displayName: 'Survey Id', key: 'SOLUTION_ID', defaultValue: 'NA' },
         { displayName: 'Survey Name', key: 'SOLUTION_NAME', defaultValue: 'NA' },
-        { displayName: 'Start Date', key: 'START_DATE', datePipe: false },
-        { displayName: 'End Date', key: 'END_DATE', datePipe: false },
+        { displayName: 'Start Date', key: 'START_DATE', datePipe: true },
+        { displayName: 'End Date', key: 'END_DATE', datePipe: true },
 
       ],
       needCheckBox: false,
@@ -109,7 +109,8 @@ export class SurveyComponent implements OnInit {
       if (response && response.status === 200) {
         if (response && response.SolutionList && response.SolutionList.length) {
           //this.data = response.SolutionList
-          this.formatData(response.SolutionList)
+          this.data = response.SolutionList
+          // this.formatData(response.SolutionList)
         } else {
           this.data = []
         }
