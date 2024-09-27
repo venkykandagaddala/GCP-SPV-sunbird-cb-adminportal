@@ -71,7 +71,7 @@
                     <span *ngIf="col.datePipe" class="textclass mat-body-2">
                         <ng-container
                             *ngIf="element[col.key] !== 'None' && element[col.key] !== null && element[col.key] !== undefined;else notValidDate">{{element[col.key]
-                            | date: 'dd-MM-YYYY'}}</ng-container>
+                            | slice: 0 : 10 }}</ng-container>
                         <ng-template #notValidDate>
                             NA
                         </ng-template>

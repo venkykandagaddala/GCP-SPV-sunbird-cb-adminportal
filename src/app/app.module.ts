@@ -96,7 +96,7 @@ import {
   UIORGTableModule,
   BreadcrumbsOrgModule,
   BtnPageBackModuleAdmin,
-  WIDGET_REGISTRATION_CONFIG
+  WIDGET_REGISTRATION_CONFIG,
 } from '@sunbird-cb/collection'
 // import { WidgetResolverModule } from '@sunbird-cb/resolver'
 import { LoggerService, PipeSafeSanitizerModule } from '@sunbird-cb/utils'
@@ -340,7 +340,7 @@ const getBaseHref = (platformLocation: PlatformLocation): string => {
     PublicLogoutModule,
     PipeSafeSanitizerModule,
     TourModule,
-    WidgetResolverModule.forRoot(WIDGET_REGISTRATION_CONFIG)
+    WidgetResolverModule.forRoot(WIDGET_REGISTRATION_CONFIG),
     // ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   exports: [

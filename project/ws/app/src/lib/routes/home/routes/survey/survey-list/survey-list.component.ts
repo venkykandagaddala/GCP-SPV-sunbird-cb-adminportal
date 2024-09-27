@@ -124,7 +124,7 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
     selBox.style.left = '0'
     selBox.style.top = '0'
     selBox.style.opacity = '0'
-    selBox.value = `${environment.karmYogiPath}/mligot/mlsurvey/${val}`
+    selBox.value = `${environment.karmYogiPath}/surveyml/${val}`
     document.body.appendChild(selBox)
     selBox.focus()
     selBox.select()
