@@ -31,7 +31,7 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
   @Input() data?: []
   @Input() isCreate?: boolean
   @Input() currentFilter?: ''
-
+  @Input() totalRecordsFlag: any
   @Input() columns?: IColums[]
   @Input() needCheckBox?: Boolean
   @Input() needHash?: boolean
@@ -92,8 +92,14 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
 
   }
 
-  ngOnChanges(data: SimpleChanges) {
-    this.dataSource.data = _.get(data, 'data.currentValue')
+  ngOnChanges() {
+    if (this.tableData) {
+      this.displayedColumns = this.tableData.columns
+    }
+    this.dataSource.data = this.data
+    if (this.data) {
+      this.pendingListRecord = this.data.length
+    }
     this.length = this.dataSource.data.length
     if (this.paginator) {
       this.paginator.firstPage()
