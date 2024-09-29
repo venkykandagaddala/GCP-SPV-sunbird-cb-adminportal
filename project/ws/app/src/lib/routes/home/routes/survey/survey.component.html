@@ -14,7 +14,7 @@
 
     </div>
     <mat-card-content>
-      <ng-container>
+      <ng-container *ngIf="loadSurveyList">
         <ws-app-survey-list [tableData]='tabledata' [data]='data' isCreate=true
           [currentFilter]="currentFilter"></ws-app-survey-list>
       </ng-container>
