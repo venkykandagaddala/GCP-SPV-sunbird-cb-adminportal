@@ -32,6 +32,7 @@ export class SurveyComponent implements OnInit {
   data: any = []
   currentFilter = 'upcoming'
   slugForSolutionPortal = 'validation/template/template-selection'
+  loadSurveyList = false
   constructor(
     public dialog: MatDialog,
     private activeRoute: ActivatedRoute,
@@ -104,14 +105,17 @@ export class SurveyComponent implements OnInit {
   }
 
   getSurveysData() {
+    this.loadSurveyList = false
     const reqPayLoad = { "resourceType": "Survey" }
     this.surveyApiService.getSurveyResults(reqPayLoad).subscribe((response: any) => {
       if (response && response.status === 200) {
         if (response && response.SolutionList && response.SolutionList.length) {
           //this.data = response.SolutionList
           //this.data = response.SolutionList
+
           this.formatData(response.SolutionList)
         } else {
+          this.loadSurveyList = true
           this.data = []
         }
       }
@@ -163,10 +167,12 @@ export class SurveyComponent implements OnInit {
 
       }
       this.data.push(req)
+
       // this.data.sort((a: any, b: any) => {
       //   return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
       // })
     })
+    this.loadSurveyList = true
   }
 
 }
