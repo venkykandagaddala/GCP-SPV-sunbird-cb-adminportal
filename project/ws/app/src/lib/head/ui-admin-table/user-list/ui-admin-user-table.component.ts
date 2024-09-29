@@ -31,6 +31,7 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
   @Input() isUpload?: boolean
   @Input() isCreate?: boolean
   @Input() otherInput?: any
+  @Input() totalDataRecords?: any
   @Input() currentTabData!: string
   @Input() inputDepartmentId?: string | undefined
   @Input() showFirstLastButtonsFlag = false
