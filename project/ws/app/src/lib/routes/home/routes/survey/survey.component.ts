@@ -95,10 +95,18 @@ export class SurveyComponent implements OnInit {
       panelClass: 'overflow-visable',
     })
     dialogRef.afterClosed().subscribe(() => {
-      this.getSurveysData()
+      this.loadSurveyList = false
+      setTimeout(() => {
+        this.getSurveysData()
+        this.loadSurveyList = true
+      }, 0)
+
+
+
     })
     dialogRef.backdropClick().subscribe(() => {
       // Close the dialog
+      // this.getSurveysData()
       dialogRef.close()
     })
 
@@ -106,6 +114,7 @@ export class SurveyComponent implements OnInit {
 
   getSurveysData() {
     this.loadSurveyList = false
+    this.data = []
     const reqPayLoad = { "resourceType": "Survey" }
     this.surveyApiService.getSurveyResults(reqPayLoad).subscribe((response: any) => {
       if (response && response.status === 200) {
@@ -116,7 +125,6 @@ export class SurveyComponent implements OnInit {
           this.formatData(response.SolutionList)
         } else {
           this.loadSurveyList = true
-          this.data = []
         }
       }
     })
@@ -166,15 +174,6 @@ export class SurveyComponent implements OnInit {
 
 
       }
-      this.data.push({
-        "DISPLAY_START_DATE": "29-09-2026",
-        "DISPLAY_END_DATE": "29-09-2026",
-        "END_DATE": "2026-07-01T23:59:59.000Z",
-        "SOLUTION_CREATED_DATE": "2024-09-01T05:59:46.235Z",
-        "SOLUTION_ID": "66f4f85214b7f70008dcf6bb",
-        "SOLUTION_NAME": "Temp",
-        "START_DATE": "2024-03-01T00:00:00.000Z"
-      },)
       this.data.push(req)
 
       // this.data.sort((a: any, b: any) => {
