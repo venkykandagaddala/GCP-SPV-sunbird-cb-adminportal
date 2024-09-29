@@ -14,9 +14,9 @@
 
     </div>
     <mat-card-content>
-      <ng-container *ngIf="loadSurveyList">
-        <ws-app-survey-list [tableData]='tabledata' [data]='data' isCreate=true
-          [currentFilter]="currentFilter"></ws-app-survey-list>
+      <ng-container>
+        <ws-app-survey-list [tableData]='tabledata' [data]='data' isCreate=true [currentFilter]="currentFilter"
+          [totalRecordsFlag]="data.length"></ws-app-survey-list>
       </ng-container>
     </mat-card-content>
   </mat-card>
