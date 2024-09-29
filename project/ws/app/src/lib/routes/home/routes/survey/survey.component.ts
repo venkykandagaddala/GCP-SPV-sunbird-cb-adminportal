@@ -115,6 +115,7 @@ export class SurveyComponent implements OnInit {
 
           this.formatData(response.SolutionList)
         } else {
+          this.loadSurveyList = true
           this.data = []
         }
       }
@@ -166,11 +167,12 @@ export class SurveyComponent implements OnInit {
 
       }
       this.data.push(req)
-      this.loadSurveyList = true
+
       // this.data.sort((a: any, b: any) => {
       //   return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
       // })
     })
+    this.loadSurveyList = true
   }
 
 }
