@@ -1,11 +1,13 @@
 <h1 mat-dialog-title style="font-weight: 600;
-    font-size: 20px; font-family: Montserrat;">Reason for rejection</h1><!-- //NOSONAR -->
+    font-size: 20px; font-family: Montserrat,sans-serif;">Reason for rejection</h1><!-- //NOSONAR -->
 
 <div mat-dialog-content>
-  <p style="font-family: Lato; font-weight: 700; font-size: 14px; color: RGBA(0, 0, 0, 0.87);"><!-- //NOSONAR -->Please
+  <p style="font-family: Lato,sans-serif; font-weight: 700; font-size: 14px; color: RGBA(0, 0, 0, 0.87);">
+    <!-- //NOSONAR -->Please
     crop out the
     profane
-    area</p>
+    area
+  </p>
   <div style="display:flex; justify-content: center; padding-bottom: 3%;">
     <image-cropper [imageChangedEvent]="imageChangedEvent" [imageURL]=data.text [maintainAspectRatio]="false"
       (imageCropped)="imageCropped($event)" style="width: 300px;height: 200px;">
@@ -25,14 +27,14 @@
 
 <div>
   <label id="example-radio-group-label"
-    style="font-family: Lato; font-weight: 700; font-size: 14px; color: RGBA(0, 0, 0, 0.87);"><!-- //NOSONAR -->Please
+    style="font-family: Lato,sans-serif; font-weight: 700; font-size: 14px; color: RGBA(0, 0, 0, 0.87);"><!-- //NOSONAR -->Please
     chose a reason for
     rejecting
     this content.</label>
   <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" [(ngModel)]="favoriteSeason">
 
     <mat-radio-button color="primary" class="example-radio-button" *ngFor="let season of data.seasons" [value]="season"
-      style="font-family: Lato; font-weight: 400; font-size: 14px; color: RGBA(0, 0, 0, 0.87);"><!-- //NOSONAR -->
+      style="font-family: Lato,sans-serif; font-weight: 400; font-size: 14px; color: RGBA(0, 0, 0, 0.87);"><!-- //NOSONAR -->
       {{season}}
 
     </mat-radio-button>
