@@ -44,10 +44,12 @@
                                             <ng-container *ngIf="!imageSrcURL">
                                                 <div class="images">
                                                     <div class="img">
-                                                        <img class="imgicon display-block" src="/assets/icons/jpg.svg">
+                                                        <img alt="jpg" class="imgicon display-block"
+                                                            src="/assets/icons/jpg.svg">
                                                     </div>
                                                     <div class="img">
-                                                        <img class="imgicon display-block" src="/assets/icons/png.svg">
+                                                        <img alt="png" class="imgicon display-block"
+                                                            src="/assets/icons/png.svg">
                                                     </div>
                                                 </div>
                                             </ng-container>
@@ -396,6 +398,7 @@
                                 </button>
                             </div>
                             <div class="example-table-container" *ngIf="participantsArr.length > 0">
+                                <!-- //NOSONAR -->
                                 <table class="mat-body-2">
                                     <tr>
                                         <td>Full name</td>

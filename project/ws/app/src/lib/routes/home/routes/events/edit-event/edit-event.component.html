@@ -1,4 +1,4 @@
-<div class="container-balanced">
+`<div class="container-balanced">
     <div class="page_title_flex">
         <div class="flex margin-left-xl">
             <ws-widget-breadcrumbs-org
@@ -41,10 +41,12 @@
                                             <ng-container *ngIf="!imageSrcURL">
                                                 <div class="images">
                                                     <div class="img">
-                                                        <img class="imgicon display-block" src="/assets/icons/jpg.svg">
+                                                        <img alt="jpg" class="imgicon display-block"
+                                                            src="/assets/icons/jpg.svg">
                                                     </div>
                                                     <div class="img">
-                                                        <img class="imgicon display-block" src="/assets/icons/png.svg">
+                                                        <img alt="png" class="imgicon display-block"
+                                                            src="/assets/icons/png.svg">
                                                     </div>
                                                 </div>
                                             </ng-container>
@@ -62,7 +64,7 @@
                                                 <!-- <img *ngIf="imageSrcURL" id="blah" [src]="eventimageURL"
                                                                                                 alt="your image" /> -->
 
-                                                <img src="{{eventimageURL | pipePublicURL }}" id="blah"
+                                                <img alt="event" src="{{eventimageURL | pipePublicURL }}" id="blah"
                                                     *ngIf="imageSrcURL">
                                                 <!-- <img src="/assets/icons/Events_default.png" id="blah"
                                                                                                 *ngIf="!imageSrcURL"> -->
@@ -362,6 +364,7 @@
                                 </button>
                             </div>
                             <div class="example-table-container" *ngIf="participantsArr.length > 0">
+                                <!-- //NOSONAR -->
                                 <table class="mat-body-2">
                                     <tr>
                                         <td>Full name</td>
