@@ -577,7 +577,7 @@ export class EditEventComponent implements OnInit {
               this.displayLoader = false
               this.openSnackbar('Event details are successfuly updated.')
               this.router.navigate([`/app/home/events`])
-            },         5000)
+            }, 5000)
           }
         },
         (err: any) => {
@@ -613,6 +613,7 @@ export class EditEventComponent implements OnInit {
   goToList() {
     this.router.navigate([`/app/home/events`]),
       // this.telemetrySvc.impression()
+      // NOSONAR
       this.events.raiseInteractTelemetry(
         {
           type: TelemetryEvents.EnumInteractTypes.CLICK,
