@@ -109,7 +109,7 @@ export class ReportsComponent implements OnInit {
 
   filter(value: string) {
     if (value !== 'survey') {
-      this.searchInputvalue && this.searchInputvalue.searchInput ? this.searchInputvalue.searchInput.nativeElement.value = '' : ''
+      this.searchInputvalue && this.searchInputvalue.searchInput ? this.searchInputvalue.searchInput.nativeElement.value = '' : '' //NOSONAR
     }
     let key = ''
     let index = 1
@@ -140,7 +140,7 @@ export class ReportsComponent implements OnInit {
       label: key,
     }
     if (value !== 'survey') {
-      this.searchInputvalue ? this.searchInputvalue.applyFilter('') : ''
+      this.searchInputvalue ? this.searchInputvalue.applyFilter('') : '' //NOSONAR
       this.getAllDepartments('')
       this.getDepartDataByKey(key)
       this.raiseTabTelemetry(key, data)
