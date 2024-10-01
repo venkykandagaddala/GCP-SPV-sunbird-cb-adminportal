@@ -34,7 +34,7 @@ export class UsersComponent implements OnInit {
     if (this.activatedRoute.parent && this.activatedRoute.parent.parent) {
       this.activatedRoute.parent.parent.data.subscribe(data => {
         const featureData = data.featureData.data
-        Object.keys(featureData.roleList).map(role => {
+        Object.keys(featureData.roleList).forEach(role => {
           this.rolesHash[role] = {
             about: featureData.roleList[role],
             hasRole: false,
