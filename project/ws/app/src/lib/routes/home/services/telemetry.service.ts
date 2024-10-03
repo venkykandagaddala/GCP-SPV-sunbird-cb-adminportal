@@ -87,7 +87,7 @@ export class TelemetryService {
               },
             },
             object: {
-              ...(data) && data, //NOSONAR
+              ...(data) && data, // NOSONAR
             },
           }
         )
@@ -116,7 +116,7 @@ export class TelemetryService {
             },
           },
           object: {
-            ...(data) && data, //NOSONAR
+            ...(data) && data, // NOSONAR
           },
         },
       )
