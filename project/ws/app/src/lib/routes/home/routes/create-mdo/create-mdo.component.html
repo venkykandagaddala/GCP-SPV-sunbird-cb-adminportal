@@ -158,10 +158,10 @@
                       Ministry
                     </label>
                     <mat-form-field appearance="outline" class="margin-top-s w-full">
-                      <input id="ministry" matInput tab-directive type="text"
-                        placeholder="Select your ministry"="Ministry" formControlName="ministry"
-                        (keyup)="specialCharachters($event, 'ministry')" [matAutocomplete]="ministryAutocomplete"
-                        aria-label="Ministry" #ministry aria-label="Ministry Field input" maxlength="250" />
+                      <input id="ministry" matInput tab-directive type="text" placeholder="Select your ministry"
+                        formControlName="ministry" (keyup)="specialCharachters($event, 'ministry')"
+                        [matAutocomplete]="ministryAutocomplete" aria-label="Ministry" #ministry
+                        aria-label="Ministry Field input" maxlength="250" />
                       <mat-error [hidden]="false" *ngIf="departmentForm?.controls['ministry'].errors?.required"
                         aria-label="Ministry is mandatory">
                         Ministry is mandatory
