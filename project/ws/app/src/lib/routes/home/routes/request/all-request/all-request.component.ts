@@ -113,7 +113,7 @@ export class AllRequestComponent implements OnInit {
         if (this.requestListData) {
           this.requestCount = res.totalCount
 
-          this.requestListData.map((data: any) => {
+          this.requestListData.forEach((data: any) => {
             // if (data.createdOn) {
             //   data.createdOn = this.datePipe.transform(data.createdOn, 'MMM d, y')
             // }

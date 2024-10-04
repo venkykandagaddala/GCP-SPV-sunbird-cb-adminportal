@@ -611,8 +611,9 @@ export class EditEventComponent implements OnInit {
   }
 
   goToList() {
-    this.router.navigate([`/app/home/events`]),
+    this.router.navigate([`/app/home/events`]), // NOSONAR
       // this.telemetrySvc.impression()
+
       this.events.raiseInteractTelemetry(
         {
           type: TelemetryEvents.EnumInteractTypes.CLICK,

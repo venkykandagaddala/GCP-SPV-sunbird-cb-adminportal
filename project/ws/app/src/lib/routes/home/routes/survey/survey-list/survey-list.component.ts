@@ -1,6 +1,6 @@
 import {
   Component, OnInit, Input, Output, EventEmitter, ViewChild,
-  AfterViewInit, OnChanges, SimpleChanges, Inject, ChangeDetectorRef, AfterViewChecked,
+  AfterViewInit, OnChanges, Inject, ChangeDetectorRef, AfterViewChecked,
 } from '@angular/core'
 import { SelectionModel } from '@angular/cdk/collections'
 import { MatTableDataSource } from '@angular/material/table'
@@ -31,7 +31,7 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
   @Input() data?: []
   @Input() isCreate?: boolean
   @Input() currentFilter?: ''
-
+  @Input() totalRecordsFlag: any
   @Input() columns?: IColums[]
   @Input() needCheckBox?: Boolean
   @Input() needHash?: boolean
@@ -59,6 +59,11 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
   dialogRef: any
   configSvc: any
   searchColumn!: string
+  limit = 20
+  pageIndex = 0
+  currentOffset = 0
+  pendingListRecord?: number | 0
+  totalRecords?: number | 0
 
   constructor(
     // private router: Router,
@@ -81,10 +86,20 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
       this.displayedColumns = this.tableData.columns
     }
     this.dataSource.data = this.data
+    if (this.data) {
+      this.pendingListRecord = this.data.length
+    }
+
   }
 
-  ngOnChanges(data: SimpleChanges) {
-    this.dataSource.data = _.get(data, 'data.currentValue')
+  ngOnChanges() {
+    if (this.tableData) {
+      this.displayedColumns = this.tableData.columns
+    }
+    this.dataSource.data = this.data
+    if (this.data) {
+      this.pendingListRecord = this.data.length
+    }
     this.length = this.dataSource.data.length
     if (this.paginator) {
       this.paginator.firstPage()
@@ -115,7 +130,7 @@ export class SurveyListComponent implements OnInit, AfterViewInit, OnChanges, Af
     selBox.style.left = '0'
     selBox.style.top = '0'
     selBox.style.opacity = '0'
-    selBox.value = `${environment.karmYogiPath}/mligot/mlsurvey/${val}`
+    selBox.value = `${environment.karmYogiPath}/surveyml/${val}`
     document.body.appendChild(selBox)
     selBox.focus()
     selBox.select()

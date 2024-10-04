@@ -1,5 +1,5 @@
 <div class="example-container mt-5">
-  <div class="example-loading-shade"></div>
+  <div class="example-loading-shade survey-list"></div>
   <!-- <div class="example-table-container">
     <div class="container-balanced">
       <div class="flex flex-1 custom">
@@ -12,8 +12,11 @@
     </div>
   </div> -->
   <ng-container *ngIf="data?.length > 0">
-    <ws-widget-ui-user-table [tableData]="tableData" [data]="data" (actionsClick)="actionsClick($event)"
+    <!-- <ws-widget-org-user-table-v2 [tableData]="tableData" [data]="data" (actionsClick)="actionsClick($event)"
       [needAddAdmin]="false" [needCreateUser]="false">
+    </ws-widget-org-user-table-v2> -->
+    <ws-widget-ui-user-table [tableData]="tableData" [data]="data" (actionsClick)="actionsClick($event)"
+      [needAddAdmin]="false" [showFirstLastButtonsFlag]="true" [needCreateUser]="false" [totalDataRecords]="data">
     </ws-widget-ui-user-table>
   </ng-container>
 

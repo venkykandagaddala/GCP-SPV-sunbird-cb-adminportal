@@ -151,7 +151,7 @@ export class CreateUserComponent implements OnInit {
     }
   }
   resetAllCheckedRole() {
-    this.rolesHash.map(data => {
+    this.rolesHash.forEach(data => {
       data.selected = false
     })
     this.selectedSystemRoles = []

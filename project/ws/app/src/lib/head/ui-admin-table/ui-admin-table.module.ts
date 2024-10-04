@@ -29,10 +29,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatRadioModule } from '@angular/material/radio'
 import { MatChipsModule } from '@angular/material/chips'
 import { ImageCropperModule } from 'ngx-image-cropper'
-
+import { ReverseDateFormatPipe } from './user-list/reverse-date-format.pipe'
 // import { BtnPageBackModule } from '../btn-page-back/btn-page-back.module'
 @NgModule({
-  declarations: [UIAdminUserTableComponent, UIDirectoryTableComponent, UserPopupComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, DialogTextProfanityComponent],
+  declarations: [UIAdminUserTableComponent, UIDirectoryTableComponent, UserPopupComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, DialogTextProfanityComponent, ReverseDateFormatPipe],
 
   imports: [
     AppButtonModule,
@@ -60,6 +60,6 @@ import { ImageCropperModule } from 'ngx-image-cropper'
     // MatRadioButton, MatRadioGroup
   ],
   entryComponents: [UserPopupComponent, DialogTextProfanityComponent],
-  exports: [UIAdminUserTableComponent, UIDirectoryTableComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent],
+  exports: [UIAdminUserTableComponent, UIDirectoryTableComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, ReverseDateFormatPipe],
 })
 export class UIAdminTableModule { }

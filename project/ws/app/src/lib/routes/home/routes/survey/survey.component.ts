@@ -32,6 +32,7 @@ export class SurveyComponent implements OnInit {
   data: any = []
   currentFilter = 'upcoming'
   slugForSolutionPortal = 'validation/template/template-selection'
+  loadSurveyList = false
   constructor(
     public dialog: MatDialog,
     private activeRoute: ActivatedRoute,
@@ -68,14 +69,14 @@ export class SurveyComponent implements OnInit {
       columns: [
         { displayName: 'Survey Id', key: 'SOLUTION_ID', defaultValue: 'NA' },
         { displayName: 'Survey Name', key: 'SOLUTION_NAME', defaultValue: 'NA' },
-        { displayName: 'Start Date', key: 'START_DATE', datePipe: true },
-        { displayName: 'End Date', key: 'END_DATE', datePipe: true },
+        { displayName: 'Start Date', key: 'DISPLAY_START_DATE', datePipe: true },
+        { displayName: 'End Date', key: 'DISPLAY_END_DATE', datePipe: true },
 
       ],
       needCheckBox: false,
       needHash: false,
       needUserMenus: false,
-      sortColumn: false,
+      sortColumn: true,
       sortState: 'asc',
       actionColumnName: 'Actions',
     }
@@ -83,7 +84,7 @@ export class SurveyComponent implements OnInit {
   }
 
   onCreateClick() {
-    const url = `${environment.karmYogiPath}/${this.slugForSolutionPortal}`
+    const url = `https://${environment.sitePath}/${this.slugForSolutionPortal}`
     let dialogRef = this.dialog.open(SolutionSurveyUploadComponent, {
       data: {
         surveyFileUploadUrl: url,
@@ -94,27 +95,92 @@ export class SurveyComponent implements OnInit {
       panelClass: 'overflow-visable',
     })
     dialogRef.afterClosed().subscribe(() => {
-      this.getSurveysData()
+      this.loadSurveyList = false
+      setTimeout(() => {
+        this.getSurveysData()
+        this.loadSurveyList = true
+      }, 0)
+
+
+
     })
     dialogRef.backdropClick().subscribe(() => {
       // Close the dialog
+      // this.getSurveysData()
       dialogRef.close()
     })
 
   }
 
   getSurveysData() {
+    this.loadSurveyList = false
+    this.data = []
     const reqPayLoad = { "resourceType": "Survey" }
     this.surveyApiService.getSurveyResults(reqPayLoad).subscribe((response: any) => {
-      console.log('response', response.SolutionList)
       if (response && response.status === 200) {
         if (response && response.SolutionList && response.SolutionList.length) {
-          this.data = response.SolutionList
+          //this.data = response.SolutionList
+          //this.data = response.SolutionList
+
+          this.formatData(response.SolutionList)
         } else {
-          this.data = []
+          this.loadSurveyList = true
         }
       }
     })
+  }
+
+  formatData(resData: any) {
+    resData.forEach((req: any) => {
+      if (req.START_DATE) {
+
+        // const date = ('0' + (new Date(req.START_DATE).getDate())).slice(-2)
+        // // const mm = new Date(val.createdOn).getMonth() + 1
+        // // tslint:disable-next-line:prefer-template
+        // const mm = ('0' + (new Date(req.START_DATE).getMonth() + 1)).slice(-2)
+        // const year = new Date(req.START_DATE).getFullYear()
+        // // tslint:disable-next-line:prefer-template
+        // const createdDate = date + `-` + mm + `-` + year
+        req.START_DATE_ACTUAL = JSON.parse(JSON.stringify(req.START_DATE))
+        const fsdate = req.START_DATE.toLocaleString().split('T')[0]
+        req.START_DATE = fsdate
+        if (fsdate.includes("-")) {
+          let dd = fsdate.split("-")[2]
+          let mm = fsdate.split("-")[1]
+          let yy = fsdate.split("-")[0]
+          req.DISPLAY_START_DATE = `${dd}-${mm}-${yy}}`
+        }
+
+
+
+      }
+
+      if (req.END_DATE) {
+        // tslint:disable-next-line:prefer-template
+        // const udate = ('0' + (new Date(req.END_DATE).getDate())).slice(-2)
+        // // tslint:disable-next-line:prefer-template
+        // const umm = ('0' + (new Date(req.END_DATE).getMonth() + 1)).slice(-2)
+        // const uyear = new Date(req.END_DATE).getFullYear()
+        // // tslint:disable-next-line:prefer-template
+        // const updatedDate = udate + `-` + umm + `-` + uyear
+        const fedate = req.END_DATE.toLocaleString().split('T')[0]
+        req.END_DATE = fedate
+        if (fedate.includes("-")) {
+          let dd = fedate.split("-")[2]
+          let mm = fedate.split("-")[1]
+          let yy = fedate.split("-")[0]
+          req.DISPLAY_END_DATE = `${dd}-${mm}-${yy}}`
+        }
+
+
+      }
+      this.data.push(req)
+
+      // this.data.sort((a: any, b: any) => {
+      //   return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+      // })
+    })
+    this.loadSurveyList = true
   }
 
 }
