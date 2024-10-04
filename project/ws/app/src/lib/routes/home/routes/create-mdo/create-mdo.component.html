@@ -192,7 +192,7 @@
                     </label>
                     <mat-form-field appearance="outline" class="margin-top-s w-full">
                       <input id="department" matInput tab-directive type="text" placeholder="Select your department"
-                        (keyup)="specialCharachters($event, 'department')"="department" formControlName="department"
+                        (keyup)="specialCharachters($event, 'department')" formControlName="department"
                         [matAutocomplete]="departmentAutocomplete" aria-label="Department" #department
                         aria-label="Department Field input" maxlength="250" />
                       <mat-error [hidden]="false" *ngIf="departmentForm?.controls['department'].errors?.required"
@@ -227,9 +227,9 @@
                     </label>
                     <mat-form-field appearance="outline" class="margin-top-s w-full">
                       <input id="Organisation" matInput tab-directive type="text" placeholder="Select your organisation"
-                        (keyup)="specialCharachters($event, 'organization')"="Organisation"
-                        formControlName="organisation" [matAutocomplete]="organisationAutocomplete"
-                        aria-label="Organisation" #organisation aria-label="Organisation Field input" />
+                        (keyup)="specialCharachters($event, 'organization')" formControlName="organisation"
+                        [matAutocomplete]="organisationAutocomplete" aria-label="Organisation" #organisation
+                        aria-label="Organisation Field input" />
                       <mat-error [hidden]="false" *ngIf="departmentForm?.controls['organisation'].errors?.required"
                         aria-label="Organisation is mandatory">
                         Organisation is mandatory
@@ -287,7 +287,7 @@
                     </label>
                     <mat-form-field appearance="outline" class="margin-top-s w-full">
                       <input id="ministry" matInput tab-directive type="text" placeholder="Select your state"
-                        (keyup)="specialCharachters($event, 'ministry')"="Ministry" formControlName="ministry"
+                        (keyup)="specialCharachters($event, 'ministry')" formControlName="ministry"
                         [matAutocomplete]="ministryAutocomplete" aria-label="Ministry" #ministry
                         aria-label="Ministry Field input" readonly maxlength="250" />
                       <mat-error [hidden]="false" *ngIf="departmentForm?.controls['ministry'].errors?.required"
@@ -317,7 +317,7 @@
                     </label>
                     <mat-form-field appearance="outline" class="margin-top-s w-full">
                       <input id="department" matInput tab-directive type="text" placeholder="Select your department"
-                        (keyup)="specialCharachters($event, 'department')"="department" formControlName="department"
+                        (keyup)="specialCharachters($event, 'department')" formControlName="department"
                         [matAutocomplete]="departmentAutocomplete" aria-label="Department" #department
                         aria-label="Department Field input" maxlength="250" />
                       <mat-error [hidden]="false" *ngIf="departmentForm?.controls['department'].errors?.required"
@@ -348,9 +348,9 @@
                     </label>
                     <mat-form-field appearance="outline" class="margin-top-s w-full">
                       <input id="Organisation" matInput tab-directive type="text" placeholder="Select your organisation"
-                        (keyup)="specialCharachters($event,'organization')"="Organisation"
-                        formControlName="organisation" [matAutocomplete]="organisationAutocomplete"
-                        aria-label="Organisation" #organisation aria-label="Organisation Field input" />
+                        (keyup)="specialCharachters($event,'organization')" formControlName="organisation"
+                        [matAutocomplete]="organisationAutocomplete" aria-label="Organisation" #organisation
+                        aria-label="Organisation Field input" />
                       <mat-error [hidden]="false" *ngIf="departmentForm?.controls['organisation'].errors?.required"
                         aria-label="Organisation is mandatory">
                         Organisation is mandatory
