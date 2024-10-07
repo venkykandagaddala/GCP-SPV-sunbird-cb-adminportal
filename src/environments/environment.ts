@@ -16,6 +16,7 @@ export const environment: IEnvironment = {
   spvPath: (window as { [key: string]: any })['env']['spvPath'] || '',
   connectionType: (window as { [key: string]: any })['env']['connectionType'] || '',
   KCMframeworkName: (window as { [key: string]: any })['env']['KCMframeworkName'] || '',
+  compentencyVersionKey: (window as { [key: string]: any })['env']['compentencyVersionKey'] || '',
 }
 interface IEnvironment {
   contentBucket: any
@@ -31,6 +32,7 @@ interface IEnvironment {
   spvPath?: string
   connectionType?: string,
   KCMframeworkName?: string
+  compentencyVersionKey: string
 }
 
 /*

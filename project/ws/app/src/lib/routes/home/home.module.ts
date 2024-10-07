@@ -94,6 +94,7 @@ import { PublicGcpUrlPipe } from './pipes/public-gcp-url.pipe'
 import { SurveyComponent } from './routes/survey/survey.component'
 import { SurveyListComponent } from './routes/survey/survey-list/survey-list.component'
 import { SolutionSurveyUploadComponent } from './components/solution-survey-upload/solution-survey-upload.component'
+import { CapitalizePipe } from './pipes/capitalize.pipe'
 @NgModule({
   declarations: [
     HomeComponent,
@@ -143,6 +144,7 @@ import { SolutionSurveyUploadComponent } from './components/solution-survey-uplo
     SurveyComponent,
     SurveyListComponent,
     SolutionSurveyUploadComponent,
+    CapitalizePipe,
   ],
   imports: [
     CommonModule,

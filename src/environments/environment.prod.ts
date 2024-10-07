@@ -12,4 +12,5 @@ export const environment = {
   spvPath: (window as { [key: string]: any })['env']['spvPath'] || '',
   connectionType: (window as { [key: string]: any })['env']['connectionType'] || '',
   KCMframeworkName: (window as { [key: string]: any })['env']['KCMframeworkName'] || '',
+  compentencyVersionKey: (window as { [key: string]: any })['env']['compentencyVersionKey'] || '',
 }
