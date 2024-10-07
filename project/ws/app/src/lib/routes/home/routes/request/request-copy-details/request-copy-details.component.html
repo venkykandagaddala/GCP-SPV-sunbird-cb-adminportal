@@ -109,7 +109,7 @@
                       class="flex flex-row itm-center ws-mat-accent-border margin-right-s"
                       *ngFor="let option of filteredallCompetencies" [value]="option.name"
                       (change)="compAreaSelected(option)">
-                      <span class="mat-body-2">{{option.name}}</span>
+                      <span class="mat-body-2">{{option.name | capitalize}}</span>
                     </mat-radio-button>
                   </mat-radio-group>
                 </ng-container>
@@ -121,8 +121,8 @@
                   <mat-form-field appearance="outline" class="autocomplete-form" color="primary" [floatLabel]="'never'">
                     <mat-icon matPrefix class="search-home flex items-center justify-center">search</mat-icon>
                     <mat-label>Search</mat-label>
-                    <input type="search" #searchInput class="ml-2 flex-1"="search" [placeholder]="'Search'"
-                      i18-aria-label aria-label="Search" matInput formControlName="queryThemeControl" maxlength="50"
+                    <input type="search" #searchInput class="ml-2 flex-1" [placeholder]="'Search'" i18-aria-label
+                      aria-label="Search" matInput formControlName="queryThemeControl" maxlength="50"
                       (keyup)="updateQuery('theme')" />
                   </mat-form-field>
                   <button class="margin-top-s" mat-icon-button (click)="resetSearch('theme')">
@@ -131,9 +131,9 @@
                 </div>
                 <div>
                   <span class="display-inline-block complabels mat-caption cursor-pointer"
-                    [ngClass]="{active: (seletedCompetencyTheme && option.id === seletedCompetencyTheme.id)}"
+                    [ngClass]="{active: (seletedCompetencyTheme && option.identifier === seletedCompetencyTheme.identifier)}"
                     (click)="compThemeSelected(option)"
-                    *ngFor="let option of filteredallCompetencyTheme">{{option.name}}</span>
+                    *ngFor="let option of filteredallCompetencyTheme">{{option.displayName}}</span>
                 </div>
               </div>
 
@@ -143,8 +143,8 @@
                   <mat-form-field appearance="outline" class="autocomplete-form" color="primary" [floatLabel]="'never'">
                     <mat-icon matPrefix class="search-home flex items-center justify-center">search</mat-icon>
                     <mat-label>Search</mat-label>
-                    <input type="search" #searchInput class="ml-2 flex-1"="search" [placeholder]="'Search'"
-                      i18-aria-label aria-label="Search" matInput formControlName="querySubThemeControl" maxlength="50"
+                    <input type="search" #searchInput class="ml-2 flex-1" [placeholder]="'Search'" i18-aria-label
+                      aria-label="Search" matInput formControlName="querySubThemeControl" maxlength="50"
                       (keyup)="updateQuery('subtheme')" />
                   </mat-form-field>
                   <button class="margin-top-s" mat-icon-button (click)="resetSearch('subtheme')">
@@ -153,9 +153,9 @@
                 </div>
                 <div>
                   <span class="display-inline-block complabels mat-caption cursor-pointer"
-                    [ngClass]="{active: (seletedCompetencySubTheme && option.id === seletedCompetencySubTheme.id)}"
+                    [ngClass]="{active: (seletedCompetencySubTheme && option.identifier === seletedCompetencySubTheme.identifier)}"
                     (click)="compSubThemeSelected(option)"
-                    *ngFor="let option of filteredallCompetencySubtheme">{{option.name}}</span>
+                    *ngFor="let option of filteredallCompetencySubtheme">{{option.displayName}}</span>
                 </div>
               </div>
 
@@ -169,18 +169,19 @@
             </div>
             <div class="flex new-mobile">
               <div class="flex-1">
-                <div class="flex flex-1" *ngIf="requestForm.controls?.competencies_v5?.value?.length > 0">
-                  <table class="compt-table width-1-1 text-left margin-bottom-xl" cellspacing="0"><!-- //NOSONAR -->
+                <div class="flex flex-1" *ngIf="requestForm.controls[this.compentencyKey.vKey]?.value?.length > 0">
+                  <table class="compt-table width-1-1 text-left margin-bottom-xl" cellspacing="0">
                     <tr>
                       <th class="padding-xs ws-mat-black60-text mat-body-1">Area</th>
                       <th class="padding-xs ws-mat-black60-text mat-body-1">Theme</th>
                       <th class="padding-xs ws-mat-black60-text mat-body-1">Sub theme</th>
                     </tr>
-                    <tr *ngFor="let comp of requestForm.controls?.competencies_v5?.value"
+                    <tr *ngFor="let comp of requestForm.controls[this.compentencyKey.vKey]?.value"
                       [attr.disabled]="isCompetencyHide ? true : null" (click)=view(comp)>
-                      <td class="padding-xs mat-body-1 cursor-pointer">{{comp.competencyArea}}</td>
-                      <td class="padding-xs mat-body-1 cursor-pointer">{{comp.competencyTheme || comp.name}}</td>
-                      <td class="padding-xs mat-body-1 cursor-pointer">{{comp.competencySubTheme ||
+                      <td class="padding-xs mat-body-1 cursor-pointer">{{comp.competencyArea | capitalize}}</td>
+                      <td class="padding-xs mat-body-1 cursor-pointer">{{(comp.competencyTheme | capitalize) ||
+                        comp.name}}</td>
+                      <td class="padding-xs mat-body-1 cursor-pointer">{{(comp.competencySubTheme | capitalize) ||
                         comp.selectedLevelLevel}}</td>
                     </tr>
                   </table>
