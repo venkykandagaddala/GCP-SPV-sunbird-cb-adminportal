@@ -101,7 +101,7 @@
                   </label>
                   <mat-form-field appearance="outline" class="margin-top-s w-full">
                     <input id="state" matInput tab-directive type="text" placeholder="Select your state"
-                      (keyup)="specialCharachters($event, 'state')"="State" formControlName="state"
+                      (keyup)="specialCharachters($event, 'state')" formControlName="state"
                       [matAutocomplete]="stateAutocomplete" aria-label="State" #state aria-label="State Field input"
                       maxlength="250" />
                     <mat-error [hidden]="false" *ngIf="stateForm?.controls['state'].errors?.required"
