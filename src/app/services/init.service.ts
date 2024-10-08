@@ -57,7 +57,7 @@ export class InitService {
 
   constructor(
     private logger: LoggerService,
-    private configSvc: ConfigurationsService,
+    public configSvc: ConfigurationsService,
     // private authSvc: AuthKeycloakService,
     private widgetResolverService: WidgetResolverService,
     private settingsSvc: BtnSettingsService,
@@ -232,6 +232,8 @@ export class InitService {
     // TODO: set one org as default org :: use user preference
     this.configSvc.activeOrg = publicConfig.org[0]
     this.configSvc.appSetup = publicConfig.appSetup
+    this.configSvc.competency = publicConfig.competency
+
     return publicConfig
   }
 
