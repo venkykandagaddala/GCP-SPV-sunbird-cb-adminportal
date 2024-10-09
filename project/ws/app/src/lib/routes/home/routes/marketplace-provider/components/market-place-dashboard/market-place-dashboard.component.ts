@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core'
 import { ConformationPopupComponent } from '../../dialogs/conformation-popup/conformation-popup.component'
-import { MatDialog, MatSnackBar } from '@angular/material'
 import { Router } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { HttpErrorResponse } from '@angular/common/http'
 import * as _ from 'lodash'
 import { map } from 'rxjs/operators'
 import { DatePipe } from '@angular/common'
+import { MatDialog } from '@angular/material/dialog'
+import { MatSnackBar } from '@angular/material/snack-bar'
 
 @Component({
   selector: 'ws-app-market-place-dashboard',
@@ -165,7 +166,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
 
   navigateToConfiguration(tab: string = 'provider', providerDetails?: any) {
     this.router.navigate(['/app/home/marketplace-providers/onboard-partner'],
-                         { state: { tab, providerDetails } })
+      { state: { tab, providerDetails } })
   }
 
   openConformationPopup(provider: any) {
@@ -220,7 +221,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
         if (res) {
           setTimeout(() => {
             this.getProviders()
-          },         2000)
+          }, 2000)
         } else {
           this.displayLoader = false
         }
