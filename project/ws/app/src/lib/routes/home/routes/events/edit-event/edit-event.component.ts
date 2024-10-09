@@ -11,7 +11,7 @@ import { ParticipantsComponent } from '../participants/participants.component'
 import { SuccessComponent } from '../success/success.component'
 import { Router, ActivatedRoute } from '@angular/router'
 import { ConfigurationsService, EventService } from '@sunbird-cb/utils'
-import * as moment from 'moment'
+import moment from 'moment'
 /* tslint:disable */
 import _ from 'lodash'
 import { TelemetryEvents } from '../model/telemetry.event.model'

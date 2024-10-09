@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar'
 import { environment } from 'src/environments/environment'
 import { LoaderService } from '../../services/loader.service'
 import { ProfileV2UtillService } from '../../services/home-utill.service'
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator'
 @Component({
   selector: 'ws-app-users-view',
   templateUrl: './users-view.component.html',

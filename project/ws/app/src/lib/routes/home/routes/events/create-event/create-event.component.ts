@@ -11,7 +11,7 @@ import { ParticipantsComponent } from '../participants/participants.component'
 import { SuccessComponent } from '../success/success.component'
 import { Router, ActivatedRoute } from '@angular/router'
 import { ConfigurationsService, EventService } from '@sunbird-cb/utils'
-import * as moment from 'moment'
+import moment from 'moment'
 import { MomentDateAdapter } from '@angular/material-moment-adapter'
 /* tslint:disable */
 import _ from 'lodash'
