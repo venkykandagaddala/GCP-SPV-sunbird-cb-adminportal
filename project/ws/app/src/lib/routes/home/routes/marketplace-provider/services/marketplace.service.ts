@@ -4,6 +4,7 @@ import { Observable } from 'rxjs'
 
 const API_END_POINTS = {
   CREATE_CONTENTPARTNER: `/apis/proxies/v8/contentpartner/v1/create`,
+  UPDATE_CONTENTPARTNER: `/apis/proxies/v8/contentpartner/v1/update`,
   UPLOAD_THUMBNAIL: `apis/proxies/v8/storage/v1/uploadCiosIcon`,
   UPLOAD_CIOS_CONTRACT: `/apis/proxies/v8/storage/v1/uploadCiosContract`,
   GET_PROVIDERS_LIST: `/apis/proxies/v8/contentpartner/v1/search`,
@@ -28,6 +29,10 @@ export class MarketplaceService {
 
   createProvider(formBody: any) {
     return this.http.post(`${API_END_POINTS.CREATE_CONTENTPARTNER}`, formBody)
+  }
+
+  updateProvider(formBody: any) {
+    return this.http.post(`${API_END_POINTS.UPDATE_CONTENTPARTNER}`, formBody)
   }
 
   uploadThumbNail(

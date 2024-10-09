@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router'
 import * as _ from 'lodash'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { HttpErrorResponse } from '@angular/common/http'
-import { MatSnackBar } from '@angular/material'
 import { DatePipe } from '@angular/common'
 import { forkJoin, of } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
 import { JsonEditorOptions } from 'ang-jsoneditor'
+import { MatSnackBar } from '@angular/material/snack-bar'
 
 @Component({
   selector: 'ws-app-provider-details',
@@ -31,6 +31,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     helpVideoLink: 'url',
   }
   providerFormGroup!: FormGroup
+  providerDetalsBeforUpdate: any
 
   imageUrl!: string
   thumbnailFile: any
@@ -49,7 +50,6 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   public contentEeditorOptions: JsonEditorOptions | undefined
   public progressEditorOptions: JsonEditorOptions | undefined
   public certificateEditorOptions: JsonEditorOptions | undefined
-  public data: any
 
   constructor(
     private formBuilder: FormBuilder,
@@ -117,6 +117,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       this.marketPlaceSvc.getProviderDetails(this.providerDetails.id).subscribe({
         next: (responce: any) => {
           this.patchProviderDetails(responce.result)
+          this.providerDetalsBeforUpdate = responce.result
         },
         error: (error: HttpErrorResponse) => {
           const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
@@ -217,7 +218,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    },            'image/png')
+    }, 'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -295,7 +296,11 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
             this.uploadedPdfUrl = url
           }
         })
-        this.saveProviderDetails()
+        if (this.providerDetails.id) {
+          this.upDateProviderDetails()
+        } else {
+          this.saveProviderDetails()
+        }
       },
       error: (error: HttpErrorResponse) => {
         const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
@@ -304,7 +309,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     })
 
     if (resourceCreationSubscriptions.length === 0 && this.providerDetails.id) {
-      this.saveProviderDetails()
+      this.upDateProviderDetails()
     }
   }
 
@@ -341,7 +346,40 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            },         1000)
+            }, 1000)
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
+          this.showSnackBar(errmsg)
+        },
+      })
+    }
+  }
+
+  upDateProviderDetails() {
+    if (this.providerFormGroup.valid && this.imageUrl) {
+      const formDetails = this.providerFormGroup.value
+      this.providerDetalsBeforUpdate['data']['websiteUrl'] = formDetails.websiteUrl
+      this.providerDetalsBeforUpdate['data']['isActive'] = true
+      this.providerDetalsBeforUpdate['data']['description'] = formDetails.description
+      this.providerDetalsBeforUpdate['data']['contentPartnerName'] = formDetails.contentPartnerName
+      this.providerDetalsBeforUpdate['data']['providerTips'] = formDetails.providerTips
+      this.providerDetalsBeforUpdate['data']['link'] = this.thumbNailUrl
+      this.providerDetalsBeforUpdate['data']['documentUrl'] = this.uploadedPdfUrl
+      const tranforamtions = this.transforamtionForm.value
+      this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
+      this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson
+      this.providerDetalsBeforUpdate['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
+
+      this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
+        next: (responce: any) => {
+          if (responce) {
+            setTimeout(() => {
+              const successMsg = 'Successfully Onboarded'
+              this.showSnackBar(successMsg)
+              this.navigateToProvidersDashboard()
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {

@@ -4,7 +4,6 @@ import { MarketPlaceDashboardComponent } from './components/market-place-dashboa
 import { ProviderDetailsComponent } from './components/provider-details/provider-details.component'
 import { RouterModule, Routes } from '@angular/router'
 import { ConfigureMarketplaceProvidersComponent } from './components/configure-marketplace-providers/configure-marketplace-providers.component'
-import { MatCardModule, MatButtonModule, MatIconModule, MatExpansionModule, MatTabsModule, MatInputModule, MatMenuModule, MatDialogModule, MatTableModule, MatPaginatorModule, MatTooltipModule, MatProgressSpinnerModule, MatCheckboxModule, MatProgressBarModule } from '@angular/material'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { BreadcrumbsOrgModule } from '@sunbird-cb/collection'
 import { HelpCenterGuideComponent } from './components/help-center-guide/help-center-guide.component'
@@ -16,6 +15,20 @@ import { CoursesPreviewComponent } from './components/courses-preview/courses-pr
 import { DragDropDirective } from './directives/drag-drop.directive'
 import { PageResolve } from '@sunbird-cb/utils'
 import { NgJsonEditorModule } from 'ang-jsoneditor'
+import { MatInputModule } from '@angular/material/input'
+import { MatCardModule } from '@angular/material/card'
+import { MatButtonModule } from '@angular/material/button'
+import { MatIconModule } from '@angular/material/icon'
+import { MatExpansionModule } from '@angular/material/expansion'
+import { MatTabsModule } from '@angular/material/tabs'
+import { MatMenuModule } from '@angular/material/menu'
+import { MatDialogModule } from '@angular/material/dialog'
+import { MatTooltipModule } from '@angular/material/tooltip'
+import { MatProgressBarModule } from '@angular/material/progress-bar'
+import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatPaginatorModule } from '@angular/material/paginator'
+import { MatTableModule } from '@angular/material/table'
 
 const routes: Routes = [
   {

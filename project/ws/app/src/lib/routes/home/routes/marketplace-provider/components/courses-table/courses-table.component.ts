@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core'
 import { FormControl } from '@angular/forms'
-import { MatTableDataSource, PageEvent } from '@angular/material'
+import { PageEvent } from '@angular/material/paginator'
+import { MatTableDataSource } from '@angular/material/table'
 import * as _ from 'lodash'
 import { debounceTime } from 'rxjs/operators'
 
