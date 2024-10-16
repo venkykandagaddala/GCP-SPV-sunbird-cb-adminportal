@@ -320,9 +320,10 @@ export class CreateEventComponent implements OnInit {
   }
 
   updateDate(event: any) {
-    const dd = event.value.getDate()
-    const mm = event.value.getMonth() + 1
-    const yr = event.value.getFullYear()
+    const data = new Date(event.value)
+    const dd = data.getDate()
+    const mm = data.getMonth() + 1
+    const yr = data.getFullYear()
     const selectedDate = `${dd}-${mm}-${yr}`
 
     const dd1 = new Date().getDate()
