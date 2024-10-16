@@ -230,7 +230,8 @@
                                         aria-label="Event Date label">
                                         Date
                                     </label>
-                                    <ng-container *ngIf="createEventForm.get('eventType').value === 'Karmayogi Saptah'">
+                                    <ng-container
+                                        *ngIf="createEventForm.get('eventType')?.value === 'Karmayogi Saptah'">
                                         <mat-form-field color="accent" appearance="outline">
                                             <input matInput [matDatepicker]="eventDate" formControlName="eventDate"
                                                 [min]="currentDate" [max]="maxDate" [(ngModel)]="todayDate"
@@ -253,7 +254,7 @@
                                         </mat-form-field>
                                     </ng-container>
                                     <ng-container
-                                        *ngIf="!(createEventForm.get('eventType').value === 'Karmayogi Saptah')">
+                                        *ngIf="!(createEventForm.get('eventType')?.value === 'Karmayogi Saptah')">
                                         <mat-form-field color="accent" appearance="outline">
                                             <input matInput [matDatepicker]="eventDate" formControlName="eventDate"
                                                 [max]="maxDate" [(ngModel)]="todayDate"
