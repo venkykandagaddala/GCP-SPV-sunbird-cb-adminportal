@@ -310,13 +310,15 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     }
   }
 
-  contentEvents(event: any, content: any) {
+  contentEvents(event: any) {
     switch (event.action) {
       case 'view':
-        this.navigateToPreview(content)
+        this.navigateToPreview(event.rows)
         break
       case 'delete':
         this.deletedSelectedCourses(event)
+        break
+      case 'downloadLog':
         break
     }
   }

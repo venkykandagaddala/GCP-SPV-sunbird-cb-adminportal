@@ -78,7 +78,7 @@
         <ng-container *ngIf="!showUploadedStatusLoader; else showLoader">
           <div>
             <ws-app-courses-table [tableData]="contentTableData" [data]="uploadedContentList"
-              [menuItems]="contenetMenuItems"></ws-app-courses-table>
+              [menuItems]="contenetMenuItems" (actionsClick)="contentEvents($event)"></ws-app-courses-table>
           </div>
         </ng-container>
       </div>
