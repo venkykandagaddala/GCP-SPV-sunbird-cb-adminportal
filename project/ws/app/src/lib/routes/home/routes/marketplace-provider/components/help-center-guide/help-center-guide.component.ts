@@ -19,4 +19,10 @@ export class HelpCenterGuideComponent implements OnInit {
 
   openVideoPopup() { }
 
+  callResizeEvent(_event: any) {
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'))
+    },         100)
+  }
+
 }
