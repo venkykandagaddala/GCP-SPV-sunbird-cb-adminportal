@@ -119,6 +119,7 @@ export class CreateEventComponent implements OnInit {
   disableCreateButton = false
   displayLoader = false
   reqPayload: any
+  currentDate = new Date()
 
   constructor(private snackBar: MatSnackBar, private eventsSvc: EventsService, private matDialog: MatDialog,
     // tslint:disable-next-line:align
@@ -590,5 +591,12 @@ export class CreateEventComponent implements OnInit {
   omit_special_char(event: any) {
     const k = event.charCode
     return ((k > 64 && k < 91) || (k > 96 && k < 123) || k === 8 || k === 32 || (k >= 48 && k <= 57))
+  }
+
+  resetDateField() {
+    const control = this.createEventForm.get('eventDate')
+    if (control) {
+      control.setValue(this.currentDate)
+    }
   }
 }
