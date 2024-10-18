@@ -18,6 +18,7 @@ import _ from 'lodash'
 import { TelemetryEvents } from '../../events/model/telemetry.event.model'
 import { ProfileV2UtillService } from '../services/home-utill.service'
 import { preventHtmlAndJs } from '../../../validators/prevent-html-and-js.validator'
+import { PipePublicURL } from '../../../pipes/pipe-public-URL/pipe-public-URL.pipe'
 /* tslint:enable */
 
 export const MY_FORMATS = {
@@ -137,7 +138,8 @@ export class CreateEventComponent implements OnInit {
     // tslint:disable-next-line:align
     private router: Router, private configSvc: ConfigurationsService, private changeDetectorRefs: ChangeDetectorRef,
     // tslint:disable-next-line:align
-    private activeRoute: ActivatedRoute, private events: EventService, private profileUtilSvc: ProfileV2UtillService
+    private activeRoute: ActivatedRoute, private events: EventService, private profileUtilSvc: ProfileV2UtillService,
+    private pipePublic: PipePublicURL
   ) {
 
     if (this.configSvc.userProfile) {
@@ -314,7 +316,8 @@ export class CreateEventComponent implements OnInit {
         formData.append('data', file)
 
         this.eventsSvc.uploadFile(contentID, formData).subscribe((fdata: any) => {
-          this.eventimageURL = fdata.result.artifactUrl
+          const bucketURL = this.pipePublic.transform(fdata.result.artifactUrl)
+          this.eventimageURL = bucketURL
           event.target.value = ''
         })
       })
@@ -599,7 +602,7 @@ export class CreateEventComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(() => {
       setTimeout(() => {
         this.router.navigate([`/app/home/events`])
-      },         700)
+      }, 700)
     })
   }
 
