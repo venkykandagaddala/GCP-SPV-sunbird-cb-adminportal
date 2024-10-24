@@ -1,8 +1,8 @@
 import { DirectoryService } from '../../services/directory.services'
 import { Component, OnInit, Input } from '@angular/core'
 import { UntypedFormGroup, UntypedFormControl, ValidatorFn, AbstractControl, Validators } from '@angular/forms'
-import { MatDialog } from '@angular/material/dialog'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { UserPopupComponent } from '../user-popup/user-popup'
 
 import { LoaderService } from '../../services/loader.service'

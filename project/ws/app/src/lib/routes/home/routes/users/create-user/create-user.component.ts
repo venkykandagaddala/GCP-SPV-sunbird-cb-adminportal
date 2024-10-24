@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { UntypedFormGroup, Validators, UntypedFormControl, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { ConfigurationsService } from '@sunbird-cb/utils'
 import { IUserForm } from '../users.model'
 import { CreateUserService } from './create-user.service'
