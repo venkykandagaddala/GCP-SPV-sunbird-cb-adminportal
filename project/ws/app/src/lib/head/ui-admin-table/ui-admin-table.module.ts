@@ -32,34 +32,31 @@ import { ImageCropperModule } from 'ngx-image-cropper'
 import { ReverseDateFormatPipe } from './user-list/reverse-date-format.pipe'
 // import { BtnPageBackModule } from '../btn-page-back/btn-page-back.module'
 @NgModule({
-  declarations: [UIAdminUserTableComponent, UIDirectoryTableComponent, UserPopupComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, DialogTextProfanityComponent, ReverseDateFormatPipe],
-
-  imports: [
-    AppButtonModule,
-    CommonModule,
-    MatTableModule,
-    MatTooltipModule,
-    MatSortModule,
-    MatCardModule,
-    MatIconModule,
-    MatMenuModule,
-    DefaultThumbnailModule, PipeCountTransformModule,
-    PipeDurationTransformModule, PipeHtmlTagRemovalModule,
-    PipePartialContentModule,
-    BtnChannelAnalyticsModule,
-    BtnContentFeedbackV2Module,
-    MatPaginatorModule,
-    MatDialogModule, MatButtonModule,
-    MatCheckboxModule,
-    FormsModule,
-    MatRadioModule,
-    MatInputModule, MatOptionModule, MatSelectModule, ReactiveFormsModule,
-    MatChipsModule,
-    ImageCropperModule,
-
-    // MatRadioButton, MatRadioGroup
-  ],
-  entryComponents: [UserPopupComponent, DialogTextProfanityComponent],
-  exports: [UIAdminUserTableComponent, UIDirectoryTableComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, ReverseDateFormatPipe],
+    declarations: [UIAdminUserTableComponent, UIDirectoryTableComponent, UserPopupComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, DialogTextProfanityComponent, ReverseDateFormatPipe],
+    imports: [
+        AppButtonModule,
+        CommonModule,
+        MatTableModule,
+        MatTooltipModule,
+        MatSortModule,
+        MatCardModule,
+        MatIconModule,
+        MatMenuModule,
+        DefaultThumbnailModule, PipeCountTransformModule,
+        PipeDurationTransformModule, PipeHtmlTagRemovalModule,
+        PipePartialContentModule,
+        BtnChannelAnalyticsModule,
+        BtnContentFeedbackV2Module,
+        MatPaginatorModule,
+        MatDialogModule, MatButtonModule,
+        MatCheckboxModule,
+        FormsModule,
+        MatRadioModule,
+        MatInputModule, MatOptionModule, MatSelectModule, ReactiveFormsModule,
+        MatChipsModule,
+        ImageCropperModule,
+        // MatRadioButton, MatRadioGroup
+    ],
+    exports: [UIAdminUserTableComponent, UIDirectoryTableComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, ReverseDateFormatPipe]
 })
 export class UIAdminTableModule { }
