@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog'
 import { ActivatedRoute, Router } from '@angular/router'
 import * as _ from 'lodash'
@@ -19,7 +19,7 @@ import { sectorConstants } from '../sectors-constats.model'
 export class AddSectorComponent implements OnInit {
 
   currentUser!: string | null
-  addSectorForm: FormGroup
+  addSectorForm: UntypedFormGroup
   disableCreateButton = false
   myreg = sectorConstants.nameRegex
   aspectRatio = 1 / 2
@@ -34,9 +34,9 @@ export class AddSectorComponent implements OnInit {
     private sanitizer: DomSanitizer,
   ) {
     this.currentUser = _.get(this.activatedRoute, 'snapshot.parent.data.configService.userProfile.userId')
-    this.addSectorForm = new FormGroup({
-      sectorTitle: new FormControl('', [Validators.required, Validators.pattern(this.myreg)]),
-      imgUrl: new FormControl('', [Validators.required]),
+    this.addSectorForm = new UntypedFormGroup({
+      sectorTitle: new UntypedFormControl('', [Validators.required, Validators.pattern(this.myreg)]),
+      imgUrl: new UntypedFormControl('', [Validators.required]),
     })
   }
 

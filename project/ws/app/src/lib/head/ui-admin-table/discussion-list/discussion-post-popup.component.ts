@@ -9,7 +9,7 @@ import * as _ from 'lodash'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { COMMA, ENTER } from '@angular/cdk/keycodes'
 import { MatChipInputEvent } from '@angular/material/chips'
-import { FormBuilder, FormGroup } from '@angular/forms'
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms'
 
 export interface IDialogData {
   profaneCategories: string[]
@@ -25,9 +25,9 @@ export interface IDialogData {
 })
 
 export class DialogTextProfanityComponent implements OnInit {
-  profaneGroup: FormGroup
+  profaneGroup: UntypedFormGroup
 
-  constructor(fb: FormBuilder,
+  constructor(fb: UntypedFormBuilder,
               public dialogRef: MatDialogRef<DialogTextProfanityComponent>,
               @Inject(MAT_DIALOG_DATA) public data: IDialogData,
   ) {

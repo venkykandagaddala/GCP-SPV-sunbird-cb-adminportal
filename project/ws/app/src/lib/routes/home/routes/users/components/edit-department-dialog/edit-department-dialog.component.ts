@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { FormGroup, Validators, FormControl } from '@angular/forms'
+import { UntypedFormGroup, Validators, UntypedFormControl } from '@angular/forms'
 import { TenantAdminService } from '../../../../services/tenant-admin.service'
 
 @Component({
@@ -11,7 +11,7 @@ import { TenantAdminService } from '../../../../services/tenant-admin.service'
   styleUrls: ['./edit-department-dialog.component.scss'],
 })
 export class EditDepartmentDialogComponent implements OnInit {
-  editForm: FormGroup
+  editForm: UntypedFormGroup
   uploadSaveData = false
   processing = false
   departments: any = []
@@ -25,8 +25,8 @@ export class EditDepartmentDialogComponent implements OnInit {
     private snackBar: MatSnackBar,
   ) {
     this.userDepartment = this.data.department
-    this.editForm = new FormGroup({
-      department: new FormControl('', [Validators.required]),
+    this.editForm = new UntypedFormGroup({
+      department: new UntypedFormControl('', [Validators.required]),
     })
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { ActivatedRoute, Router } from '@angular/router'
@@ -15,7 +15,7 @@ import { preventHtmlAndJs } from '../../validators/prevent-html-and-js.validator
   styleUrls: ['./requests-approval.component.scss'],
 })
 export class RequestsApprovalComponent implements OnInit {
-  positionForm!: FormGroup
+  positionForm!: UntypedFormGroup
   posData: any = {}
   requestType: any
   // breadcrumbs: any
@@ -63,15 +63,15 @@ export class RequestsApprovalComponent implements OnInit {
     //   })
     // }
 
-    this.positionForm = new FormGroup({
-      fullname: new FormControl({ value: this.posData.firstName, disabled: true }, []),
-      email: new FormControl({ value: this.posData.email, disabled: true }, []),
-      mobile: new FormControl({ value: this.posData.mobile, disabled: true }, []),
-      position: new FormControl(this.requestType === 'position' ? this.posData.position : '', this.requestType === 'position' ? [Validators.required, Validators.maxLength(500), Validators.pattern(this.customCharsPattern)] : []),
-      organisation: new FormControl(this.requestType === 'organisation' ? this.posData.organisation : '', this.requestType === 'organisation' ? [Validators.required, Validators.pattern(this.customCharsPattern)] : []),
-      domain: new FormControl(this.requestType === 'domain' ? this.posData.domain : '', this.requestType === 'domain' ? [Validators.required, Validators.pattern(this.domainPattern)] : []),
-      description: new FormControl(this.posData.description, [preventHtmlAndJs()]),
-      wfId: new FormControl(this.posData.wfId),
+    this.positionForm = new UntypedFormGroup({
+      fullname: new UntypedFormControl({ value: this.posData.firstName, disabled: true }, []),
+      email: new UntypedFormControl({ value: this.posData.email, disabled: true }, []),
+      mobile: new UntypedFormControl({ value: this.posData.mobile, disabled: true }, []),
+      position: new UntypedFormControl(this.requestType === 'position' ? this.posData.position : '', this.requestType === 'position' ? [Validators.required, Validators.maxLength(500), Validators.pattern(this.customCharsPattern)] : []),
+      organisation: new UntypedFormControl(this.requestType === 'organisation' ? this.posData.organisation : '', this.requestType === 'organisation' ? [Validators.required, Validators.pattern(this.customCharsPattern)] : []),
+      domain: new UntypedFormControl(this.requestType === 'domain' ? this.posData.domain : '', this.requestType === 'domain' ? [Validators.required, Validators.pattern(this.domainPattern)] : []),
+      description: new UntypedFormControl(this.posData.description, [preventHtmlAndJs()]),
+      wfId: new UntypedFormControl(this.posData.wfId),
     })
 
   }

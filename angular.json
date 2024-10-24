@@ -271,7 +271,6 @@
       }
     }
   },
-  "defaultProject": "spv",
   "schematics": {
     "@schematics/angular:component": {
       "style": "scss"

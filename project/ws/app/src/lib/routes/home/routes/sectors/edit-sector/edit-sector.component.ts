@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ConfigurationsService } from '@sunbird-cb/utils'
@@ -17,11 +17,11 @@ import { sectorConstants } from '../sectors-constats.model'
 export class EditSectorComponent implements OnInit {
 
   currentUser!: string | null
-  addSectorForm: FormGroup
+  addSectorForm: UntypedFormGroup
   disableCreateButton = false
   myreg = sectorConstants.nameRegex
   isDisabled = true
-  myForm: FormGroup
+  myForm: UntypedFormGroup
   subSectors: any = []
   sectorDetails: any
   id: any
@@ -33,16 +33,16 @@ export class EditSectorComponent implements OnInit {
     public dialog: MatDialog,
     private configSvc: ConfigurationsService,
     private router: Router,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private sectorsService: SectorsService,
     private sanitizer: DomSanitizer,
     private activatedRoute: ActivatedRoute,
     private snackBar: MatSnackBar,
   ) {
     this.currentUser = this.configSvc.userProfile && this.configSvc.userProfile.userId
-    this.addSectorForm = new FormGroup({
-      sectorTitle: new FormControl({ value: '', disabled: this.isDisabled }, [Validators.required, Validators.pattern(this.myreg)]),
-      imgUrl: new FormControl('', [Validators.required]),
+    this.addSectorForm = new UntypedFormGroup({
+      sectorTitle: new UntypedFormControl({ value: '', disabled: this.isDisabled }, [Validators.required, Validators.pattern(this.myreg)]),
+      imgUrl: new UntypedFormControl('', [Validators.required]),
     })
 
     this.myForm = this.formBuilder.group({
@@ -51,7 +51,7 @@ export class EditSectorComponent implements OnInit {
   }
   // Initialize the textbox
   get textboxes() {
-    return this.myForm.get('textboxes') as FormArray
+    return this.myForm.get('textboxes') as UntypedFormArray
   }
   // Dynamically add textbox for sub sectors
   addTextbox(value: string = '') {
