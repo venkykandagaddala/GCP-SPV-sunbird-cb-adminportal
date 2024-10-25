@@ -225,7 +225,7 @@ import { PipePublicURL } from './pipes/pipe-public-URL/pipe-public-URL.pipe'
     InitResolver,
     { provide: MAT_DIALOG_DATA, useValue: {} },
     MatDatepickerModule, MatNativeDateModule,
-    ConfirmationPopupComponent, PipePublicURL
+    ConfirmationPopupComponent, PipePublicURL,
   ],
   exports: [AddThumbnailComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
