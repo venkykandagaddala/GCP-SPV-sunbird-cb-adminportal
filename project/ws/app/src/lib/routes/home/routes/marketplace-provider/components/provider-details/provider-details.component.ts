@@ -9,6 +9,7 @@ import { forkJoin, of } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
 import { JsonEditorOptions } from 'ang-jsoneditor'
 import { MatSnackBar } from '@angular/material/snack-bar'
+import { LoaderService } from '../../../../services/loader.service'
 
 @Component({
   selector: 'ws-app-provider-details',
@@ -57,7 +58,8 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     private marketPlaceSvc: MarketplaceService,
     private snackBar: MatSnackBar,
     private datePipe: DatePipe,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    private loaderService: LoaderService,
   ) {
     this.initialization()
     this.setJsonEditorOptions()
@@ -114,12 +116,15 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   getProviderDetails() {
     if (this.providerDetails && this.providerDetails.id) {
+      this.loaderService.changeLoad.next(true)
       this.marketPlaceSvc.getProviderDetails(this.providerDetails.id).subscribe({
         next: (responce: any) => {
+          this.loaderService.changeLoad.next(false)
           this.patchProviderDetails(responce.result)
           this.providerDetalsBeforUpdate = responce.result
         },
         error: (error: HttpErrorResponse) => {
+          this.loaderService.changeLoad.next(false)
           const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
           this.showSnackBar(errmsg)
         },
@@ -218,7 +223,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    }, 'image/png')
+    },            'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -247,7 +252,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   createContentsToUpload() {
     const resourceCreationSubscriptions: any = []
-
+    this.loaderService.changeLoad.next(true)
     if (this.thumbnailFile) {
       const formData = new FormData()
       formData.append(
@@ -296,19 +301,20 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
             this.uploadedPdfUrl = url
           }
         })
-        if (this.providerDetails.id) {
+        if (this.providerDetails && this.providerDetails.id) {
           this.upDateProviderDetails()
         } else {
           this.saveProviderDetails()
         }
       },
       error: (error: HttpErrorResponse) => {
+        this.loaderService.changeLoad.next(false)
         const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
         this.showSnackBar(errmsg)
       },
     })
 
-    if (resourceCreationSubscriptions.length === 0 && this.providerDetails.id) {
+    if (resourceCreationSubscriptions.length === 0 && this.providerDetails && this.providerDetails.id) {
       this.upDateProviderDetails()
     }
   }
@@ -341,15 +347,17 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
       this.marketPlaceSvc.createProvider(formBody).subscribe({
         next: (responce: any) => {
+          this.loaderService.changeLoad.next(false)
           if (responce) {
             setTimeout(() => {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            }, 1000)
+            },         1000)
           }
         },
         error: (error: HttpErrorResponse) => {
+          this.loaderService.changeLoad.next(false)
           const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
           this.showSnackBar(errmsg)
         },
@@ -374,15 +382,17 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
       this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
         next: (responce: any) => {
+          this.loaderService.changeLoad.next(false)
           if (responce) {
             setTimeout(() => {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            }, 1000)
+            },         1000)
           }
         },
         error: (error: HttpErrorResponse) => {
+          this.loaderService.changeLoad.next(false)
           const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
           this.showSnackBar(errmsg)
         },

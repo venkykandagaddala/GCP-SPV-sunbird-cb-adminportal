@@ -166,7 +166,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
 
   navigateToConfiguration(tab: string = 'provider', providerDetails?: any) {
     this.router.navigate(['/app/home/marketplace-providers/onboard-partner'],
-      { state: { tab, providerDetails } })
+                         { state: { tab, providerDetails } })
   }
 
   openConformationPopup(provider: any) {
@@ -221,7 +221,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
         if (res) {
           setTimeout(() => {
             this.getProviders()
-          }, 2000)
+          },         2000)
         } else {
           this.displayLoader = false
         }
