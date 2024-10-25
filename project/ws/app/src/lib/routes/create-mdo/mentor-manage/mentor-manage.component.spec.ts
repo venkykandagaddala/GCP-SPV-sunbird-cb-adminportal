@@ -27,10 +27,10 @@ describe('MentorManageComponent', () => {
     queryParams: of({ roleId: 'testRoleId' }),
   }
   const mockRouter: Partial<Router> = {
-    navigate: jest.fn()
+    navigate: jest.fn(),
   }
   const mockEvents: Partial<EventService> = {
-    raiseInteractTelemetry: jest.fn()
+    raiseInteractTelemetry: jest.fn(),
   }
   const mockLoaderService: Partial<LoaderService> = {
     changeLoad: new BehaviorSubject<boolean>(false),
@@ -97,15 +97,15 @@ describe('MentorManageComponent', () => {
     })
 
     it('should handle undefined userProfile gracefully', () => {
-      //arrange
+      // arrange
       component.configSvc = {
         unMappedUser: {
           profileDetails: { profileStatus: 'active' },
         },
       }
-      //act
+      // act
       component.ngOnInit()
-      //assert
+      // assert
       expect(component.currentUser).toBe('')
     })
 

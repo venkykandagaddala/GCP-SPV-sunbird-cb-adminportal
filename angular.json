@@ -37,6 +37,7 @@
               "src/styles/mat-typography.scss",
               "src/styles/styles.scss",
               "node_modules/shepherd.js/dist/css/shepherd.css",
+              "node_modules/jsoneditor/dist/jsoneditor.min.css",
               {
                 "inject": false,
                 "input": "src/themes/theme-deep-purple.scss",

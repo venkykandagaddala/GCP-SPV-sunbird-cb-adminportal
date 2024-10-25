@@ -36,12 +36,12 @@ import { HomeRoutingModule } from './home.rounting.module'
 import { HomeComponent } from './routes/home/home.component'
 import { UsersViewComponent } from './routes/users-view/users-view.component'
 import {
-  AvatarPhotoModule,
-  BtnPageBackModuleAdmin,
-  UserAutocompleteModule,
-  BreadcrumbsOrgModule,
-  UIORGTableModule,
-  ScrollspyLeftMenuModule,
+    AvatarPhotoModule,
+    BtnPageBackModuleAdmin,
+    UserAutocompleteModule,
+    BreadcrumbsOrgModule,
+    UIORGTableModule,
+    ScrollspyLeftMenuModule,
 } from '@sunbird-cb/collection'
 // TO-DO need to enable for image crop
 // import { ImageCropModule } from './routes/image-crop/image-crop.module'
@@ -210,10 +210,10 @@ import { PipePublicURL } from './pipes/pipe-public-URL/pipe-public-URL.pipe'
         InitResolver,
         { provide: MAT_DIALOG_DATA, useValue: {} },
         MatDatepickerModule, MatNativeDateModule,
-        ConfirmationPopupComponent, PipePublicURL
+        ConfirmationPopupComponent, PipePublicURL,
     ],
     exports: [AddThumbnailComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HomeModule {
 }

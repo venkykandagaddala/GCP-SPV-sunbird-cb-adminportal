@@ -4,7 +4,7 @@ import {
   Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output,
   QueryList, TemplateRef, ViewChild, ViewChildren,
 } from '@angular/core'
-import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms'
+import { UntypedFormGroup, UntypedFormControl, Validators, FormControl, FormGroup } from '@angular/forms'
 import { UsersService } from '../../../routes/home/services/users.service'
 import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips'
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
@@ -127,13 +127,13 @@ export class UserCardComponent implements OnInit, OnChanges, AfterViewChecked {
     private events: EventService,
     // private datePipe: DatePipe,
     private cdr: ChangeDetectorRef) {
-    this.updateUserDataForm = new UntypedFormGroup({
-      designation: new UntypedFormControl('', []),
-      group: new UntypedFormControl('', [Validators.required]),
-      employeeID: new UntypedFormControl('', [Validators.pattern(this.empIDPattern)]),
-      ehrmsID: new UntypedFormControl({ value: '', disabled: true }, []),
-      dob: new UntypedFormControl('', []),
-      primaryEmail: new UntypedFormControl('', [Validators.required, Validators.email, Validators.pattern(EMAIL_PATTERN)]),
+    this.updateUserDataForm = new FormGroup({
+      designation: new FormControl('', []),
+      group: new FormControl('', [Validators.required]),
+      employeeID: new FormControl('', [Validators.pattern(this.empIDPattern)]),
+      ehrmsID: new FormControl({ value: '', disabled: true }, []),
+      dob: new FormControl('', []),
+      primaryEmail: new FormControl('', [Validators.required, Validators.email, Validators.pattern(EMAIL_PATTERN)]),
       // countryCode: new FormControl('+91', []),
       mobile: new UntypedFormControl('', [Validators.required, Validators.pattern(this.phoneNumberPattern)]),
       tags: new UntypedFormControl('', [Validators.pattern(this.namePatern)]),

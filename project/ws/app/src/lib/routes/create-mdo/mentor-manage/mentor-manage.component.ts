@@ -111,7 +111,7 @@ export class MentorManageComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         this.getAllVerifiedUsers('')
         this.getMentorUsers('')
-      }, 1000)
+      },         1000)
 
     })
     // this.getNMUsers('')
