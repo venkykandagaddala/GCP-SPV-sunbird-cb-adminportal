@@ -29,6 +29,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatPaginatorModule } from '@angular/material/paginator'
 import { MatTableModule } from '@angular/material/table'
+import { LoaderService } from '../../services/loader.service'
 
 const routes: Routes = [
   {
@@ -93,7 +94,7 @@ const routes: Routes = [
     MatTooltipModule,
     NgJsonEditorModule,
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, LoaderService],
   entryComponents: [
     ConformationPopupComponent,
   ],

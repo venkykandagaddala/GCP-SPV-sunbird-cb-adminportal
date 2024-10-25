@@ -78,8 +78,8 @@ export class MentorManageComponent implements OnInit, OnDestroy {
   ) {
     this.Math = Math
     this.configSvc = this.route.parent && this.route.parent.snapshot.data.configService
-    this.currentUser = this.configSvc.userProfile && this.configSvc.userProfile.userId
-    this.currentUserStatus = this.configSvc.unMappedUser.profileDetails.profileStatus
+    this.currentUser = this.configSvc?.userProfile?.userId || ''
+    this.currentUserStatus = this.configSvc?.unMappedUser?.profileDetails?.profileStatus || ''
 
     // this.usersData = _.get(this.route, 'snapshot.data.usersList.data') || {}
     // this.filterData()

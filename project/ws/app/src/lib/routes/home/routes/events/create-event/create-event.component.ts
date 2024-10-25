@@ -18,6 +18,7 @@ import _ from 'lodash'
 import { TelemetryEvents } from '../../events/model/telemetry.event.model'
 import { ProfileV2UtillService } from '../services/home-utill.service'
 import { preventHtmlAndJs } from '../../../validators/prevent-html-and-js.validator'
+import { PipePublicURL } from '../../../pipes/pipe-public-URL/pipe-public-URL.pipe'
 /* tslint:enable */
 
 export const MY_FORMATS = {
@@ -74,18 +75,30 @@ export class CreateEventComponent implements OnInit {
   evntTypesList = ['Webinar', 'Karmayogi Talks', 'Karmayogi Saptah']
 
   timeArr = [
-    { value: '00:00' }, { value: '00:30' }, { value: '01:00' }, { value: '01:30' },
-    { value: '02:00' }, { value: '02:30' }, { value: '03:00' }, { value: '03:30' },
-    { value: '04:00' }, { value: '04:30' }, { value: '05:00' }, { value: '05:30' },
-    { value: '06:00' }, { value: '06:30' }, { value: '07:00' }, { value: '07:30' },
-    { value: '08:00' }, { value: '08:30' }, { value: '09:00' }, { value: '09:30' },
-    { value: '10:00' }, { value: '10:30' }, { value: '11:00' }, { value: '11:30' },
-    { value: '12:00' }, { value: '12:30' }, { value: '13:00' }, { value: '13:30' },
-    { value: '14:00' }, { value: '14:30' }, { value: '15:00' }, { value: '15:30' },
-    { value: '16:00' }, { value: '16:30' }, { value: '17:00' }, { value: '17:30' },
-    { value: '18:00' }, { value: '18:30' }, { value: '19:00' }, { value: '19:30' },
-    { value: '20:00' }, { value: '20:30' }, { value: '21:00' }, { value: '21:30' },
-    { value: '22:00' }, { value: '22:30' }, { value: '23:00' }, { value: '23:30' },
+    { value: '00:00' }, { value: '00:15' }, { value: '00:30' }, { value: '00:45' },
+    { value: '01:00' }, { value: '01:15' }, { value: '01:30' }, { value: '01:45' },
+    { value: '02:00' }, { value: '02:15' }, { value: '02:30' }, { value: '02:45' },
+    { value: '03:00' }, { value: '03:15' }, { value: '03:30' }, { value: '03:45' },
+    { value: '04:00' }, { value: '04:15' }, { value: '04:30' }, { value: '04:45' },
+    { value: '05:00' }, { value: '05:15' }, { value: '05:30' }, { value: '05:45' },
+    { value: '06:00' }, { value: '06:15' }, { value: '06:30' }, { value: '06:45' },
+    { value: '07:00' }, { value: '07:15' }, { value: '07:30' }, { value: '07:45' },
+    { value: '08:00' }, { value: '08:15' }, { value: '08:30' }, { value: '08:45' },
+    { value: '09:00' }, { value: '09:15' }, { value: '09:30' }, { value: '09:45' },
+    { value: '10:00' }, { value: '10:15' }, { value: '10:30' }, { value: '10:45' },
+    { value: '11:00' }, { value: '11:15' }, { value: '11:30' }, { value: '11:45' },
+    { value: '12:00' }, { value: '12:15' }, { value: '12:30' }, { value: '12:45' },
+    { value: '13:00' }, { value: '13:15' }, { value: '13:30' }, { value: '13:45' },
+    { value: '14:00' }, { value: '14:15' }, { value: '14:30' }, { value: '14:45' },
+    { value: '15:00' }, { value: '15:15' }, { value: '15:30' }, { value: '15:45' },
+    { value: '16:00' }, { value: '16:15' }, { value: '16:30' }, { value: '16:45' },
+    { value: '17:00' }, { value: '17:15' }, { value: '17:30' }, { value: '17:45' },
+    { value: '18:00' }, { value: '18:15' }, { value: '18:30' }, { value: '18:45' },
+    { value: '19:00' }, { value: '19:15' }, { value: '19:30' }, { value: '19:45' },
+    { value: '20:00' }, { value: '20:15' }, { value: '20:30' }, { value: '20:45' },
+    { value: '21:00' }, { value: '21:15' }, { value: '21:30' }, { value: '21:45' },
+    { value: '22:00' }, { value: '22:15' }, { value: '22:30' }, { value: '22:45' },
+    { value: '23:00' }, { value: '23:15' }, { value: '23:30' }, { value: '23:45' },
   ]
 
   hoursList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
@@ -119,12 +132,14 @@ export class CreateEventComponent implements OnInit {
   disableCreateButton = false
   displayLoader = false
   reqPayload: any
+  currentDate = new Date()
 
   constructor(private snackBar: MatSnackBar, private eventsSvc: EventsService, private matDialog: MatDialog,
     // tslint:disable-next-line:align
     private router: Router, private configSvc: ConfigurationsService, private changeDetectorRefs: ChangeDetectorRef,
     // tslint:disable-next-line:align
-    private activeRoute: ActivatedRoute, private events: EventService, private profileUtilSvc: ProfileV2UtillService
+    private activeRoute: ActivatedRoute, private events: EventService, private profileUtilSvc: ProfileV2UtillService,
+              private pipePublic: PipePublicURL
   ) {
 
     if (this.configSvc.userProfile) {
@@ -301,7 +316,8 @@ export class CreateEventComponent implements OnInit {
         formData.append('data', file)
 
         this.eventsSvc.uploadFile(contentID, formData).subscribe((fdata: any) => {
-          this.eventimageURL = fdata.result.artifactUrl
+          const bucketURL = this.pipePublic.transform(fdata.result.artifactUrl)
+          this.eventimageURL = bucketURL
           event.target.value = ''
         })
       })
@@ -319,9 +335,10 @@ export class CreateEventComponent implements OnInit {
   }
 
   updateDate(event: any) {
-    const dd = event.value.getDate()
-    const mm = event.value.getMonth() + 1
-    const yr = event.value.getFullYear()
+    const data = new Date(event.value)
+    const dd = data.getDate()
+    const mm = data.getMonth() + 1
+    const yr = data.getFullYear()
     const selectedDate = `${dd}-${mm}-${yr}`
 
     const dd1 = new Date().getDate()
@@ -414,8 +431,10 @@ export class CreateEventComponent implements OnInit {
 
     const createdforarray: any[] = []
     createdforarray.push(this.departmentID)
-
-    if (eventDate < todayDate) {
+    const convertDate = new Date(todayDate)
+    const userTimezoneOffset = convertDate.getTimezoneOffset() * 60000
+    const newtodayDate = new Date(convertDate.getTime() + userTimezoneOffset).getTime()
+    if (eventDate < newtodayDate) {
       const linkArry = []
       linkArry.push(this.createEventForm.controls['conferenceLink'].value)
       // form.request.event.recordedLinks = arry
@@ -583,12 +602,19 @@ export class CreateEventComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(() => {
       setTimeout(() => {
         this.router.navigate([`/app/home/events`])
-      }, 700)
+      },         700)
     })
   }
 
   omit_special_char(event: any) {
     const k = event.charCode
     return ((k > 64 && k < 91) || (k > 96 && k < 123) || k === 8 || k === 32 || (k >= 48 && k <= 57))
+  }
+
+  resetDateField() {
+    const control = this.createEventForm.get('eventDate')
+    if (control) {
+      control.setValue(this.currentDate)
+    }
   }
 }
