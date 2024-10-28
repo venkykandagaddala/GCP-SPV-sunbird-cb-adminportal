@@ -77,12 +77,12 @@ export class RequestCopyDetailsComponent implements OnInit {
   compentencyKey!: ICompentencyKeys
 
   constructor(private formBuilder: FormBuilder,
-              private requestService: RequestServiceService,
-              private activatedRouter: ActivatedRoute,
-              private snackBar: MatSnackBar,
-              private router: Router,
-              public dialog: MatDialog,
-              private initService: InitService,
+    private requestService: RequestServiceService,
+    private activatedRouter: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    public dialog: MatDialog,
+    private initService: InitService,
 
   ) {
 
@@ -590,21 +590,6 @@ export class RequestCopyDetailsComponent implements OnInit {
     if (this.demandId && this.actionBtnName === 'reassign') {
       this.requestForm.enable()
     }
-    // let providerList: any[] = []
-    // if (this.requestForm.value.providers) {
-    //   providerList = this.requestForm.value.providers.map((item: any) => ({
-    //     providerName: item.orgName,
-    //     providerId: item.id,
-    //   }))
-    // }
-    // let assigneeProvider: any
-    // if (this.requestForm.value.assignee) {
-    //   assigneeProvider = {
-    //     providerName: this.requestForm.value.assignee.orgName,
-    //     providerId: this.requestForm.value.assignee.id,
-    //   }
-    // }
-
     let competencyDataList: any[] = []
     if (this.requestForm.value[this.compentencyKey.vKey]) {
       competencyDataList = this.requestForm.value[this.compentencyKey.vKey].map((item: any) => ({
@@ -664,9 +649,9 @@ export class RequestCopyDetailsComponent implements OnInit {
           this.router.navigateByUrl('/app/home/all-request')
           this.snackBar.open('Request submitted successfully ')
         }
-      },         1000)
+      }, 1000)
     },
-                                                        (error: any) => {
+      (error: any) => {
         this.dialogRefs.close({ error })
         this.snackBar.open('Request Failed')
 

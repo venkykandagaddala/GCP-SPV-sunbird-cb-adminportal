@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar'
 import { environment } from 'src/environments/environment'
 import { LoaderService } from '../../services/loader.service'
 import { ProfileV2UtillService } from '../../services/home-utill.service'
-import { PageEvent } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator'
 @Component({
   selector: 'ws-app-users-view',
   templateUrl: './users-view.component.html',
@@ -59,7 +59,7 @@ export class UsersViewComponent implements OnInit {
   ) {
     this.Math = Math
     this.configSvc = this.route.parent && this.route.parent.snapshot.data.configService
-    this.currentUser = this.configSvc.userProfile && this.configSvc.userProfile.userId
+    this.currentUser = this.configSvc?.userProfile?.userId || ''
     this.tabsData = this.route.parent && this.route.parent.snapshot.data.pageData.data.tabs || []
     this.tabs = this.route.data.subscribe(data => {
       this.portalProfile = data.profile

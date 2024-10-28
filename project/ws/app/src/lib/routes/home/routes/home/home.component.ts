@@ -4,7 +4,7 @@ import { Router, Event, NavigationEnd, NavigationError, ActivatedRoute, Activate
 import { EventService, TelemetryService, UtilityService, ValueService } from '@sunbird-cb/utils'
 import { map } from 'rxjs/operators'
 /* tslint:disable */
-import _ from 'lodash'
+import * as _ from 'lodash'
 import { ILeftMenu, LeftMenuService } from '@sunbird-cb/collection'
 import { NsWidgetResolver } from '@sunbird-cb/resolver'
 import { Subscription } from 'rxjs'
