@@ -10,6 +10,7 @@ import { mergeMap } from 'rxjs/operators'
 import { JsonEditorOptions } from 'ang-jsoneditor'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { LoaderService } from '../../../../services/loader.service'
+import { environment } from '../../../../../../../../../../../src/environments/environment'
 
 @Component({
   selector: 'ws-app-provider-details',
@@ -223,7 +224,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    },            'image/png')
+    }, 'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -294,7 +295,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       next: responcess => {
         responcess.forEach((responce: any) => {
           const url = _.get(responce, 'result.url')
-            .replace('https://storage.googleapis.com/igot', 'https://portal.dev.karmayogibharat.net/content-store')
+            .replace('https://storage.googleapis.com/igot', `${environment.karmYogiPath}/content-store`)
           if (responce.fileType === 'thumbnail') {
             this.thumbNailUrl = url
           } else if (responce.fileType === 'ciosFile') {
@@ -353,7 +354,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            },         1000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -388,7 +389,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            },         1000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
