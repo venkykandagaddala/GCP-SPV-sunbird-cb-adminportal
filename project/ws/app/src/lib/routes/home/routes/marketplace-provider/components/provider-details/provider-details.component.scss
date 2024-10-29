@@ -230,10 +230,19 @@
 
 .pdfDetails {
   height: 93px;
+  width: 50%;
 
   .pdfName {
     font: 400 16px Lato;
     color: #000000DE;
+    width: 95%;
+    display: -webkit-box;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
   .fileUplaodedDate {
