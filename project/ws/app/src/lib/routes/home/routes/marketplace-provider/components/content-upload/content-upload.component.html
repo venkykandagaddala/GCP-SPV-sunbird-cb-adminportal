@@ -27,17 +27,16 @@
                 file.</span>
             </div>
           </div>
-          <div class="flex flex-col gap-10 items-center justify-center w-full instructions-box upload-box"
-            wsAuthDragDrop (fileDropped)="onDrop($event)" (click)="fileInput.click()">
+          <div class="flex flex-col gap-1 items-center justify-center w-full instructions-box upload-box" wsAuthDragDrop
+            (fileDropped)="onDrop($event)" (click)="fileInput.click()">
             <!-- <ng-container *ngIf="!contentFileUploaded; else fileUploaded"> -->
             <img class="file-icon" src="/assets/icons/csv.svg" alt="pdf icon">
-            <button class="import-btn" mat-button>Import</button>
-            <div class="flex flex-col gap-3 items-center">
+            <div class="flex flex-col gap-2 items-center">
               <a class="browse-file" (click)="fileInput.click()">Browse files</a>
-              <span class="or-text">of</span>
+              <span class="or-text">or</span>
               <span class="drag-file">Drag file to upload</span>
             </div>
-            <div class="flex flex-col gap-1 items-center">
+            <div class="flex flex-col gap-1 mt-1 items-center">
               <span class="file-size">Max file size: 100 MB</span>
               <span class="file-type">Supported file types: CSV, .xlsx</span>
             </div>
