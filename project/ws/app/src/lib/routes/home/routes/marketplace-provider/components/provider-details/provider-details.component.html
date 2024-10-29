@@ -86,7 +86,8 @@
                   <input [id]="'item-' + i" [formControlName]="i" matInput placeholder="Type here">
                 </mat-form-field>
               </div>
-              <button mat-button (click)="removeTipAtIndex(i)" class="removeTipBox flex justify-center items-center">
+              <button type="button" mat-button (click)="removeTipAtIndex(i)"
+                class="removeTipBox flex justify-center items-center">
                 <mat-icon class="removeIcon">close</mat-icon>
               </button>
             </div>
