@@ -38,6 +38,8 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   pageSize = 20
   pageSizeOptions = [20, 30, 40]
   isSelectedDept = true
+  showNewNoContent = false
+  openCreateNavBar = false
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator
   @ViewChild(MatSort, { static: true }) sort?: MatSort
   selection = new SelectionModel<any>(true, [])
@@ -65,7 +67,8 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   ngOnChanges(data: SimpleChanges) {
     this.tableData = null
     this.tableData = _.get(data, 'tableData.currentValue')
-    this.dataSource.data = _.get(data, 'data.currentValue')
+    this.showNewNoContent = this.tableData.showNewNoContent ? true : false
+    this.dataSource.data = _.get(data, 'data.currentValue', [])
     this.length = this.dataSource.data.length
     this.paginator.firstPage()
   }
@@ -142,7 +145,11 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
     this.raiseTelemetryForRow('row', e)
   }
   gotoCreateNew() {
-    this.router.navigate([`/app/home/${this.selectedDepartment}/create-department`, { needAddAdmin: true }])
+    if (this.selectedDepartment === 'organisation') {
+      this.openCreateNavBar = true
+    } else {
+      this.router.navigate([`/app/home/${this.selectedDepartment}/create-department`, { needAddAdmin: true }])
+    }
   }
   raiseTelemetryForRow(sub: string, e: any) {
     this.events.raiseInteractTelemetry({
@@ -160,5 +167,10 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
 
   onSearchEnter(filterValue: any) {
     this.searchByEnterKey.emit(filterValue)
+  }
+
+  buttonClickAction(event: any) {
+    this.openCreateNavBar = false
+    if (event.action === 'create') { }
   }
 }

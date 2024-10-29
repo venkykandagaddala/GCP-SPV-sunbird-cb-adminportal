@@ -1,0 +1,30 @@
+<mat-sidenav-container class="nav-container" autosize name="auth-tool-exp">
+  <mat-sidenav-content>
+    <div class="filter-overlay-12">
+      <div class="filter-12">
+        <div class="flex justify-between right-sidenav-header px-5 pt-5 pb-4">
+          <div>Create {{selectedDepartment}}</div>
+          <mat-icon class="closeIcon" (click)="closeNaveBar()">close</mat-icon>
+        </div>
+
+        <div class="px-5 pt-6">
+          <form [formGroup]="organisationForm">
+            <div class="flex flex-column gap-1 w-full">
+              <div class="flex items-center gap-1 required">
+                <span class="lable">Organisation Name</span>
+              </div>
+              <mat-form-field class="w-full organisation-input-form">
+                <input formControlName="organisationName" matInput placeholder="Add organisation name here">
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+
+        <div class="right-sidenav-footer flex items-center justify-end gap-4 items-center px-5 pt-3 pb-5">
+          <button mat-button class="cancelButton" (click)="closeNaveBar()">Cancel</button>
+          <button mat-button class="addButton" (click)="submit()">Add</button>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

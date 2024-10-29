@@ -1,0 +1,80 @@
+.nav-container {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  min-height: calc(100vh - 164px);
+}
+
+.filter-overlay-12 {
+  background: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.filter-12 {
+  height: calc(100% - 60px);
+  border: 1px solid #ccc;
+  right: 0;
+  top: 57px;
+  background: #fff;
+  z-index: 10000 !important;
+  position: fixed;
+  overflow-y: auto;
+  width: 590px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.right-sidenav-header {
+  font: 600 20px 'Montserrat';
+  color: #000000DE;
+  border-bottom: 2px solid #00000014;
+
+  .closeIcon {
+    color: #666666;
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
+
+.right-sidenav-footer {
+  border-top: 2px solid#00000014;
+  width: 550px;
+  position: fixed;
+  top: calc(100% - 72px);
+
+  .cancelButton {
+    width: 90px;
+    height: 40px;
+    border-radius: 20px;
+    border: 1px solid #1B4CA1 !important;
+    color: #1B4CA1;
+    font: 700 14px 'Lato';
+  }
+
+  .addButton {
+    width: 74px;
+    height: 40px;
+    border-radius: 20px;
+    background: #1B4CA1 !important;
+    font: 700 14px 'Lato';
+    color: #FFFFFF;
+  }
+}
+
+.lable {
+  color: #212529;
+  font: 700 14px 'Lato';
+}
+
+:host ::ng-deep .organisation-input-form .mat-form-field-flex {
+    height: 50px;
+    align-items: center;
+  }

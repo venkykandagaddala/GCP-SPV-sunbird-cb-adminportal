@@ -1,4 +1,8 @@
 <div class="example-container">
+    <ng-container *ngIf="openCreateNavBar">
+        <ws-app-create-organisation [selectedDepartment]="selectedDepartment"
+            (buttonClick)="buttonClickAction($event)"></ws-app-create-organisation>
+    </ng-container>
     <div class="example-loading-shade">
     </div>
     <div class="example-table-container">
@@ -77,8 +81,18 @@
             </mat-row>
 
         </mat-table>
-        <div class="no-information-found" *ngIf="dataSource.filteredData.length===0">No directories found
-        </div>
+        <ng-container *ngIf="dataSource.filteredData.length===0">
+            <ng-container *ngIf="showNewNoContent; else noDirectories">
+                <div class="w-full flex flex-column items-center justify-center gap-2 py-10">
+                    <img src="/assets/icons/noFile.svg" alt="no content">
+                    <span class="noContent">No Content Found</span>
+                </div>
+            </ng-container>
+            <ng-template #noDirectories>
+                <div class="no-information-found">No directories found
+                </div>
+            </ng-template>
+        </ng-container>
         <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
         </mat-paginator>
     </div>
