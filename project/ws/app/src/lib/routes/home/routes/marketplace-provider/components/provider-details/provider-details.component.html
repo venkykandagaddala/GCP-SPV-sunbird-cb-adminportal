@@ -29,7 +29,7 @@
             <span class="lable">Contact Partner Name</span>
           </div>
           <mat-form-field class="w-full provider-input-form">
-            <input formControlName="contentPartnerName" matInput placeholder="Type here">
+            <input formControlName="contentPartnerName" matInput placeholder="Type here" maxlength="70">
           </mat-form-field>
           <div class="flex justify-between items-center">
             <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
@@ -41,7 +41,7 @@
             <span class="lable">Website URL</span>
           </div>
           <mat-form-field class="w-full provider-input-form">
-            <input formControlName="websiteUrl" matInput placeholder="Type here">
+            <input formControlName="websiteUrl" matInput placeholder="Type here" maxlength="70">
           </mat-form-field>
           <div class="flex justify-between items-center">
             <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
@@ -57,7 +57,7 @@
             matTooltip="We recomment you to give desciption in 300-500 characters">info_outline</mat-icon>
         </div>
         <mat-form-field class="w-full description">
-          <textarea matInput rows="6" formControlName="description"
+          <textarea matInput rows="6" formControlName="description" maxlength="500"
             placeholder="Type the decription in fewer than 500 characters" i18n-placeholder></textarea>
         </mat-form-field>
         <div class="flex justify-between items-center">
