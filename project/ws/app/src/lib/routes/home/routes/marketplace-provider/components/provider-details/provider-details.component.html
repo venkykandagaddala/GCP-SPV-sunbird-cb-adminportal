@@ -117,10 +117,13 @@
         </ng-container>
         <ng-template #fileUploaded>
           <div class="flex items-center my-2 fileUploadedCard">
+            <mat-icon class="removePdf" matTooltip="Remove PDF" (click)="removePdf()">close</mat-icon>
             <img src="/assets/icons/samplePdf.svg" alt="uploaded pdf" class="samplePdf">
             <div class="flex flex-column justify-between pdfDetails">
               <span class="pdfName">{{fileName}}</span>
-              <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>
+              <ng-container *ngIf="fileUploadedDate">
+                <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>
+              </ng-container>
               <span class="documentAttached flex items-center">
                 <mat-icon class="greenTick">check_circle</mat-icon>
                 Document attached

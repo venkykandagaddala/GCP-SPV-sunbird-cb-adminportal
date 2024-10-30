@@ -142,11 +142,26 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     })
     this.imageUrl = _.get(providerDetails, 'data.link')
     this.thumbNailUrl = this.imageUrl
-    this.uploadedPdfUrl = _.get(providerDetails, 'data.documentUrl')
+    if (_.get(providerDetails, 'data.documentUrl')) {
+      this.uploadedPdfUrl = _.get(providerDetails, 'data.documentUrl', '')
+      this.pdfUploaded = true
+      this.fileName = this.getFileName
+    }
     _.get(providerDetails, 'data.providerTips', []).forEach((tip: string) => {
       this.addTips(tip)
     })
     this.setTransformationDetails(providerDetails)
+  }
+
+  get getFileName() {
+    let fileName = ''
+    const fileNameWithPrefix = this.uploadedPdfUrl.split('/').pop()
+    if (fileNameWithPrefix) {
+      fileName = fileNameWithPrefix.includes('_')
+        ? fileNameWithPrefix.split('_').slice(1).join('_')
+        : fileNameWithPrefix
+    }
+    return fileName
   }
 
   setTransformationDetails(providerDetails: any) {
@@ -242,6 +257,13 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       this.fileName = file.name
       this.fileUploadedDate = this.datePipe.transform(new Date(), 'dd/MM/yyyy')
     }
+  }
+
+  removePdf() {
+    this.pdfFile = null
+    this.pdfUploaded = false
+    this.fileName = ''
+    this.uploadedPdfUrl = ''
   }
 
   //#region (submit details or update)
