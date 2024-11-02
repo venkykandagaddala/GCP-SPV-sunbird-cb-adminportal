@@ -62,7 +62,7 @@
   "angularCompilerOptions": {
     "enableIvy": true,
     "fullTemplateTypeCheck": true,
-    "compilationMode": "partial",
+    "compilationMode": "full",
     "strictInjectionParameters": true
   }
 }
