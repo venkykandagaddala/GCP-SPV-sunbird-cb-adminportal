@@ -6,7 +6,7 @@ import {
 } from '@angular/core'
 import { UntypedFormGroup, UntypedFormControl, Validators, FormControl, FormGroup } from '@angular/forms'
 import { UsersService } from '../../../routes/home/services/users.service'
-import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips'
+// import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips'
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
 import { MatExpansionPanel } from '@angular/material/expansion'
 import { MatLegacyPaginator as MatPaginator, LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator'
@@ -537,7 +537,7 @@ export class UserCardComponent implements OnInit, OnChanges, AfterViewChecked {
     this.selectedtags = _.get(profileData, 'additionalProperties.tag') || []
   }
 
-  addActivity(event: MatChipInputEvent) {
+  addActivity(event: any) {
     const input = event.input
     const value = event.value as string
     // if ((value && value.trim()) && this.updateUserDataForm.valid) {
