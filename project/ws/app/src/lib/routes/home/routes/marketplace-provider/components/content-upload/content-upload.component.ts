@@ -123,6 +123,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
           name: element.fileName,
           intiatedOn: this.datePipe.transform(new Date(element.initiatedOn), 'dd MMM yyyy hh:mm a'),
           completedOn: this.datePipe.transform(new Date(element.completedOn), 'dd MMM yyyy hh:mm a'),
+          gcpfileName: element.gcpfileName
         }
         formatedList.push(formatedData)
       })
@@ -319,6 +320,9 @@ export class ContentUploadComponent implements OnInit, OnChanges {
         this.deletedSelectedCourses(event)
         break
       case 'downloadLog':
+        if (event.rows.gcpfileName) {
+          this.downloadLog(event.rows.gcpfileName)
+        }
         break
     }
   }
@@ -360,15 +364,20 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.marketPlaceSvc.uploadContent(formData, this.providerDetails.partnerCode).subscribe({
         next: (res: any) => {
           if (res) {
-            this.showSnackBar('File imported successfully')
-            this.dialogRef.close()
-            this.getContentList()
-            this.getUnPublishedCoursesList()
-            this.getPublishedCoursesList()
+            setTimeout(() => {
+              this.showSnackBar('File imported successfully')
+              this.dialogRef.close()
+              this.getContentList()
+              this.getUnPublishedCoursesList()
+              this.getPublishedCoursesList()
+            }, 10000)
           }
         },
         error: (error: HttpErrorResponse) => {
-          const errmsg = _.get(error, 'error.code', 'Some thig went wrong while uploading. Please try again')
+          let errmsg = _.get(error, 'error.code', 'Some thig went wrong while uploading. Please try again')
+          if (error && error.error && error.error.includes('unsupported file type')) {
+            errmsg = 'Uploaded file format is not supported. Please try again with a supported file format.'
+          }
           this.dialogRef.close()
           this.showSnackBar(errmsg)
         },
@@ -428,6 +437,22 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   navigateToPreview(course: any) {
     this.marketPlaceSvc.setSelectedCourse(course)
     this.router.navigateByUrl('/app/home/marketplace-providers/course-preview')
+  }
+
+  downloadLog(gcpfileName: string) {
+    this.marketPlaceSvc.downloadLogs(gcpfileName)
+      .subscribe({
+        next: (res: any) => {
+          if (res) {
+            const message = 'Logs Downloaded Successfully.'
+            this.showSnackBar(message)
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          const errmsg = _.get(error, 'error.params.errMsg', 'Some thing went wrong please try again')
+          this.showSnackBar(errmsg)
+        },
+      })
   }
 
   showSnackBar(message: string) {
