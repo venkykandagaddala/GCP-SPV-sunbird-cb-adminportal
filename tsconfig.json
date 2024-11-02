@@ -58,11 +58,5 @@
       }
     ],
     "useDefineForClassFields": false
-  },
-  "angularCompilerOptions": {
-    "enableIvy": true,
-    "fullTemplateTypeCheck": true,
-    "compilationMode": "full",
-    "strictInjectionParameters": true
   }
 }
