@@ -34,9 +34,11 @@ const routes: Routes = [
     canActivate: [EmptyRouteGuard],
     component: LoginRootComponent,
   },
-  { path: 'practice/behavioral',
+  {
+    path: 'practice/behavioral',
     pathMatch: 'full',
-    redirectTo: 'page/embed-behavioural-skills' },
+    redirectTo: 'page/embed-behavioural-skills'
+  },
   {
     path: 'app/home',
     loadChildren: () => import('./routes/route-home.module').then(u => u.RouteHomeAppModule),
@@ -320,12 +322,12 @@ const routes: Routes = [
     PageModule,
     FeaturesModule,
     RouterModule.forRoot(routes, {
-    anchorScrolling: 'enabled',
-    scrollPositionRestoration: 'top',
-    urlUpdateStrategy: 'eager',
-    onSameUrlNavigation: 'reload',
-    scrollOffset: [0, 80]
-}),
+      anchorScrolling: 'enabled',
+      scrollPositionRestoration: 'top',
+      urlUpdateStrategy: 'eager',
+      onSameUrlNavigation: 'reload',
+      scrollOffset: [0, 80]
+    }),
   ],
   exports: [RouterModule],
   providers: [ExploreDetailResolve],
