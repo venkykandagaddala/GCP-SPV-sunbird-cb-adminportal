@@ -43,8 +43,6 @@
     "@babel/preset-env": "7.25.4",
     "@project-sunbird/telemetry-sdk": "0.0.26",
     "@sunbird-cb/collection": "1.0.48-ang-13-16",
-    "@sunbird-cb/rain-dashboards": "0.4.15-ang-9-12",
-    "@sunbird-cb/resolver": "1.0.0-ang-9-12",
     "@sunbird-cb/taxonomy-editor": "0.0.0-ang-13-16",
     "@sunbird-cb/utils": "1.0.19-ang-13-16",
     "@types/file-saver": "^2.0.1",
