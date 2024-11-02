@@ -8,7 +8,7 @@ import { CompetencyViewComponent } from '../competency-view/competency-view.comp
 import { ConfirmationPopupComponent } from '../confirmation-popup/confirmation-popup.component'
 /* tslint:disable */
 import _ from 'lodash'
-import { debounceTime, distinctUntilChanged, startWith } from 'rxjs/operators'
+// import { debounceTime, distinctUntilChanged, startWith } from 'rxjs/operators'
 import { preventHtmlAndJs } from '../../../validators/prevent-html-and-js.validator'
 import { ICompentencyKeys } from '../interface/interface'
 import { environment } from '../../../../../../../../../../src/environments/environment'
@@ -77,12 +77,12 @@ export class RequestCopyDetailsComponent implements OnInit {
   compentencyKey!: ICompentencyKeys
 
   constructor(private formBuilder: UntypedFormBuilder,
-              private requestService: RequestServiceService,
-              private activatedRouter: ActivatedRoute,
-              private snackBar: MatSnackBar,
-              private router: Router,
-              public dialog: MatDialog,
-              private initService: InitService,
+    private requestService: RequestServiceService,
+    private activatedRouter: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    public dialog: MatDialog,
+    private initService: InitService,
 
   ) {
 
@@ -202,25 +202,25 @@ export class RequestCopyDetailsComponent implements OnInit {
   }
 
   valuechangeFuctions() {
-    if (this.requestForm.controls['providerText']) {
-      this.requestForm.controls['providerText'].valueChanges.pipe(
-        debounceTime(100),
-        distinctUntilChanged(),
-        startWith(''),
-      ).subscribe((newValue: any) => {
-        this.filteredRequestType = this.getHiddenOptions(newValue, this.requestTypeData)
-      })
-    }
+    // if (this.requestForm.controls['providerText']) {
+    //   this.requestForm.controls['providerText'].valueChanges.pipe(
+    //     debounceTime(100),
+    //     distinctUntilChanged(),
+    //     startWith(''),
+    //   ).subscribe((newValue: any) => {
+    //     this.filteredRequestType = this.getHiddenOptions(newValue, this.requestTypeData)
+    //   })
+    // }
 
-    if (this.requestForm.controls['assigneeText']) {
-      this.requestForm.controls['assigneeText'].valueChanges.pipe(
-        debounceTime(100),
-        distinctUntilChanged(),
-        startWith(''),
-      ).subscribe((newValue: any) => {
-        this.filteredAssigneeType = this.filterOrgValues(newValue, this.requestTypeData)
-      })
-    }
+    // if (this.requestForm.controls['assigneeText']) {
+    //   this.requestForm.controls['assigneeText'].valueChanges.pipe(
+    //     debounceTime(100),
+    //     distinctUntilChanged(),
+    //     startWith(''),
+    //   ).subscribe((newValue: any) => {
+    //     this.filteredAssigneeType = this.filterOrgValues(newValue, this.requestTypeData)
+    //   })
+    // }
 
   }
 
@@ -664,9 +664,9 @@ export class RequestCopyDetailsComponent implements OnInit {
           this.router.navigateByUrl('/app/home/all-request')
           this.snackBar.open('Request submitted successfully ')
         }
-      },         1000)
+      }, 1000)
     },
-                                                        (error: any) => {
+      (error: any) => {
         this.dialogRefs.close({ error })
         this.snackBar.open('Request Failed')
 
