@@ -14,7 +14,7 @@ const API_END_POINTS = {
   GET_FILES_LIST: `/apis/proxies/v8/ciosIntegration/v1/file/info/`,
   GET_CONTENT_LIST: `/apis/proxies/v8/ciosIntegration/v1/readAllContentFromDb`,
   DELETE_NOT_PULISHED_COURSES: 'apis/proxies/v8/ciosIntegration/v1/deleteContent',
-  DOWNLOAD_LOG: (gcpfileName: string) => `/apis/proxies/v8/storage/v1/downloadCiosLogs/${gcpfileName}`
+  DOWNLOAD_LOG: (gcpfileName: string) => `/apis/proxies/v8/storage/v1/downloadCiosLogs/${gcpfileName}`,
 }
 
 @Injectable({

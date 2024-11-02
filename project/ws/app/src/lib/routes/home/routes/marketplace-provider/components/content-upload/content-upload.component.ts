@@ -123,7 +123,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
           name: element.fileName,
           intiatedOn: this.datePipe.transform(new Date(element.initiatedOn), 'dd MMM yyyy hh:mm a'),
           completedOn: this.datePipe.transform(new Date(element.completedOn), 'dd MMM yyyy hh:mm a'),
-          gcpfileName: element.gcpfileName
+          gcpfileName: element.gcpfileName,
         }
         formatedList.push(formatedData)
       })
@@ -364,13 +364,11 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.marketPlaceSvc.uploadContent(formData, this.providerDetails.partnerCode).subscribe({
         next: (res: any) => {
           if (res) {
-            setTimeout(() => {
-              this.showSnackBar('File imported successfully')
-              this.dialogRef.close()
-              this.getContentList()
-              this.getUnPublishedCoursesList()
-              this.getPublishedCoursesList()
-            }, 10000)
+            this.showSnackBar('File imported successfully')
+            this.dialogRef.close()
+            this.getContentList()
+            this.getUnPublishedCoursesList()
+            this.getPublishedCoursesList()
           }
         },
         error: (error: HttpErrorResponse) => {
