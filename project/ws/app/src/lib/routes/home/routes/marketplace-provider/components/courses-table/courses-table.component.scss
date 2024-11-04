@@ -77,10 +77,11 @@
 }
 
 .header-info-icon {
-  color: #FFFFFF00;
+  color: #6C757D;
   font-size: 14px;
   height: 14px;
   width: 14px;
+  margin-left: 5px;
 }
 
 .authenticated {
@@ -160,6 +161,11 @@
   .disableMenu {
     opacity: 0.5;
   }
+}
+
+.table-header-text {
+  color: #0000008A !important;
+  font-size: 14px !important;
 }
 
 .coursesTableLoader {

@@ -10,6 +10,7 @@ import { mergeMap } from 'rxjs/operators'
 import { JsonEditorOptions } from 'ang-jsoneditor'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { LoaderService } from '../../../../services/loader.service'
+import { environment } from '../../../../../../../../../../../src/environments/environment'
 
 @Component({
   selector: 'ws-app-provider-details',
@@ -141,11 +142,26 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     })
     this.imageUrl = _.get(providerDetails, 'data.link')
     this.thumbNailUrl = this.imageUrl
-    this.uploadedPdfUrl = _.get(providerDetails, 'data.documentUrl')
+    if (_.get(providerDetails, 'data.documentUrl')) {
+      this.uploadedPdfUrl = _.get(providerDetails, 'data.documentUrl', '')
+      this.pdfUploaded = true
+      this.fileName = this.getFileName
+    }
     _.get(providerDetails, 'data.providerTips', []).forEach((tip: string) => {
       this.addTips(tip)
     })
     this.setTransformationDetails(providerDetails)
+  }
+
+  get getFileName() {
+    let fileName = ''
+    const fileNameWithPrefix = this.uploadedPdfUrl.split('/').pop()
+    if (fileNameWithPrefix) {
+      fileName = fileNameWithPrefix.includes('_')
+        ? fileNameWithPrefix.split('_').slice(1).join('_')
+        : fileNameWithPrefix
+    }
+    return fileName
   }
 
   setTransformationDetails(providerDetails: any) {
@@ -243,6 +259,13 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     }
   }
 
+  removePdf() {
+    this.pdfFile = null
+    this.pdfUploaded = false
+    this.fileName = ''
+    this.uploadedPdfUrl = ''
+  }
+
   //#region (submit details or update)
   submit() {
     if (this.providerFormGroup.valid && this.imageUrl) {
@@ -294,7 +317,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       next: responcess => {
         responcess.forEach((responce: any) => {
           const url = _.get(responce, 'result.url')
-            .replace('https://storage.googleapis.com/igot', 'https://portal.dev.karmayogibharat.net/content-store')
+            .replace('https://storage.googleapis.com/igot', `${environment.karmYogiPath}/content-store`)
           if (responce.fileType === 'thumbnail') {
             this.thumbNailUrl = url
           } else if (responce.fileType === 'ciosFile') {
