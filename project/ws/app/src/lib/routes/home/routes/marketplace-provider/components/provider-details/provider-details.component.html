@@ -11,7 +11,7 @@
           <mat-icon class="info-icon"
             matTooltip="Image must be cropped to a 1:1 aspect ratio, sized between 300 KB and 2 MB, and in SVG or PNG format.">info_outline</mat-icon>
         </span>
-        <span class="img-note">Image will be cropped to 16:9 aspect ratio</span>
+        <!-- <span class="img-note">Image will be cropped to 16:9 aspect ratio</span> -->
         <div class="img-card">
           <mat-icon (click)="thumbNailInput.click()"
             class="img-icon flex justify-center items-center">photo_camera</mat-icon>
@@ -29,7 +29,7 @@
             <span class="lable">Contact Partner Name</span>
           </div>
           <mat-form-field class="w-full provider-input-form">
-            <input formControlName="contentPartnerName" matInput placeholder="Type here">
+            <input formControlName="contentPartnerName" matInput placeholder="Type here" maxlength="70">
           </mat-form-field>
           <div class="flex justify-between items-center">
             <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
@@ -41,7 +41,7 @@
             <span class="lable">Website URL</span>
           </div>
           <mat-form-field class="w-full provider-input-form">
-            <input formControlName="websiteUrl" matInput placeholder="Type here">
+            <input formControlName="websiteUrl" matInput placeholder="Type here" maxlength="70">
           </mat-form-field>
           <div class="flex justify-between items-center">
             <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
@@ -57,7 +57,7 @@
             matTooltip="We recomment you to give desciption in 300-500 characters">info_outline</mat-icon>
         </div>
         <mat-form-field class="w-full description">
-          <textarea matInput rows="6" formControlName="description"
+          <textarea matInput rows="6" formControlName="description" maxlength="500"
             placeholder="Type the decription in fewer than 500 characters" i18n-placeholder></textarea>
         </mat-form-field>
         <div class="flex justify-between items-center">
@@ -86,7 +86,8 @@
                   <input [id]="'item-' + i" [formControlName]="i" matInput placeholder="Type here">
                 </mat-form-field>
               </div>
-              <button mat-button (click)="removeTipAtIndex(i)" class="removeTipBox flex justify-center items-center">
+              <button type="button" mat-button (click)="removeTipAtIndex(i)"
+                class="removeTipBox flex justify-center items-center">
                 <mat-icon class="removeIcon">close</mat-icon>
               </button>
             </div>
@@ -116,10 +117,13 @@
         </ng-container>
         <ng-template #fileUploaded>
           <div class="flex items-center my-2 fileUploadedCard">
+            <mat-icon class="removePdf" matTooltip="Remove PDF" (click)="removePdf()">close</mat-icon>
             <img src="/assets/icons/samplePdf.svg" alt="uploaded pdf" class="samplePdf">
             <div class="flex flex-column justify-between pdfDetails">
               <span class="pdfName">{{fileName}}</span>
-              <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>
+              <ng-container *ngIf="fileUploadedDate">
+                <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>
+              </ng-container>
               <span class="documentAttached flex items-center">
                 <mat-icon class="greenTick">check_circle</mat-icon>
                 Document attached
