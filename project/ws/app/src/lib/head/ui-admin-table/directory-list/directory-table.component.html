@@ -1,7 +1,8 @@
 <div class="example-container">
     <ng-container *ngIf="openCreateNavBar">
-        <ws-app-create-organisation [selectedDepartment]="selectedDepartment"
-            (buttonClick)="buttonClickAction($event)"></ws-app-create-organisation>
+        <ws-app-create-organisation [openMode]="openMode" [dropdownList]="dropdownList" [rowData]="rowData"
+            (buttonClick)="buttonClickAction($event)">
+        </ws-app-create-organisation>
     </ng-container>
     <div class="example-loading-shade">
     </div>

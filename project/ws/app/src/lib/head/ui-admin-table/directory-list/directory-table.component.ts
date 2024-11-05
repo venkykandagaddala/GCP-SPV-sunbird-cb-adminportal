@@ -40,6 +40,41 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   isSelectedDept = true
   showNewNoContent = false
   openCreateNavBar = false
+  openMode = ''
+  rowData: any
+  dropdownList: {
+    statesList: any[],
+    ministriesList: any[]
+  } = {
+      statesList: [
+        {
+          name: 'state 1',
+          id: 1
+        },
+        {
+          name: 'state 2',
+          id: 2
+        },
+        {
+          name: 'state 3',
+          id: 3
+        },
+      ],
+      ministriesList: [
+        {
+          name: 'ministry 1',
+          id: 1
+        },
+        {
+          name: 'ministry 2',
+          id: 2
+        },
+        {
+          name: 'ministry 3',
+          id: 3
+        },
+      ],
+    }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator
   @ViewChild(MatSort, { static: true }) sort?: MatSort
   selection = new SelectionModel<any>(true, [])
@@ -144,9 +179,25 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
     this.eOnRowClick.emit(e)
     this.raiseTelemetryForRow('row', e)
   }
+
   gotoCreateNew() {
     if (this.selectedDepartment === 'organisation') {
       this.openCreateNavBar = true
+      // this.openMode = 'createNew'
+
+      this.openMode = 'viewMode'
+      this.rowData = {
+        organisationName: 'Department of Atomic Energy',
+        category: 'state',
+        state: 'state 1',
+        minsitry: '',
+        description: `Lorem ipsum, placeholder or dummy text used in typesetting and graphic design for
+        previewing layouts. It features scrambled Latin text, which emphasizes the design over content
+        of the layout. It is the standard placeholder text of the printing and publishing industries.`,
+        log: '/assets/icons/noFile.svg',
+        createdBy: 'Manasvi.malav@gov.in',
+        createdOn: '24/12/2023, 4:00PM'
+      }
     } else {
       this.router.navigate([`/app/home/${this.selectedDepartment}/create-department`, { needAddAdmin: true }])
     }
