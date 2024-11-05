@@ -418,7 +418,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           this.loaderService.changeLoad.next(false)
           if (responce) {
             setTimeout(() => {
-              const successMsg = 'Successfully Updated'
+              const successMsg = 'Provider details updated successfully.'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
             }, 1000)
