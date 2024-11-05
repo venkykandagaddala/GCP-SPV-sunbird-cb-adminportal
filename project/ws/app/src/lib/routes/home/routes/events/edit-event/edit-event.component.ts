@@ -70,7 +70,7 @@ export class EditEventComponent implements OnInit {
   //   { title: 'Webinar', desc: 'General discussion involving', border: 'rgb(0, 116, 182)', disabled: false },
   // ]
 
-  evntTypesList = ['Webinar', 'Karmayogi Talks']
+  evntTypesList = ['Webinar', 'Karmayogi Talks', 'Karmayogi Saptah']
 
   timeArr = [
     { value: '00:00' }, { value: '00:30' }, { value: '01:00' }, { value: '01:30' },

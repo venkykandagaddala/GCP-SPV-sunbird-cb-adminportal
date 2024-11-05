@@ -121,12 +121,12 @@ export class UserCardComponent implements OnInit, OnChanges, AfterViewChecked {
   checked = false
   isSPVAdmin = false
   constructor(private usersSvc: UsersService, private roleservice: RolesService,
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private snackBar: MatSnackBar,
-    private events: EventService,
+              private dialog: MatDialog,
+              private route: ActivatedRoute,
+              private snackBar: MatSnackBar,
+              private events: EventService,
     // private datePipe: DatePipe,
-    private cdr: ChangeDetectorRef) {
+              private cdr: ChangeDetectorRef) {
     this.updateUserDataForm = new FormGroup({
       designation: new FormControl('', []),
       group: new FormControl('', [Validators.required]),
