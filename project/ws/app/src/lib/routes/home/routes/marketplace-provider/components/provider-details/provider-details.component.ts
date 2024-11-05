@@ -197,16 +197,21 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   onThumbNailSelected(event: any): void {
     this.thumbnailFile = event
+    const fileName = event.name.replace(/[^A-Za-z0-9_.]/g, '')
     if (this.thumbnailFile) {
-      const reader = new FileReader()
-      reader.onload = (e: any) => {
-        const img = new Image()
-        img.onload = () => {
-          this.cropImage(img)
+      if (fileName.toLowerCase().endsWith('.svg') || fileName.toLowerCase().endsWith('.png')) {
+        const reader = new FileReader()
+        reader.onload = (e: any) => {
+          const img = new Image()
+          img.onload = () => {
+            this.cropImage(img)
+          }
+          img.src = e.target.result
         }
-        img.src = e.target.result
+        reader.readAsDataURL(this.thumbnailFile)
+      } else {
+        this.showSnackBar('Please upload svg or png image')
       }
-      reader.readAsDataURL(this.thumbnailFile)
     }
   }
 
@@ -239,7 +244,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    },            'image/png')
+    }, 'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -316,8 +321,13 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     forkJoin(resourceCreationSubscriptions).subscribe({
       next: responcess => {
         responcess.forEach((responce: any) => {
-          const url = _.get(responce, 'result.url')
-            .replace('https://storage.googleapis.com/igot', `${environment.karmYogiPath}/content-store`)
+          const createdUrl = _.get(responce, 'result.url')
+          const urlToReplace = 'https://storage.googleapis.com/igot'
+          let url = ''
+          if (createdUrl.startsWith(urlToReplace)) {
+            const urlSplice = createdUrl.slice(urlToReplace.length).split('/')
+            url = `${environment.karmYogiPath}/content-store/${urlSplice.slice(1).join('/')}`
+          }
           if (responce.fileType === 'thumbnail') {
             this.thumbNailUrl = url
           } else if (responce.fileType === 'ciosFile') {
@@ -376,7 +386,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            },         1000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -408,10 +418,10 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           this.loaderService.changeLoad.next(false)
           if (responce) {
             setTimeout(() => {
-              const successMsg = 'Successfully Onboarded'
+              const successMsg = 'Successfully Updated'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            },         1000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
