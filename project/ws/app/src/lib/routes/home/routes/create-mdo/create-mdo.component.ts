@@ -128,7 +128,7 @@ export class CreateMdoComponent implements OnInit {
     {
       this.loggedInUserId = _.get(this.activatedRoute, 'snapshot.parent.data.configService.userProfile.userId')
       this.userRoles = _.get(this.activatedRoute, 'snapshot.parent.data.configService.unMappedUser.roles')
-      if (this.userRoles.indexOf('STATE_ADMIN') >= 0) {
+      if (this.userRoles && this.userRoles.indexOf('STATE_ADMIN') >= 0) {
         this.isStateAdmin = true
       }
       this.contentForm = new FormGroup({
@@ -467,7 +467,7 @@ export class CreateMdoComponent implements OnInit {
 
               // this.router.navigate([`/app/home/directory`])
             }
-          },          (error: any) => {
+          }, (error: any) => {
             this.openSnackbar(`Something went wrong, please try again later`)
             this.disableStateCreateButton = false
             this.displayLoader = false
