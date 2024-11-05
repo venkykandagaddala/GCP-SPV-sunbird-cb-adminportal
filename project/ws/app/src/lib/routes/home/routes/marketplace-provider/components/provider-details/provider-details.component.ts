@@ -323,7 +323,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         responcess.forEach((responce: any) => {
           const createdUrl = _.get(responce, 'result.url')
           const urlToReplace = 'https://storage.googleapis.com/igot'
-          let url = ''
+          let url = createdUrl
           if (createdUrl.startsWith(urlToReplace)) {
             const urlSplice = createdUrl.slice(urlToReplace.length).split('/')
             url = `${environment.karmYogiPath}/content-store/${urlSplice.slice(1).join('/')}`
