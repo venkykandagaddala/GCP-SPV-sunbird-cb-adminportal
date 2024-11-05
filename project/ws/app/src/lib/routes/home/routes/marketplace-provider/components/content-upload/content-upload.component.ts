@@ -328,15 +328,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   onDrop(file: File) {
-    // this.contentFileUploadCondition = {
-    //   fileName: false,
-    //   eval: false,
-    //   externalReference: false,
-    //   iframe: false,
-    //   isSubmitPressed: false,
-    //   preview: false,
-    //   url: '',
-    // }
     this.fileName = file.name.replace(/[^A-Za-z0-9_.]/g, '')
     if (!(this.fileName.toLowerCase().endsWith('.csv') || this.fileName.toLowerCase().endsWith('.xlsx'))) {
       this.showSnackBar('Unsupported File Format. Please upload a CSV or XLSX file.')
@@ -364,11 +355,13 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.marketPlaceSvc.uploadContent(formData, this.providerDetails.partnerCode).subscribe({
         next: (res: any) => {
           if (res) {
-            this.showSnackBar('File imported successfully')
-            this.dialogRef.close()
-            this.getContentList()
-            this.getUnPublishedCoursesList()
-            this.getPublishedCoursesList()
+            setTimeout(() => {
+              this.showSnackBar('File imported successfully')
+              this.dialogRef.close()
+              this.getContentList()
+              this.getUnPublishedCoursesList()
+              this.getPublishedCoursesList()
+            },         3000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -411,7 +404,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   deletedSelectedCourses(event: any) {
-    if (event && event.rows) {
+    if (event && event.rows && event.rows.length) {
       const formBody = {
         partnerCode: this.providerDetails.partnerCode,
         externalId: event.rows.length ? event.rows.map((item: any) => item.id) : [event.rows.id],
@@ -429,6 +422,8 @@ export class ContentUploadComponent implements OnInit, OnChanges {
           this.showSnackBar(errmsg)
         },
       })
+    } else {
+      this.showSnackBar('Please select course to delete.')
     }
   }
 
