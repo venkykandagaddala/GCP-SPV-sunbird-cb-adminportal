@@ -34,6 +34,13 @@
               mat-button [routerLink]="'/app/home/directory/state'" (click)="filter(department.toLowerCase())"
               role="button">
               STATE</a>
+
+            <a *ngIf="department==='Organisation'" class="filter-option"
+              [ngClass]="{'ws-mat-accent-border-active' : currentFilter === 'organisation',
+                                                                  'ws-mat-accent-border font-medium':currentFilter !== 'state'}" mat-button
+              [routerLink]="'/app/home/directory/organisation'" (click)="filter(department.toLowerCase())"
+              role="button">
+              Organisation</a>
           </div>
 
           <!-- <a *ngFor="let department of departmentHearders" class="filter-option" [ngClass]="{'ws-mat-accent-border-active' : currentFilter ===department,

@@ -30,9 +30,20 @@ import { MatRadioModule } from '@angular/material/radio'
 import { MatChipsModule } from '@angular/material/chips'
 import { ImageCropperModule } from 'ngx-image-cropper'
 import { ReverseDateFormatPipe } from './user-list/reverse-date-format.pipe'
+import { CreateOrganisationComponent } from './create-organisation/create-organisation.component'
+import { MatSidenavModule } from '@angular/material/sidenav'
 // import { BtnPageBackModule } from '../btn-page-back/btn-page-back.module'
 @NgModule({
-  declarations: [UIAdminUserTableComponent, UIDirectoryTableComponent, UserPopupComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, DialogTextProfanityComponent, ReverseDateFormatPipe],
+  declarations: [
+    UIAdminUserTableComponent,
+    UIDirectoryTableComponent,
+    UserPopupComponent,
+    UIUserTablePopUpComponent,
+    UIDiscussionPostComponent,
+    DialogTextProfanityComponent,
+    ReverseDateFormatPipe,
+    CreateOrganisationComponent
+  ],
 
   imports: [
     AppButtonModule,
@@ -56,10 +67,18 @@ import { ReverseDateFormatPipe } from './user-list/reverse-date-format.pipe'
     MatInputModule, MatOptionModule, MatSelectModule, ReactiveFormsModule,
     MatChipsModule,
     ImageCropperModule,
+    MatSidenavModule
 
     // MatRadioButton, MatRadioGroup
   ],
   entryComponents: [UserPopupComponent, DialogTextProfanityComponent],
-  exports: [UIAdminUserTableComponent, UIDirectoryTableComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, ReverseDateFormatPipe],
+  exports: [
+    UIAdminUserTableComponent,
+    UIDirectoryTableComponent,
+    UIUserTablePopUpComponent,
+    UIDiscussionPostComponent,
+    ReverseDateFormatPipe,
+    CreateOrganisationComponent
+  ],
 })
 export class UIAdminTableModule { }

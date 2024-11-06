@@ -77,6 +77,7 @@ export class DirectoryViewComponent implements OnInit {
           }
         }
       })
+      this.departmentHearders.push('Organisation') // need to remove befor commit
       if (this.departmentHearders && this.departmentHearders.length) {
         this.getDepartDataByKey(this.currentFilter)
         this.createTableHeader()
@@ -85,17 +86,32 @@ export class DirectoryViewComponent implements OnInit {
   }
   createTableHeader() {
     this.tabledata = []
-    this.tabledata = {
-      actions: [{ name: 'Edit', label: 'Edit info', icon: 'remove_red_eye', type: 'button' }],
-      columns: [
-        { displayName: 'Department', key: 'mdo' },
-        { displayName: 'Type', key: 'type' },
-      ],
-      needCheckBox: false,
-      needHash: false,
-      sortColumn: '',
-      sortState: 'asc',
-
+    if (this.currentFilter === 'organisation') {
+      this.tabledata = {
+        columns: [
+          { displayName: 'Organisation', key: 'organisation' },
+          { displayName: 'Type', key: 'type' },
+          { displayName: 'Created By', key: 'createdBy' },
+          { displayName: 'Created On', key: 'createdOn' },
+        ],
+        needCheckBox: false,
+        needHash: false,
+        sortColumn: '',
+        sortState: 'asc',
+        showNewNoContent: true
+      }
+    } else {
+      this.tabledata = {
+        actions: [{ name: 'Edit', label: 'Edit info', icon: 'remove_red_eye', type: 'button' }],
+        columns: [
+          { displayName: 'Department', key: 'mdo' },
+          { displayName: 'Type', key: 'type' },
+        ],
+        needCheckBox: false,
+        needHash: false,
+        sortColumn: '',
+        sortState: 'asc',
+      }
     }
     // console.log(key, 'key-------')
   }
@@ -128,6 +144,8 @@ export class DirectoryViewComponent implements OnInit {
       key = 'state'
     } else if (value === 'ministry') {
       key = 'ministry'
+    } else if (value === 'organisation') {
+      key = 'organisation'
     }
     if (key === 'cbc') {
       index = 1
@@ -247,6 +265,10 @@ export class DirectoryViewComponent implements OnInit {
               filteredData2.push(obj)
             }
           })
+        // case 'Organisation':
+        //   const organisationsList = []
+        //   filteredData2
+
       }
       this.data = filteredData2.map((dept: any) => {
         return {

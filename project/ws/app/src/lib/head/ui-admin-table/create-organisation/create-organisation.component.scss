@@ -1,0 +1,228 @@
+.nav-container {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  min-height: calc(100vh - 164px);
+}
+
+.filter-overlay-12 {
+  background: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.filter-12 {
+  height: calc(100% - 60px);
+  border: 1px solid #ccc;
+  right: 0;
+  top: 57px;
+  background: #fff;
+  z-index: 10000 !important;
+  position: fixed;
+  overflow-y: auto;
+  width: 590px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.right-sidenav-header {
+  /* stylelint-enable */
+  font: 600 20px 'Montserrat';
+    /* stylelint-disable */
+  color: #000000DE;
+  border-bottom: 2px solid #00000014;
+
+  .closeIcon {
+    color: #666666;
+    font-size: 24px;
+    cursor: pointer;
+  }
+}
+
+.right-sidenav-footer {
+  border-top: 2px solid#00000014;
+  width: 550px;
+  position: fixed;
+  top: calc(100% - 72px);
+
+  .cancelButton {
+    width: 90px;
+    height: 40px;
+    border-radius: 20px;
+    border: 1px solid #1B4CA1 !important;
+    color: #1B4CA1;
+    /* stylelint-enable */
+    font: 700 14px 'Lato';
+    /* stylelint-disable */
+  }
+
+  .addButton {
+    width: fit-content;
+    height: 40px;
+    border-radius: 20px;
+    background: #1B4CA1 !important;
+    /* stylelint-enable */
+    font: 700 14px 'Lato';
+    /* stylelint-disable */
+    color: #FFFFFF;
+    padding: 0px 24px;
+  }
+
+  .editButton {
+    width: 74px;
+    height: 40px;
+    border-radius: 20px;
+    background: #1B4CA1 !important;
+    /* stylelint-enable */
+    font: 700 14px 'Lato';
+    /* stylelint-disable */
+    color: #FFFFFF;
+  }
+
+  .disableBtn {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+.lable {
+  color: #212529;
+  /* stylelint-enable */
+    font: 700 14px 'Lato';
+    /* stylelint-disable */
+}
+
+.grayBox {
+  border: 1px solid #00000014;
+  background-color: #0000000A;
+  height: 115px;
+  border-radius: 8px;
+  width: 514px;;
+}
+
+.uploadLogoCard {
+  border: 2px dashed #6483ba;
+  // border: 2px solid transparent; /* Define border width */
+  // border-image: url(data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='3'%3E%3Crect width='6' height='4' fill='%236483ba'/%3E%3C/svg%3E) 1 round;
+  // border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='2'%3E%3Crect width='6' height='2' fill='%236483ba'/%3E%3C/svg%3E") 2 fill round;
+  // border-image-width: 2; /* Sets the width of the border image */
+  height: 40px;
+  width: 100%;
+  background-color: #edf1f8;
+  border-radius: 4px;
+  padding: 15px 20px;
+
+  .upload-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 32px;
+    color: #1B4CA1;
+  }
+
+  .file-upload-header {
+    color: #1B4CA1;
+    /* stylelint-enable */
+    font: 700 14px 'Lato';
+    /* stylelint-disable */
+  }
+
+  .upload-description {
+    color: #00000099;
+    /* stylelint-enable */
+    font: 400 12px 'Lato';
+    /* stylelint-disable */
+  }
+
+}
+
+.descriptionLength {
+  /* stylelint-disable */
+  font: 400 14px 'Lato';
+  /* stylelint-disable */
+  color: #00000099;
+  margin-top: -23px;
+}
+
+.log-frame {
+  width: 89px;
+  height: 85px;
+  border: 1px solid #00000029;
+
+  .log {
+    height: 58px;
+    width: 58px;
+  }
+}
+
+.organisationLable {
+  /* stylelint-disable */
+  font: 400 14px 'Lato';
+  /* stylelint-disable */
+  color: #00000099;
+}
+
+.organisationNameHeader {
+  /* stylelint-disable */
+  font: 600 20px 'Montserrat';
+  /* stylelint-disable */
+  color: #212529;
+}
+
+.viewModeLable {
+  /* stylelint-disable */
+  font: 400 14px 'Lato';
+  /* stylelint-disable */
+  color: #00000099;
+}
+
+.viewModeValue {
+  /* stylelint-disable */
+  font: 600 16px 'Montserrat';
+  /* stylelint-disable */
+  color: #212529;
+}
+
+:host ::ng-deep .organisation-form {
+  .mat-form-field-appearance-outline .mat-form-field-outline-end {
+    border-left-style: solid;
+    border-radius: 30px;
+    height: 50px;
+  }
+
+  .mat-form-field-appearance-outline .mat-form-field-infix {
+    padding-left: 10px;
+  }
+
+  .mat-form-field-appearance-outline .mat-form-field-outline-start {
+    min-width: 0px;
+    border: 0px;
+  }
+
+  .mat-form-field-outline {
+    height: 50px;
+    border-radius: 30px
+  }
+
+  .mat-form-field-flex {
+    height: 50px;
+    align-items: center;
+  }
+
+  .mat-radio-button .mat-radio-container .mat-radio-inner-circle {
+    background-color: #1B4CA1 !important;
+    width: 19.5px !important;
+    transform: scale(0.7) !important;
+  }
+
+  .active-radio-button .mat-radio-button .mat-radio-container .mat-radio-outer-circle {
+    border-color: #1B4CA1 !important;
+  }
+
+}
