@@ -16,7 +16,7 @@
           <mat-icon (click)="thumbNailInput.click()"
             class="img-icon flex justify-center items-center">photo_camera</mat-icon>
           <input type="file" #thumbNailInput class="inputfile"
-            (change)="onThumbNailSelected($event.target.files[0]); thumbNailInput.value = null" accept="image/*">
+            (change)="onThumbNailSelected($event.target.files[0]); thumbNailInput.value = null" accept=".svg, .png">
           <canvas #canvas class="inputfile"></canvas>
           <ng-container *ngIf="imageUrl">
             <img class="thumbnailImg" [src]="imageUrl" alt="uploaded file" width="300px" height="auto">

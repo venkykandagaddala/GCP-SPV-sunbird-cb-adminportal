@@ -108,7 +108,7 @@ export class MarketplaceService {
   }
 
   downloadLogs(gcpfileName: string) {
-    return this.http.get<any>(API_END_POINTS.DOWNLOAD_LOG(gcpfileName))
+    return this.http.get<any>(API_END_POINTS.DOWNLOAD_LOG(gcpfileName), { responseType: 'blob' as 'json' })
   }
 
   setSelectedCourse(course: any) {
