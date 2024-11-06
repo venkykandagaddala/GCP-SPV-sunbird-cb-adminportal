@@ -27,30 +27,27 @@ describe('UserCardComponent', () => {
     }
 
     const dialog: Partial<MatDialog> = {}
+
     const route: Partial<ActivatedRoute> = {
         snapshot: {
             params: { tab: 'verified' },
             queryParams: of({ roleId: 'testRoleId' }),
-            data: {
-                configSvc: {
-                    userProfile: {
-                        userId: 'sampleId',
-                    },
-                },
-            },
+            data: of({
+                profile: {
+                    data: [{ role: 'sam' }]
+                }
+            }),
             parent: {
-                url: [],
-                params: {},
-                queryParams: {},
-                fragment: null,
-                data: {
+                url: of([]),
+                data: of({
                     configService: {
                         userRoles: new Map([['spv_admin', true]]),
-                    },
-                },
+                    }
+                }),
             } as any,
         } as any,
     }
+
 
     const snackBar: Partial<MatSnackBar> = {}
     const events: Partial<EventService> = {}
@@ -80,7 +77,7 @@ describe('UserCardComponent', () => {
         it('should call getUserById and set user details', () => {
             // Arrange
             const user = {
-                userId: '123'
+                userId: '123',
             }
             const panel = { open: jest.fn() }
             const userResponse = {
@@ -97,14 +94,12 @@ describe('UserCardComponent', () => {
                     },
                     employmentDetails: { pinCode: '123456', employeeCode: 'EMP001' },
                     organisations: {
-                        roles: 'sampleROle'
-                    }
-                }
+                        roles: 'sampleROle',
+                    },
+                },
             }
 
             usersSvc.getUserById = jest.fn().mockReturnValue(of(userResponse))
-
-
 
             jest.spyOn(component.updateUserDataForm, 'reset')
             jest.spyOn(component.updateUserDataForm.controls['ehrmsID'], 'setValue')
@@ -147,8 +142,8 @@ describe('UserCardComponent', () => {
 
             const userResponse = {
                 profileDetails: {
-                    personalDetails: { firstname: 'Test User' }
-                }
+                    personalDetails: { firstname: 'Test User' },
+                },
             }
 
             usersSvc.getUserById = jest.fn().mockReturnValue(of(userResponse))
@@ -241,7 +236,7 @@ describe('UserCardComponent', () => {
                 {
                     userWorkflow: { userInfo: { wid: '123' } },
                     needApprovalList: [{ feildName: 'group' }],
-                    user: { profileDetails: { professionalDetails: [{ designation: 'Engineer', group: 'Dev' }] } }
+                    user: { profileDetails: { professionalDetails: [{ designation: 'Engineer', group: 'Dev' }] } },
                 },
             ]
             await component.getUserMappedData(approvalData)
@@ -250,10 +245,10 @@ describe('UserCardComponent', () => {
 
     describe('onEditUser', () => {
         it('should call the api', () => {
-            //arrange
-            //act
+            // arrange
+            // act
             component.onEditUser('123', 'sample')
-            //assert
+            // assert
             expect(usersSvc.getUserById).toHaveBeenCalled()
         })
     })
@@ -280,7 +275,6 @@ describe('UserCardComponent', () => {
             const name = component.getUseravatarName(user)
             expect(name).toBe('Doe')
         })
-
 
     })
 
