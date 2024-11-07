@@ -133,7 +133,7 @@
                   <span class="display-inline-block complabels mat-caption cursor-pointer"
                     [ngClass]="{active: (seletedCompetencyTheme && option.identifier === seletedCompetencyTheme.identifier)}"
                     (click)="compThemeSelected(option)"
-                    *ngFor="let option of filteredallCompetencyTheme">{{option.displayName}}</span>
+                    *ngFor="let option of filteredallCompetencyTheme">{{option?.additionalProperties?.displayName}}</span>
                 </div>
               </div>
 
@@ -155,7 +155,7 @@
                   <span class="display-inline-block complabels mat-caption cursor-pointer"
                     [ngClass]="{active: (seletedCompetencySubTheme && option.identifier === seletedCompetencySubTheme.identifier)}"
                     (click)="compSubThemeSelected(option)"
-                    *ngFor="let option of filteredallCompetencySubtheme">{{option.displayName}}</span>
+                    *ngFor="let option of filteredallCompetencySubtheme">{{option?.additionalProperties?.displayName}}</span>
                 </div>
               </div>
 

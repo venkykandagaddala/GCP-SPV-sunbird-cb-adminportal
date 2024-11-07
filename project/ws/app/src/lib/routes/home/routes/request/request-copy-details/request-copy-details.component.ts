@@ -162,9 +162,9 @@ export class RequestCopyDetailsComponent implements OnInit {
     const value = this.requestForm.controls[this.compentencyKey.vKey].value || []
     this.requestObjData.competencies.map((comp: any) => {
       const obj = {
-        competencyArea: comp.select_area,
-        competencyTheme: comp.select_theme,
-        competencySubTheme: comp.select_sub_theme,
+        competencyArea: comp.area || comp.select_area,
+        competencyTheme: comp.theme || comp.select_theme,
+        competencySubTheme: comp.sub_theme || comp.select_sub_theme,
       }
       value.push(obj)
     })
@@ -292,7 +292,25 @@ export class RequestCopyDetailsComponent implements OnInit {
     this.requestService.getFilterEntityV2().subscribe((res: any) => {
       if (res) {
         // this.competencyList = res
-        this.allCompetencies = res
+        const competencyArea = res[0]
+        const competencyThemes = res[1].terms.filter((term: any) => term.hasOwnProperty('associations'))
+
+        const structuredResult = competencyArea.terms.map((areaTerm: any) => {
+          const areaAssociations = areaTerm.associations || []
+
+          const themes = areaAssociations.map((association: any) => {
+            const theme = competencyThemes.find((themeTerm: any) => themeTerm.identifier === association.identifier)
+
+            return theme ? { ...theme } : null
+          }).filter((theme: any) => theme)
+          return {
+            ...areaTerm,
+            themes,
+          }
+        })
+
+        // this.allCompetencies = res
+        this.allCompetencies = structuredResult
         this.filteredallCompetencies = this.allCompetencies
       }
 
@@ -414,7 +432,7 @@ export class RequestCopyDetailsComponent implements OnInit {
     this.allCompetencies.forEach((val: any) => {
       if (option.name === val.name) {
         this.seletedCompetencyArea = val
-        this.allCompetencyTheme = val.children
+        this.allCompetencyTheme = val.themes
         this.filteredallCompetencyTheme = this.allCompetencyTheme
 
       }
@@ -424,9 +442,9 @@ export class RequestCopyDetailsComponent implements OnInit {
   compThemeSelected(option: any) {
     this.enableCompetencyAdd = false
     this.allCompetencyTheme.forEach((val: any) => {
-      if (option.name === val.name) {
+      if (option.identifier === val.identifier) {
         this.seletedCompetencyTheme = val
-        this.allCompetencySubtheme = val.children
+        this.allCompetencySubtheme = val.associations
         this.filteredallCompetencySubtheme = this.allCompetencySubtheme
       }
     })
@@ -435,7 +453,7 @@ export class RequestCopyDetailsComponent implements OnInit {
   compSubThemeSelected(option: any) {
     this.enableCompetencyAdd = true
     this.allCompetencySubtheme.forEach((val: any) => {
-      if (option.name === val.name) {
+      if (option.identifier === val.identifier) {
         this.seletedCompetencySubTheme = val
       }
     })
@@ -475,11 +493,11 @@ export class RequestCopyDetailsComponent implements OnInit {
         competencyArea: this.seletedCompetencyArea.name,
         competencyAreaId: this.seletedCompetencyArea.identifier,
         competencyAreaDescription: this.seletedCompetencyArea.description,
-        competencyTheme: this.seletedCompetencyTheme.displayName,
+        competencyTheme: this.seletedCompetencyTheme.additionalProperties.displayName,
         competencyThemeId: this.seletedCompetencyTheme.identifier,
         competecnyThemeDescription: this.seletedCompetencyTheme.description,
-        competencyThemeType: this.seletedCompetencyTheme.refId,
-        competencySubTheme: this.seletedCompetencySubTheme.displayName,
+        competencyThemeType: this.seletedCompetencyTheme.refType,
+        competencySubTheme: this.seletedCompetencySubTheme.additionalProperties.displayName,
         competencySubThemeId: this.seletedCompetencySubTheme.identifier,
         competecnySubThemeDescription: this.seletedCompetencySubTheme.description,
       }
