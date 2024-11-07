@@ -115,18 +115,23 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   formateContentList(responce: any) {
-    const formatedList: any = []
+    let formatedList: any = []
     if (responce) {
-      responce.forEach((element: any) => {
-        const formatedData = {
-          status: element.status === 'success' ? 'Live' : 'Failed',
-          name: element.fileName,
-          intiatedOn: this.datePipe.transform(new Date(element.initiatedOn), 'dd MMM yyyy hh:mm a'),
-          completedOn: this.datePipe.transform(new Date(element.completedOn), 'dd MMM yyyy hh:mm a'),
-          gcpfileName: element.gcpfileName,
-        }
-        formatedList.push(formatedData)
-      })
+      formatedList = responce
+        .sort((a: any, b: any) => {
+          const dateA = new Date(a.initiatedOn)
+          const dateB = new Date(b.initiatedOn)
+          return dateB.getTime() - dateA.getTime()
+        })
+        .map((element: any) => {
+          return {
+            status: element.status === 'success' ? 'Live' : 'Failed',
+            name: element.fileName,
+            intiatedOn: this.datePipe.transform(new Date(element.initiatedOn), 'dd MMM yyyy hh:mm a'),
+            completedOn: this.datePipe.transform(new Date(element.completedOn), 'dd MMM yyyy hh:mm a'),
+            gcpfileName: element.gcpfileName,
+          }
+        })
     }
     return formatedList
   }
@@ -351,8 +356,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
         this.contentFile as Blob,
         (this.contentFile as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
       )
-
-      this.marketPlaceSvc.uploadContent(formData, this.providerDetails.partnerCode).subscribe({
+      this.marketPlaceSvc.uploadContent(formData, this.providerDetails.partnerCode, this.providerDetails.id).subscribe({
         next: (res: any) => {
           if (res) {
             setTimeout(() => {
@@ -361,7 +365,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
               this.getContentList()
               this.getUnPublishedCoursesList()
               this.getPublishedCoursesList()
-            },         3000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
