@@ -48,6 +48,10 @@
     z-index: 1;
   }
 
+  .logoErrorMsg {
+    font-size: 13px;
+  }
+
   .info-icon {
     width: 13.33px;
     height: 13.33px;
@@ -205,15 +209,36 @@
   }
 }
 
-:host ::ng-deep .provider-input-form .mat-form-field-flex {
+:host ::ng-deep .provider-input-form{
+   .mat-form-field-flex {
     height: 50px;
     align-items: center;
   }
 
-:host ::ng-deep .description .mat-form-field-wrapper {
+  .mat-form-field-hint-spacer {
+    flex: none;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    padding: 0px !important;
+  }
+}
+
+:host ::ng-deep .description {
+  .mat-form-field-wrapper {
     padding-bottom: 0px;
     margin-bottom: 0px;
   }
+
+  .mat-form-field-hint-spacer {
+    flex: none;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    padding: 0px !important;
+    margin-top: 30px !important;
+  }
+}
 
 :host ::ng-deep .tipsCard {
   .mat-form-field-appearance-outline .mat-form-field-wrapper {

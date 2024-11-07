@@ -115,18 +115,23 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   formateContentList(responce: any) {
-    const formatedList: any = []
+    let formatedList: any = []
     if (responce) {
-      responce.forEach((element: any) => {
-        const formatedData = {
-          status: element.status === 'success' ? 'Live' : 'Failed',
-          name: element.fileName,
-          intiatedOn: this.datePipe.transform(new Date(element.initiatedOn), 'dd MMM yyyy hh:mm a'),
-          completedOn: this.datePipe.transform(new Date(element.completedOn), 'dd MMM yyyy hh:mm a'),
-          gcpfileName: element.gcpfileName,
-        }
-        formatedList.push(formatedData)
-      })
+      formatedList = responce
+        .sort((a: any, b: any) => {
+          const dateA = new Date(a.initiatedOn)
+          const dateB = new Date(b.initiatedOn)
+          return dateB.getTime() - dateA.getTime()
+        })
+        .map((element: any) => {
+          return {
+            status: element.status === 'success' ? 'Live' : 'Failed',
+            name: element.fileName,
+            intiatedOn: this.datePipe.transform(new Date(element.initiatedOn), 'dd MMM yyyy hh:mm a'),
+            completedOn: this.datePipe.transform(new Date(element.completedOn), 'dd MMM yyyy hh:mm a'),
+            gcpfileName: element.gcpfileName,
+          }
+        })
     }
     return formatedList
   }
@@ -321,7 +326,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
         break
       case 'downloadLog':
         if (event.rows.gcpfileName) {
-          this.downloadLog(event.rows.gcpfileName)
+          this.downloadLog(event.rows.gcpfileName, event.rows.name)
         }
         break
     }
@@ -351,8 +356,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
         this.contentFile as Blob,
         (this.contentFile as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
       )
-
-      this.marketPlaceSvc.uploadContent(formData, this.providerDetails.partnerCode).subscribe({
+      this.marketPlaceSvc.uploadContent(formData, this.providerDetails.partnerCode, this.providerDetails.id).subscribe({
         next: (res: any) => {
           if (res) {
             setTimeout(() => {
@@ -361,7 +365,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
               this.getContentList()
               this.getUnPublishedCoursesList()
               this.getPublishedCoursesList()
-            },         3000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -404,7 +408,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   deletedSelectedCourses(event: any) {
-    if (event && event.rows && event.rows.length) {
+    if (event && event.rows && event.rows.length !== 0) {
       const formBody = {
         partnerCode: this.providerDetails.partnerCode,
         externalId: event.rows.length ? event.rows.map((item: any) => item.id) : [event.rows.id],
@@ -412,7 +416,8 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.marketPlaceSvc.deleteUnPublishedCourses(formBody).subscribe({
         next: (res: any) => {
           if (res) {
-            const msg = 'Selected courses are deleted successfully'
+            const msg = event.rows.length && event.rows.length > 1
+              ? 'Selected courses are deleted successfully' : 'Selected course is deleted successfully'
             this.showSnackBar(msg)
             this.getUnPublishedCoursesList()
           }
@@ -432,13 +437,12 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     this.router.navigateByUrl('/app/home/marketplace-providers/course-preview')
   }
 
-  downloadLog(gcpfileName: string) {
+  downloadLog(gcpfileName: string, fileName: string) {
     this.marketPlaceSvc.downloadLogs(gcpfileName)
       .subscribe({
-        next: (res: any) => {
+        next: (res: Blob) => {
           if (res) {
-            const message = 'Logs Downloaded Successfully.'
-            this.showSnackBar(message)
+            this.downloadBlob(res, fileName)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -446,6 +450,20 @@ export class ContentUploadComponent implements OnInit, OnChanges {
           this.showSnackBar(errmsg)
         },
       })
+  }
+
+  downloadBlob(blob: Blob, fileName: string) {
+    // Create a temporary URL for the Blob object
+    const blobUrl = window.URL.createObjectURL(blob)
+
+    // Create an anchor element and simulate a click to start the download
+    const link = document.createElement('a')
+    link.href = blobUrl
+    link.download = `${fileName}_logs`
+    link.click()
+    window.URL.revokeObjectURL(blobUrl)
+    const message = 'Logs Downloaded Successfully.'
+    this.showSnackBar(message)
   }
 
   showSnackBar(message: string) {
