@@ -326,7 +326,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
         break
       case 'downloadLog':
         if (event.rows.gcpfileName) {
-          this.downloadLog(event.rows.gcpfileName)
+          this.downloadLog(event.rows.gcpfileName, event.rows.name)
         }
         break
     }
@@ -408,7 +408,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   deletedSelectedCourses(event: any) {
-    if (event && event.rows && event.rows.length) {
+    if (event && event.rows && event.rows.length !== 0) {
       const formBody = {
         partnerCode: this.providerDetails.partnerCode,
         externalId: event.rows.length ? event.rows.map((item: any) => item.id) : [event.rows.id],
@@ -416,7 +416,8 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.marketPlaceSvc.deleteUnPublishedCourses(formBody).subscribe({
         next: (res: any) => {
           if (res) {
-            const msg = 'Selected courses are deleted successfully'
+            const msg = event.rows.length && event.rows.length > 1
+              ? 'Selected courses are deleted successfully' : 'Selected course is deleted successfully'
             this.showSnackBar(msg)
             this.getUnPublishedCoursesList()
           }
@@ -436,13 +437,12 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     this.router.navigateByUrl('/app/home/marketplace-providers/course-preview')
   }
 
-  downloadLog(gcpfileName: string) {
+  downloadLog(gcpfileName: string, fileName: string) {
     this.marketPlaceSvc.downloadLogs(gcpfileName)
       .subscribe({
-        next: (res: any) => {
+        next: (res: Blob) => {
           if (res) {
-            const message = 'Logs Downloaded Successfully.'
-            this.showSnackBar(message)
+            this.downloadBlob(res, fileName)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -450,6 +450,20 @@ export class ContentUploadComponent implements OnInit, OnChanges {
           this.showSnackBar(errmsg)
         },
       })
+  }
+
+  downloadBlob(blob: Blob, fileName: string) {
+    // Create a temporary URL for the Blob object
+    const blobUrl = window.URL.createObjectURL(blob)
+
+    // Create an anchor element and simulate a click to start the download
+    const link = document.createElement('a')
+    link.href = blobUrl
+    link.download = `${fileName}_logs`
+    link.click()
+    window.URL.revokeObjectURL(blobUrl)
+    const message = 'Logs Downloaded Successfully.'
+    this.showSnackBar(message)
   }
 
   showSnackBar(message: string) {
