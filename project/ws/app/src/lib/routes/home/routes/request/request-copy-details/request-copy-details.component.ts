@@ -77,12 +77,12 @@ export class RequestCopyDetailsComponent implements OnInit {
   compentencyKey!: ICompentencyKeys
 
   constructor(private formBuilder: FormBuilder,
-              private requestService: RequestServiceService,
-              private activatedRouter: ActivatedRoute,
-              private snackBar: MatSnackBar,
-              private router: Router,
-              public dialog: MatDialog,
-              private initService: InitService,
+    private requestService: RequestServiceService,
+    private activatedRouter: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    public dialog: MatDialog,
+    private initService: InitService,
 
   ) {
 
@@ -290,7 +290,7 @@ export class RequestCopyDetailsComponent implements OnInit {
 
   getFilterEntityV2() {
     this.requestService.getFilterEntityV2().subscribe((res: any) => {
-      if (res) {
+      if (res && res[0] && res[1]) {
         // this.competencyList = res
         const competencyArea = res[0]
         const competencyThemes = res[1].terms.filter((term: any) => term.hasOwnProperty('associations'))
@@ -667,9 +667,9 @@ export class RequestCopyDetailsComponent implements OnInit {
           this.router.navigateByUrl('/app/home/all-request')
           this.snackBar.open('Request submitted successfully ')
         }
-      },         1000)
+      }, 1000)
     },
-                                                        (error: any) => {
+      (error: any) => {
         this.dialogRefs.close({ error })
         this.snackBar.open('Request Failed')
 
