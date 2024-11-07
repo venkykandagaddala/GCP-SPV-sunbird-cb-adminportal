@@ -16,7 +16,7 @@ describe('SearchComponent', () => {
     }
 
     const loadingService: Partial<LoaderService> = {
-        changeLoaderState: jest.fn()
+        changeLoaderState: jest.fn(),
     }
 
     beforeAll(() => {
@@ -58,7 +58,6 @@ describe('SearchComponent', () => {
             expect(component.filterVisibilityFlag).toBe(false)
         })
     })
-
 
     describe('searchData', () => {
         it('should update searchText and call emitSearchRequest', () => {
@@ -108,8 +107,8 @@ describe('SearchComponent', () => {
             loadingService.changeLoaderState = jest.fn()
             usersSvc.getAllValidUsers = jest.fn(() => of({
                 res: {
-                    sampleKey: 'sampleValue'
-                }
+                    sampleKey: 'sampleValue',
+                },
             }))
             component.getContent()
             expect(loadingService.changeLoaderState).toHaveBeenCalled()

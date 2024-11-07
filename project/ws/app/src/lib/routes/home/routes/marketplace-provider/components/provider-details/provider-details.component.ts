@@ -144,6 +144,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     this.thumbNailUrl = this.imageUrl
     if (_.get(providerDetails, 'data.documentUrl')) {
       this.uploadedPdfUrl = _.get(providerDetails, 'data.documentUrl', '')
+      this.fileUploadedDate = _.get(providerDetails, 'data.documentUploadedDate', '')
       this.pdfUploaded = true
       this.fileName = this.getFileName
     }
@@ -244,7 +245,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    }, 'image/png')
+    },            'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -363,6 +364,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         providerTips: formDetails.providerTips,
         link: this.thumbNailUrl,
         documentUrl: this.uploadedPdfUrl,
+        documentUploadedDate: this.fileUploadedDate,
       }
 
       if (this.providerDetails) {
@@ -386,7 +388,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            }, 1000)
+            },         1000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -408,6 +410,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       this.providerDetalsBeforUpdate['data']['providerTips'] = formDetails.providerTips
       this.providerDetalsBeforUpdate['data']['link'] = this.thumbNailUrl
       this.providerDetalsBeforUpdate['data']['documentUrl'] = this.uploadedPdfUrl
+      this.providerDetalsBeforUpdate['data']['documentUploadedDate'] = this.fileUploadedDate
       const tranforamtions = this.transforamtionForm.value
       this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
       this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson
@@ -421,7 +424,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Provider details updated successfully.'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            }, 1000)
+            },         1000)
           }
         },
         error: (error: HttpErrorResponse) => {

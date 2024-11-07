@@ -51,7 +51,8 @@
 
             <ng-container *ngSwitchCase="'authentication'">
               <mat-header-cell *matHeaderCellDef mat-sort-header class="table-header-text"> {{col.displayName}}
-                <mat-icon class="header-info-icon">info_outline</mat-icon>
+                <mat-icon class="header-info-icon"
+                  matTooltip="This icon indicates the authentication status of the partner with iGOT. Please connect with the technical team for further information.">info_outline</mat-icon>
               </mat-header-cell>
               <mat-cell *matCellDef="let element">
                 <ng-container *ngIf="element[col.key]; else notAuthenticated">
