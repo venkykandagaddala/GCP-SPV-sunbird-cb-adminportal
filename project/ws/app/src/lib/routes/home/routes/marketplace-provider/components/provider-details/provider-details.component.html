@@ -11,9 +11,8 @@
           <mat-icon class="info-icon"
             matTooltip="Image must be cropped to a 1:1 aspect ratio, sized between 300 KB and 2 MB, and in SVG or PNG format.">info_outline</mat-icon>
         </span>
-        <!-- <span class="img-note">Image will be cropped to 16:9 aspect ratio</span> -->
         <div class="img-card">
-          <mat-icon (click)="thumbNailInput.click()"
+          <mat-icon (click)="thumbNailInput.click(); logoTouched = true"
             class="img-icon flex justify-center items-center">photo_camera</mat-icon>
           <input type="file" #thumbNailInput class="inputfile"
             (change)="onThumbNailSelected($event.target.files[0]); thumbNailInput.value = null" accept=".svg, .png">
@@ -22,19 +21,30 @@
             <img class="thumbnailImg" [src]="imageUrl" alt="uploaded file" width="300px" height="auto">
           </ng-container>
         </div>
+        <mat-error [hidden]="false" *ngIf="!imageUrl && logoTouched" class="logoErrorMsg">
+          Logo is mandatory
+        </mat-error>
       </div>
-      <div class="w-full flex gap-6">
+      <div class="w-full flex gap-6 mb-6">
         <div class="flex flex-column gap-1 w-full">
           <div class="flex items-center gap-1 required">
             <span class="lable">Contact Partner Name</span>
           </div>
           <mat-form-field class="w-full provider-input-form">
             <input formControlName="contentPartnerName" matInput placeholder="Type here" maxlength="70">
+            <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+              *ngIf="getControlValidation('contentPartnerName', 'required')">
+              Contact Partner Name is mandatory
+            </mat-error>
+            <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+              *ngIf="getControlValidation('contentPartnerName', 'pattern')">
+              Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported
+            </mat-error>
+            <mat-hint class="w-full flex justify-between items-center">
+              <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
+              <span class="input-note">{{getTextLength('contentPartnerName')}}/70</span>
+            </mat-hint>
           </mat-form-field>
-          <div class="flex justify-between items-center">
-            <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
-            <span class="input-note">{{getTextLength('contentPartnerName')}}/70</span>
-          </div>
         </div>
         <div class="flex flex-column gap-1 w-full">
           <div class="flex items-center gap-1 required">
@@ -42,15 +52,23 @@
           </div>
           <mat-form-field class="w-full provider-input-form">
             <input formControlName="websiteUrl" matInput placeholder="Type here" maxlength="70">
+            <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+              *ngIf="getControlValidation('websiteUrl', 'required')">
+              Website URL is mandatory
+            </mat-error>
+            <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+              *ngIf="getControlValidation('websiteUrl', 'pattern')">
+              Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported
+            </mat-error>
+            <mat-hint class="w-full flex justify-between items-center">
+              <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
+              <span class="input-note">{{getTextLength('websiteUrl')}}/70</span>
+            </mat-hint>
           </mat-form-field>
-          <div class="flex justify-between items-center">
-            <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
-            <span class="input-note">{{getTextLength('websiteUrl')}}/70</span>
-          </div>
         </div>
       </div>
 
-      <div class="flex flex-column gap-1 w-full">
+      <div class="flex flex-column gap-1 w-full mb-6">
         <div class="flex items-center gap-1 required">
           <span class="lable">Description</span>
           <mat-icon class="info-icon"
@@ -59,11 +77,19 @@
         <mat-form-field class="w-full description">
           <textarea matInput rows="6" formControlName="description" maxlength="500"
             placeholder="Type the decription in fewer than 500 characters" i18n-placeholder></textarea>
+          <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+            *ngIf="getControlValidation('description', 'required')">
+            Description is mandatory
+          </mat-error>
+          <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+            *ngIf="getControlValidation('description', 'pattern')">
+            Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported
+          </mat-error>
+          <mat-hint class="w-full flex justify-between items-center">
+            <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
+            <span class="input-note">{{getTextLength('description')}}/500</span>
+          </mat-hint>
         </mat-form-field>
-        <div class="flex justify-between items-center">
-          <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
-          <span class="input-note">{{getTextLength('description')}}/500</span>
-        </div>
       </div>
 
       <div class="flex flex-column gap-2">

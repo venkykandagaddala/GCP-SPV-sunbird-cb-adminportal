@@ -35,6 +35,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   providerFormGroup!: FormGroup
   providerDetalsBeforUpdate: any
 
+  logoTouched = false
   imageUrl!: string
   thumbnailFile: any
   FILE_UPLOAD_MAX_SIZE = 100 * 1024 * 1024
@@ -178,6 +179,14 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     }
   }
 
+  getControlValidation(controlName: string, validator: string): Boolean {
+    const control = this.providerFormGroup.get(controlName)
+    if (control && control.touched && control.errors && control.errors[validator]) {
+      return true
+    }
+    return false
+  }
+
   get getTipsList() {
     return this.providerFormGroup.get('providerTips') as FormArray
   }
@@ -197,6 +206,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   //#region (thumnail upload)
 
   onThumbNailSelected(event: any): void {
+    this.logoTouched = true
     this.thumbnailFile = event
     const fileName = event.name.replace(/[^A-Za-z0-9_.]/g, '')
     if (this.thumbnailFile) {
@@ -245,7 +255,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    },            'image/png')
+    }, 'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -274,6 +284,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   //#region (submit details or update)
   submit() {
+    this.logoTouched = true
     if (this.providerFormGroup.valid && this.imageUrl) {
       this.createContentsToUpload()
     }
@@ -388,7 +399,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            },         1000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -424,7 +435,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Provider details updated successfully.'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            },         1000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
