@@ -181,7 +181,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   getControlValidation(controlName: string, validator: string): Boolean {
     const control = this.providerFormGroup.get(controlName)
-    if (control && control.touched && control.errors && control.errors[validator]) {
+    if (control && control.errors && control.errors[validator]) {
       return true
     }
     return false
