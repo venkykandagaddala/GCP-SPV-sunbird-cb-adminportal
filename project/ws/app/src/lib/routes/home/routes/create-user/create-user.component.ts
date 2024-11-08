@@ -117,23 +117,23 @@ export class CreateUserComponent implements OnInit {
       this.createUserForm = new UntypedFormGroup({
         fname: new UntypedFormControl({ value: name, disabled: name ? true : false }, [Validators.required]),
         // lname: new FormControl('', [Validators.required]),
-        email: new FormControl({ value: this.profileUtilSvc.transformToEmail(email), disabled: email ? true : false }, [Validators.required,
+        email: new UntypedFormControl({ value: this.profileUtilSvc.transformToEmail(email), disabled: email ? true : false }, [Validators.required,
         Validators.pattern(EMAIL_PATTERN)]),
-        mobileNumber: new FormControl({ value: mobile, disabled: name ? true : false }, [Validators.required, Validators.pattern(MOBILE_PATTERN), Validators.maxLength(10)]),
-        role: new FormControl('', [Validators.required, Validators.required]),
-        dept: new FormControl(this.orgName, [Validators.required]),
-        deptId: new FormControl(this.createdDepartment.depName, [Validators.required]),
+        mobileNumber: new UntypedFormControl({ value: mobile, disabled: name ? true : false }, [Validators.required, Validators.pattern(MOBILE_PATTERN), Validators.maxLength(10)]),
+        role: new UntypedFormControl('', [Validators.required, Validators.required]),
+        dept: new UntypedFormControl(this.orgName, [Validators.required]),
+        deptId: new UntypedFormControl(this.createdDepartment.depName, [Validators.required]),
       })
     } else {
       this.createUserForm = new UntypedFormGroup({
         fname: new UntypedFormControl('', [Validators.required]),
         // lname: new FormControl('', [Validators.required]),
-        email: new FormControl('', [Validators.required,
+        email: new UntypedFormControl('', [Validators.required,
         Validators.pattern(EMAIL_PATTERN)]),
-        mobileNumber: new FormControl('', [Validators.required, Validators.pattern(MOBILE_PATTERN), Validators.maxLength(10)]),
-        role: new FormControl('', [Validators.required, Validators.required]),
-        dept: new FormControl(_.get(this.route, 'snapshot.data.configService.unMappedUser.rootOrg.orgName') || '', [Validators.required]),
-        deptId: new FormControl(_.get(this.route, 'snapshot.data.configService.unMappedUser.channel') || ''),
+        mobileNumber: new UntypedFormControl('', [Validators.required, Validators.pattern(MOBILE_PATTERN), Validators.maxLength(10)]),
+        role: new UntypedFormControl('', [Validators.required, Validators.required]),
+        dept: new UntypedFormControl(_.get(this.route, 'snapshot.data.configService.unMappedUser.rootOrg.orgName') || '', [Validators.required]),
+        deptId: new UntypedFormControl(_.get(this.route, 'snapshot.data.configService.unMappedUser.channel') || ''),
       })
     }
     if (this.editUserInfo) {

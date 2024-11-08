@@ -76,7 +76,7 @@ export class RequestCopyDetailsComponent implements OnInit {
   data: any
   compentencyKey!: ICompentencyKeys
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(private formBuilder: UntypedFormBuilder,
     private requestService: RequestServiceService,
     private activatedRouter: ActivatedRoute,
     private snackBar: MatSnackBar,
