@@ -5,16 +5,15 @@ import { LeftMenuService } from '@sunbird-cb/collection'
 import { HomeComponent } from './home.component'
 import { of } from 'rxjs'
 
-
 describe('HomeComponent', () => {
     let component: HomeComponent
 
     const valueSvc: Partial<ValueService> = {
-    isLtMedium$: of(true)
+    isLtMedium$: of(true),
     }
 
     const router: Partial<Router> = {
-        events: of()
+        events: of(),
     }
     const activeRoute: Partial<ActivatedRoute> = {}
     const telemetrySvc: Partial<TelemetryService> = {}
@@ -23,9 +22,9 @@ describe('HomeComponent', () => {
     const leftMenuService: Partial<LeftMenuService> = {
         onMessage: () => of({
             text: {
-                message: 'sample'
-            }
-        })
+                message: 'sample',
+            },
+        }),
     }
 
     beforeAll(() => {
