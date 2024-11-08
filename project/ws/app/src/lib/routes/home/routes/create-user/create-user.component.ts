@@ -10,6 +10,10 @@ import { environment } from '../../../../../../../../../src/environments/environ
 import { EventService } from '@sunbird-cb/utils'
 import { ProfileV2UtillService } from '../../services/home-utill.service'
 
+// const EMAIL_PATTERN_OLD = /^[a-z0-9_-]+(?:\.[a-z0-9_-]+)*@((?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?){2,}\.){1,3}(?:\w){2,}$/
+const EMAIL_PATTERN = /^[a-zA-Z0-9]+[a-zA-Z0-9._-]*[a-zA-Z0-9]+@[a-zA-Z0-9]+([-a-zA-Z0-9]*[a-zA-Z0-9]+)?(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,4}$/
+const MOBILE_PATTERN = '^((\\+91-?)|0)?[0-9]{10}$'
+
 @Component({
   selector: 'ws-app-create-user',
   templateUrl: './create-user.component.html',
@@ -113,23 +117,23 @@ export class CreateUserComponent implements OnInit {
       this.createUserForm = new UntypedFormGroup({
         fname: new UntypedFormControl({ value: name, disabled: name ? true : false }, [Validators.required]),
         // lname: new FormControl('', [Validators.required]),
-        email: new UntypedFormControl({ value: this.profileUtilSvc.transformToEmail(email), disabled: email ? true : false }, [Validators.required,
-        Validators.pattern(/^[a-z0-9_-]+(?:\.[a-z0-9_-]+)*@((?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?){2,}\.){1,3}(?:\w){2,}$/)]),
-        mobileNumber: new UntypedFormControl({ value: mobile, disabled: name ? true : false }, [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$'), Validators.maxLength(10)]),
-        role: new UntypedFormControl('', [Validators.required, Validators.required]),
-        dept: new UntypedFormControl(this.orgName, [Validators.required]),
-        deptId: new UntypedFormControl(this.createdDepartment.depName, [Validators.required]),
+        email: new FormControl({ value: this.profileUtilSvc.transformToEmail(email), disabled: email ? true : false }, [Validators.required,
+        Validators.pattern(EMAIL_PATTERN)]),
+        mobileNumber: new FormControl({ value: mobile, disabled: name ? true : false }, [Validators.required, Validators.pattern(MOBILE_PATTERN), Validators.maxLength(10)]),
+        role: new FormControl('', [Validators.required, Validators.required]),
+        dept: new FormControl(this.orgName, [Validators.required]),
+        deptId: new FormControl(this.createdDepartment.depName, [Validators.required]),
       })
     } else {
       this.createUserForm = new UntypedFormGroup({
         fname: new UntypedFormControl('', [Validators.required]),
         // lname: new FormControl('', [Validators.required]),
-        email: new UntypedFormControl('', [Validators.required,
-        Validators.pattern(/^[a-z0-9_-]+(?:\.[a-z0-9_-]+)*@((?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?){2,}\.){1,3}(?:\w){2,}$/)]),
-        mobileNumber: new UntypedFormControl('', [Validators.required, Validators.pattern('^((\\+91-?)|0)?[0-9]{10}$'), Validators.maxLength(10)]),
-        role: new UntypedFormControl('', [Validators.required, Validators.required]),
-        dept: new UntypedFormControl(_.get(this.route, 'snapshot.data.configService.unMappedUser.rootOrg.orgName') || '', [Validators.required]),
-        deptId: new UntypedFormControl(_.get(this.route, 'snapshot.data.configService.unMappedUser.channel') || ''),
+        email: new FormControl('', [Validators.required,
+        Validators.pattern(EMAIL_PATTERN)]),
+        mobileNumber: new FormControl('', [Validators.required, Validators.pattern(MOBILE_PATTERN), Validators.maxLength(10)]),
+        role: new FormControl('', [Validators.required, Validators.required]),
+        dept: new FormControl(_.get(this.route, 'snapshot.data.configService.unMappedUser.rootOrg.orgName') || '', [Validators.required]),
+        deptId: new FormControl(_.get(this.route, 'snapshot.data.configService.unMappedUser.channel') || ''),
       })
     }
     if (this.editUserInfo) {
