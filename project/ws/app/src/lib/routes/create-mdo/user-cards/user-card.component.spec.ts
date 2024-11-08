@@ -27,27 +27,23 @@ describe('UserCardComponent', () => {
     }
 
     const dialog: Partial<MatDialog> = {}
+
     const route: Partial<ActivatedRoute> = {
         snapshot: {
             params: { tab: 'verified' },
             queryParams: of({ roleId: 'testRoleId' }),
-            data: {
-                configSvc: {
-                    userProfile: {
-                        userId: 'sampleId',
-                    },
+            data: of({
+                profile: {
+                    data: [{ role: 'sam' }],
                 },
-            },
+            }),
             parent: {
-                url: [],
-                params: {},
-                queryParams: {},
-                fragment: null,
-                data: {
+                url: of([]),
+                data: of({
                     configService: {
                         userRoles: new Map([['spv_admin', true]]),
                     },
-                },
+                }),
             } as any,
         } as any,
     }

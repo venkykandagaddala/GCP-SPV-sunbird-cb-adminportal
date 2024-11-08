@@ -35,6 +35,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   providerFormGroup!: FormGroup
   providerDetalsBeforUpdate: any
 
+  logoTouched = false
   imageUrl!: string
   thumbnailFile: any
   FILE_UPLOAD_MAX_SIZE = 100 * 1024 * 1024
@@ -144,6 +145,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     this.thumbNailUrl = this.imageUrl
     if (_.get(providerDetails, 'data.documentUrl')) {
       this.uploadedPdfUrl = _.get(providerDetails, 'data.documentUrl', '')
+      this.fileUploadedDate = _.get(providerDetails, 'data.documentUploadedDate', '')
       this.pdfUploaded = true
       this.fileName = this.getFileName
     }
@@ -177,6 +179,14 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     }
   }
 
+  getControlValidation(controlName: string, validator: string): Boolean {
+    const control = this.providerFormGroup.get(controlName)
+    if (control && control.touched && control.errors && control.errors[validator]) {
+      return true
+    }
+    return false
+  }
+
   get getTipsList() {
     return this.providerFormGroup.get('providerTips') as FormArray
   }
@@ -196,17 +206,23 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   //#region (thumnail upload)
 
   onThumbNailSelected(event: any): void {
+    this.logoTouched = true
     this.thumbnailFile = event
+    const fileName = event.name.replace(/[^A-Za-z0-9_.]/g, '')
     if (this.thumbnailFile) {
-      const reader = new FileReader()
-      reader.onload = (e: any) => {
-        const img = new Image()
-        img.onload = () => {
-          this.cropImage(img)
+      if (fileName.toLowerCase().endsWith('.svg') || fileName.toLowerCase().endsWith('.png')) {
+        const reader = new FileReader()
+        reader.onload = (e: any) => {
+          const img = new Image()
+          img.onload = () => {
+            this.cropImage(img)
+          }
+          img.src = e.target.result
         }
-        img.src = e.target.result
+        reader.readAsDataURL(this.thumbnailFile)
+      } else {
+        this.showSnackBar('Please upload svg or png image')
       }
-      reader.readAsDataURL(this.thumbnailFile)
     }
   }
 
@@ -239,7 +255,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    },            'image/png')
+    }, 'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -268,6 +284,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   //#region (submit details or update)
   submit() {
+    this.logoTouched = true
     if (this.providerFormGroup.valid && this.imageUrl) {
       this.createContentsToUpload()
     }
@@ -316,8 +333,13 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     forkJoin(resourceCreationSubscriptions).subscribe({
       next: responcess => {
         responcess.forEach((responce: any) => {
-          const url = _.get(responce, 'result.url')
-            .replace('https://storage.googleapis.com/igot', `${environment.karmYogiPath}/content-store`)
+          const createdUrl = _.get(responce, 'result.url')
+          const urlToReplace = 'https://storage.googleapis.com/igot'
+          let url = createdUrl
+          if (createdUrl.startsWith(urlToReplace)) {
+            const urlSplice = createdUrl.slice(urlToReplace.length).split('/')
+            url = `${environment.karmYogiPath}/content-store/${urlSplice.slice(1).join('/')}`
+          }
           if (responce.fileType === 'thumbnail') {
             this.thumbNailUrl = url
           } else if (responce.fileType === 'ciosFile') {
@@ -353,6 +375,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         providerTips: formDetails.providerTips,
         link: this.thumbNailUrl,
         documentUrl: this.uploadedPdfUrl,
+        documentUploadedDate: this.fileUploadedDate,
       }
 
       if (this.providerDetails) {
@@ -376,7 +399,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            },         1000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -398,6 +421,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       this.providerDetalsBeforUpdate['data']['providerTips'] = formDetails.providerTips
       this.providerDetalsBeforUpdate['data']['link'] = this.thumbNailUrl
       this.providerDetalsBeforUpdate['data']['documentUrl'] = this.uploadedPdfUrl
+      this.providerDetalsBeforUpdate['data']['documentUploadedDate'] = this.fileUploadedDate
       const tranforamtions = this.transforamtionForm.value
       this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
       this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson
@@ -408,10 +432,10 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           this.loaderService.changeLoad.next(false)
           if (responce) {
             setTimeout(() => {
-              const successMsg = 'Successfully Onboarded'
+              const successMsg = 'Provider details updated successfully.'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            },         1000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
