@@ -365,7 +365,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
               this.getContentList()
               this.getUnPublishedCoursesList()
               this.getPublishedCoursesList()
-            }, 1000)
+            },         1000)
           }
         },
         error: (error: HttpErrorResponse) => {
