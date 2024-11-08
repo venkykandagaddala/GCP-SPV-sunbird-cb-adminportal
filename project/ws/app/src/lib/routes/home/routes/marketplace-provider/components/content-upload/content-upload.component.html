@@ -70,8 +70,8 @@
   </mat-card-content>
 </mat-card>
 
-<ng-container *ngIf="providerDetails && providerDetails.isAuthenticated">
-  <mat-tab-group class="" [(selectedIndex)]="selectedIndex">
+<ng-container *ngIf="providerDetails && providerDetails.isAuthenticated && !delayTabLoad">
+  <mat-tab-group class="">
     <mat-tab label="Upload Status">
       <div class="w-full mt-3 flex flex-col">
         <ng-container *ngIf="!showUploadedStatusLoader; else showLoader">

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core'
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { map } from 'rxjs/operators'
@@ -15,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar'
   styleUrls: ['./content-upload.component.scss'],
   providers: [DatePipe],
 })
-export class ContentUploadComponent implements OnInit, OnChanges {
+export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>
 
@@ -73,7 +73,8 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     pageIndex: 0,
     totalCount: 20,
   }
-  selectedIndex = 0
+
+  delayTabLoad = true
 
   constructor(
     private router: Router,
@@ -90,6 +91,10 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.getPublishedCoursesList()
       this.getUnPublishedCoursesList()
     }
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => { this.delayTabLoad = false }, 1500)
   }
 
   //#region (content files)
@@ -209,13 +214,15 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   formateCoursesList(responce: any[]) {
     const formatedList: any = []
     responce.forEach((course: any) => {
+      const publishedOnDate = new Date(_.get(course, 'ciosData.content.publishedOn'))
       const formateCourse = {
         id: _.get(course, 'ciosData.content.externalId', ''),
         courseName: _.get(course, 'ciosData.content.name', ''),
         courseImg: _.get(course, 'ciosData.content.appIcon', ''),
         source: _.get(course, 'ciosData.content.source', ''),
         courseStatus: course.isActive ? 'Published' : 'Not Published',
-        publishedOn: course.publishedOn ? (this.datePipe.transform(new Date(course.publishedOn), 'MMM dd, yyyy')) : 'N/A',
+        publishedOn: isNaN(publishedOnDate.getTime()) ? 'N/A'
+          : this.datePipe.transform(publishedOnDate, 'MMM dd, yyyy'),
         listedOn: course.createdDate ? (this.datePipe.transform(new Date(course.createdDate), 'MMM dd, yyyy')) : 'N/A',
         isActive: course.isActive,
         isChecked: false,
@@ -459,7 +466,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     // Create an anchor element and simulate a click to start the download
     const link = document.createElement('a')
     link.href = blobUrl
-    link.download = `${fileName}_logs`
+    link.download = `${fileName}`.replace('xlsx', 'csv')
     link.click()
     window.URL.revokeObjectURL(blobUrl)
     const message = 'Logs Downloaded Successfully.'
