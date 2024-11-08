@@ -8,9 +8,6 @@ import { EventService, ValueService } from '@sunbird-cb/utils'
 import { CreateMdoComponent } from './create-mdo.component'
 import { of } from 'rxjs'
 
-
-
-
 describe('CreateMdoComponent', () => {
     let component: CreateMdoComponent
 
@@ -20,7 +17,7 @@ describe('CreateMdoComponent', () => {
     const router: Partial<Router> = {}
     const directoryService: Partial<DirectoryService> = {}
     const valueSvc: Partial<ValueService> = {
-        isLtMedium$: of(true)
+        isLtMedium$: of(true),
     }
     const activatedRoute: Partial<ActivatedRoute> = {
         snapshot: {
@@ -31,8 +28,8 @@ describe('CreateMdoComponent', () => {
                             userId: 'sampleId',
                         },
                         unMappedUser: {
-                            roles: ['PUBLIC', 'STATE_ADMIN']
-                        }
+                            roles: ['PUBLIC', 'STATE_ADMIN'],
+                        },
                     },
                 },
             },

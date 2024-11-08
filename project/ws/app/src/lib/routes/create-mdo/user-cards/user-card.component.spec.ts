@@ -34,20 +34,19 @@ describe('UserCardComponent', () => {
             queryParams: of({ roleId: 'testRoleId' }),
             data: of({
                 profile: {
-                    data: [{ role: 'sam' }]
-                }
+                    data: [{ role: 'sam' }],
+                },
             }),
             parent: {
                 url: of([]),
                 data: of({
                     configService: {
                         userRoles: new Map([['spv_admin', true]]),
-                    }
+                    },
                 }),
             } as any,
         } as any,
     }
-
 
     const snackBar: Partial<MatSnackBar> = {}
     const events: Partial<EventService> = {}
