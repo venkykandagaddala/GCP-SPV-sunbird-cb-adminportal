@@ -3413,10 +3413,10 @@
   dependencies:
     tslib "^2.0.0"
 
-"@sunbird-cb/utils@1.0.19-ang-13-16":
-  version "1.0.19-ang-13-16"
-  resolved "https://registry.yarnpkg.com/@sunbird-cb/utils/-/utils-1.0.19-ang-13-16.tgz#f24f8688ab426f420f9f8fe9acbe9d5292356f36"
-  integrity sha512-5MPr3qwfGoBKbIY4o2Re5SzaP4wcV8yHS2MUX4grX+oVpwh8p+R6MqX18ClVuY5CVWbb6H/PrZrBgCDO6/jiBQ==
+"@sunbird-cb/utils@1.0.20-ang-13-16":
+  version "1.0.20-ang-13-16"
+  resolved "https://registry.yarnpkg.com/@sunbird-cb/utils/-/utils-1.0.20-ang-13-16.tgz#48fe246705da3483d9eba718b35ef902233e3e1a"
+  integrity sha512-7AIGpZKBBQzluIM1Yz8ek9XYcad4aIvC7Dz1n9pKI4PZgh7bms2agtRDcbeoieIWSdPULTa5pra2UdDXjn+1hA==
   dependencies:
     tslib "^2.0.0"
 
