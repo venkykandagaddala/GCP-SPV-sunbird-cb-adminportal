@@ -1,25 +1,36 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
+import { Router } from '@angular/router'
+import { MarketplaceService } from '../../services/marketplace.service'
+import { DatePipe } from '@angular/common'
+import { MatDialog } from '@angular/material/dialog'
+import { MatSnackBar } from '@angular/material/snack-bar'
 import { ContentUploadComponent } from './content-upload.component'
 
 describe('ContentUploadComponent', () => {
-  let component: ContentUploadComponent
-  let fixture: ComponentFixture<ContentUploadComponent>
+    let component: ContentUploadComponent
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ContentUploadComponent],
+    const router: Partial<Router> = {}
+    const marketPlaceSvc: Partial<MarketplaceService> = {}
+    const datePipe: Partial<DatePipe> = {}
+    const snackBar: Partial<MatSnackBar> = {}
+    const dialog: Partial<MatDialog> = {}
+
+    beforeAll(() => {
+        component = new ContentUploadComponent(
+            router as Router,
+            marketPlaceSvc as MarketplaceService,
+            datePipe as DatePipe,
+            snackBar as MatSnackBar,
+            dialog as MatDialog
+        )
     })
-    .compileComponents()
-  }))
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ContentUploadComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    beforeEach(() => {
+        jest.clearAllMocks()
+        jest.resetAllMocks()
+    })
 
-  it('should create', () => {
-    expect(component).toBeTruthy()
-  })
+    it('should create a instance of component', () => {
+        expect(component).toBeTruthy()
+    })
 })

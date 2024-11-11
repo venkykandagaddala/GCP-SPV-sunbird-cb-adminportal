@@ -1,25 +1,22 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
-
 import { HelpCenterGuideComponent } from './help-center-guide.component'
 
 describe('HelpCenterGuideComponent', () => {
-  let component: HelpCenterGuideComponent
-  let fixture: ComponentFixture<HelpCenterGuideComponent>
+    let component: HelpCenterGuideComponent
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [HelpCenterGuideComponent],
+
+
+    beforeAll(() => {
+        component = new HelpCenterGuideComponent(
+
+        )
     })
-    .compileComponents()
-  }))
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(HelpCenterGuideComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    beforeEach(() => {
+        jest.clearAllMocks()
+        jest.resetAllMocks()
+    })
 
-  it('should create', () => {
-    expect(component).toBeTruthy()
-  })
+    it('should create a instance of component', () => {
+        expect(component).toBeTruthy()
+    })
 })

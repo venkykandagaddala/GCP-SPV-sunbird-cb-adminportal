@@ -1,10 +1,13 @@
-import { AppButtonComponent } from './app-button.component'
 
-describe('AppButtonComponent', () => {
-    let component: AppButtonComponent
+import { AboutComponent } from './about.component'
+
+describe('AboutComponent', () => {
+    let component: AboutComponent
+
+
 
     beforeAll(() => {
-        component = new AppButtonComponent(
+        component = new AboutComponent(
 
         )
     })

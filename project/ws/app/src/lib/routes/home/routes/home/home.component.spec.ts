@@ -9,7 +9,7 @@ describe('HomeComponent', () => {
     let component: HomeComponent
 
     const valueSvc: Partial<ValueService> = {
-    isLtMedium$: of(true),
+        isLtMedium$: of(true),
     }
 
     const router: Partial<Router> = {
