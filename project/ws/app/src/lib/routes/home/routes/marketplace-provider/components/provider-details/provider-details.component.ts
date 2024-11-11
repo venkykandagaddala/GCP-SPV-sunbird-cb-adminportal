@@ -35,6 +35,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   providerFormGroup!: FormGroup
   providerDetalsBeforUpdate: any
 
+  logoTouched = false
   imageUrl!: string
   thumbnailFile: any
   FILE_UPLOAD_MAX_SIZE = 100 * 1024 * 1024
@@ -144,6 +145,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     this.thumbNailUrl = this.imageUrl
     if (_.get(providerDetails, 'data.documentUrl')) {
       this.uploadedPdfUrl = _.get(providerDetails, 'data.documentUrl', '')
+      this.fileUploadedDate = _.get(providerDetails, 'data.documentUploadedDate', '')
       this.pdfUploaded = true
       this.fileName = this.getFileName
     }
@@ -177,6 +179,14 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     }
   }
 
+  getControlValidation(controlName: string, validator: string): Boolean {
+    const control = this.providerFormGroup.get(controlName)
+    if (control && control.touched && control.errors && control.errors[validator]) {
+      return true
+    }
+    return false
+  }
+
   get getTipsList() {
     return this.providerFormGroup.get('providerTips') as FormArray
   }
@@ -196,6 +206,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   //#region (thumnail upload)
 
   onThumbNailSelected(event: any): void {
+    this.logoTouched = true
     this.thumbnailFile = event
     const fileName = event.name.replace(/[^A-Za-z0-9_.]/g, '')
     if (this.thumbnailFile) {
@@ -273,6 +284,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   //#region (submit details or update)
   submit() {
+    this.logoTouched = true
     if (this.providerFormGroup.valid && this.imageUrl) {
       this.createContentsToUpload()
     }
@@ -363,6 +375,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         providerTips: formDetails.providerTips,
         link: this.thumbNailUrl,
         documentUrl: this.uploadedPdfUrl,
+        documentUploadedDate: this.fileUploadedDate,
       }
 
       if (this.providerDetails) {
@@ -408,6 +421,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       this.providerDetalsBeforUpdate['data']['providerTips'] = formDetails.providerTips
       this.providerDetalsBeforUpdate['data']['link'] = this.thumbNailUrl
       this.providerDetalsBeforUpdate['data']['documentUrl'] = this.uploadedPdfUrl
+      this.providerDetalsBeforUpdate['data']['documentUploadedDate'] = this.fileUploadedDate
       const tranforamtions = this.transforamtionForm.value
       this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
       this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson

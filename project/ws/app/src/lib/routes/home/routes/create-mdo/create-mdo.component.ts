@@ -1,8 +1,8 @@
 import { DirectoryService } from '../../services/directory.services'
 import { Component, OnInit, Input } from '@angular/core'
-import { FormGroup, FormControl, ValidatorFn, AbstractControl, Validators } from '@angular/forms'
-import { MatDialog } from '@angular/material/dialog'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { UntypedFormGroup, UntypedFormControl, ValidatorFn, AbstractControl, Validators } from '@angular/forms'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { UserPopupComponent } from '../user-popup/user-popup'
 
 import { LoaderService } from '../../services/loader.service'
@@ -49,9 +49,9 @@ export class CreateMdoComponent implements OnInit {
   @Input() type = ''
   createdDepartment: any
   fracData: any = []
-  contentForm!: FormGroup
-  stateForm!: FormGroup
-  departmentForm!: FormGroup
+  contentForm!: UntypedFormGroup
+  stateForm!: UntypedFormGroup
+  departmentForm!: UntypedFormGroup
   formType: 'default' | 'state' | 'department' = 'default'
   states: any[] = []
   masterStates!: Observable<any> | undefined
@@ -131,19 +131,19 @@ export class CreateMdoComponent implements OnInit {
       if (this.userRoles && this.userRoles.indexOf('STATE_ADMIN') >= 0) {
         this.isStateAdmin = true
       }
-      this.contentForm = new FormGroup({
-        name: new FormControl(),
-        head: new FormControl(),
-        deptSubTypeId: new FormControl(),
-        deptMdoSubTypeId: new FormControl(),
+      this.contentForm = new UntypedFormGroup({
+        name: new UntypedFormControl(),
+        head: new UntypedFormControl(),
+        deptSubTypeId: new UntypedFormControl(),
+        deptMdoSubTypeId: new UntypedFormControl(),
       })
-      this.stateForm = new FormGroup({
-        state: new FormControl('', [Validators.required]),
+      this.stateForm = new UntypedFormGroup({
+        state: new UntypedFormControl('', [Validators.required]),
       })
-      this.departmentForm = new FormGroup({
-        ministry: new FormControl('', [Validators.required]),
-        department: new FormControl('', [forbiddenNamesValidator(this.masterDepartments)]),
-        organisation: new FormControl('', [forbiddenNamesValidator(this.masterOrgs)]),
+      this.departmentForm = new UntypedFormGroup({
+        ministry: new UntypedFormControl('', [Validators.required]),
+        department: new UntypedFormControl('', [forbiddenNamesValidator(this.masterDepartments)]),
+        organisation: new UntypedFormControl('', [forbiddenNamesValidator(this.masterOrgs)]),
       })
       this.activatedRoute.params.subscribe(params => {
         let data = params['data']
@@ -183,11 +183,11 @@ export class CreateMdoComponent implements OnInit {
 
         }
         if (data) {
-          this.contentForm = new FormGroup({
-            name: new FormControl(data.row.mdo),
-            head: new FormControl(data.row.head),
-            deptSubTypeId: new FormControl(),
-            deptMdoSubTypeId: new FormControl(),
+          this.contentForm = new UntypedFormGroup({
+            name: new UntypedFormControl(data.row.mdo),
+            head: new UntypedFormControl(data.row.head),
+            deptSubTypeId: new UntypedFormControl(),
+            deptMdoSubTypeId: new UntypedFormControl(),
           })
         }
 
@@ -467,7 +467,7 @@ export class CreateMdoComponent implements OnInit {
 
               // this.router.navigate([`/app/home/directory`])
             }
-          }, (error: any) => {
+          },          (error: any) => {
             this.openSnackbar(`Something went wrong, please try again later`)
             this.disableStateCreateButton = false
             this.displayLoader = false

@@ -1,5 +1,4 @@
 
-
 import { Router, ActivatedRoute } from '@angular/router'
 import { ProfileV2UtillService } from '../../../home/services/home-utill.service'
 import { ProfileV2Service } from '../../../home/services/home.servive'

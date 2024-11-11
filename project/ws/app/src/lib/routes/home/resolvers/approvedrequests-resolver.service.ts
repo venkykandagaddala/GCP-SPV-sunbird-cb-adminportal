@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Resolve } from '@angular/router'
+
 import { of } from 'rxjs'
 import { map, catchError } from 'rxjs/operators'
 // import { IResolveResponse } from '@sunbird-cb/utils'
@@ -8,8 +8,7 @@ import { map, catchError } from 'rxjs/operators'
 
 @Injectable()
 export class ApprovedRequestsResolve
-  implements
-  Resolve<any> {
+   {
   requestType: any
   url: any
   pageLimit = 1000

@@ -65,7 +65,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'directory/mdo',
+        // redirectTo: 'directory/mdo',
         // redirectTo: 'users/active',
         component: DirectoryViewComponent,
         // component: UsersViewComponent,
@@ -136,7 +136,7 @@ const routes: Routes = [
       {
         path: 'directory',
         // pathMatch: 'full',
-        redirectTo: 'directory/mdo',
+        // redirectTo: 'directory/mdo',
         component: DirectoryViewComponent,
         data: {
           // pageId: 'app/directory',
@@ -226,7 +226,7 @@ const routes: Routes = [
       },
       {
         path: 'requests',
-        redirectTo: 'requests/:type',
+        // redirectTo: 'requests/:type',
         component: OnboardingRequestsComponent,
         data: {
           pageId: 'home/requests',

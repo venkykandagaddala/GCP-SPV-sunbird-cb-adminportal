@@ -2,7 +2,9 @@
   padding: 20px;
 
   .header {
+    /* stylelint-enable */
     font: 700 20px / 30px Lato;
+    /* stylelint-disable */
     color: #212529;
   }
 
@@ -16,7 +18,9 @@
 
   .sub-header {
     color: #000000DE;
+    /* stylelint-enable */
     font: 400 14px Lato;
+    /* stylelint-disable */
   }
 
   .scv-btn {
@@ -25,7 +29,9 @@
     height: 40px;
     border-radius: 20px;
     color: #FFFFFF;
+    /* stylelint-enable */
     font: 700 14px Lato;
+    /* stylelint-disable */
   }
 
   .api-btn {
@@ -33,7 +39,9 @@
     height: 38px;
     border: 1px solid #1B4CA1;
     color: #1B4CA1;
+    /* stylelint-enable */
     font: 700 14px Lato;
+    /* stylelint-disable */
   }
 
   .instructions-box {
@@ -43,7 +51,9 @@
 
     .instruction-text {
       color: #000000DE;
+      /* stylelint-enable */
       font: 400 14px Lato;
+      /* stylelint-disable */
     }
 
     // .download-btn {
@@ -66,34 +76,46 @@
       width: 117px;
       border-radius: 20px;
       color: #1B4CA1;
+      /* stylelint-enable */
       font: 700 14px Lato;
+      /* stylelint-disable */
     }
 
     .browse-file {
       color: #1B4CA1;
+      /* stylelint-enable */
       font: 700 14px Lato;
+      /* stylelint-disable */
       pointer-events: all;
       cursor: pointer;
     }
 
     .or-text {
       color: #00000099;
+      /* stylelint-enable */
       font: 400 14px Lato;
+      /* stylelint-disable */
     }
 
     .drag-file {
       color: #00000099;
+      /* stylelint-enable */
       font: 400 16px Inter;
+      /* stylelint-disable */
     }
 
     .file-size {
       color: #000000DE;
+      /* stylelint-enable */
       font: 400 12px Lato;
+      /* stylelint-disable */
     }
 
     .file-type{
       color: #00000099;
+      /* stylelint-enable */
       font: 400 12px Lato;
+      /* stylelint-disable */
     }
   }
 
@@ -112,18 +134,24 @@
   height: 93px;
 
   .pdfName {
+    /* stylelint-enable */
     font: 400 16px Lato;
+    /* stylelint-disable */
     color: #000000DE;
   }
 
   .fileUplaodedDate {
+    /* stylelint-enable */
     font: 400 12px Lato;
+    /* stylelint-disable */
     color: #000000DE;
   }
 
   .documentAttached {
     color: #00000099;
+    /* stylelint-enable */
     font: 700 12px Lato;
+    /* stylelint-disable */
 
     .greenTick {
       width: 20px;
@@ -151,7 +179,9 @@
   border: 1px solid #DCDCDC;
 
   .cantUploadMsg{
+    /* stylelint-enable */
     font: 400 14px Inter;
+    /* stylelint-disable */
     color: #525252;
   }
 }

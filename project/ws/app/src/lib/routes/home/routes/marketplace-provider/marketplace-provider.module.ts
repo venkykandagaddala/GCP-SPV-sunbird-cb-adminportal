@@ -95,9 +95,6 @@ const routes: Routes = [
     NgJsonEditorModule,
   ],
   providers: [DatePipe, LoaderService],
-  entryComponents: [
-    ConformationPopupComponent,
-  ],
   exports: [RouterModule],
 })
 export class MarketplaceProviderModule { }

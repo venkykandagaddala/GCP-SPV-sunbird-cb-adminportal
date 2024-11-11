@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core'
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
 import { RequestServiceService } from '../request-service.service'
 import { ActivatedRoute, Router } from '@angular/router'
-import { MatDialog } from '@angular/material/dialog'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { CompetencyViewComponent } from '../competency-view/competency-view.component'
 import { ConfirmationPopupComponent } from '../confirmation-popup/confirmation-popup.component'
 /* tslint:disable */
@@ -22,7 +22,7 @@ import { InitService } from '../../../../../../../../../../src/app/services/init
 })
 export class RequestCopyDetailsComponent implements OnInit {
 
-  requestForm!: FormGroup
+  requestForm!: UntypedFormGroup
   specialCharList = `( a-z/A-Z , 0-9 . _ - $ / \ : [ ]' ' !)`
   // tslint:disable-next-line:max-line-length
   noSpecialChar = new RegExp(/^[\u0900-\u097F\u0980-\u09FF\u0C00-\u0C7F\u0B80-\u0BFF\u0C80-\u0CFF\u0D00-\u0D7F\u0A80-\u0AFF\u0B00-\u0B7F\u0A00-\u0A7Fa-zA-Z0-9()$[\]\\.:,_/ -]*$/) // NOSONAR
@@ -69,14 +69,14 @@ export class RequestCopyDetailsComponent implements OnInit {
   filteredAssigneeType: any[] = []
   isCompetencyHide = false
 
-  competencyCtrl!: FormControl
-  competencyArea!: FormControl
-  competencyTheme!: FormControl
-  competencySubtheme!: FormControl
+  competencyCtrl!: UntypedFormControl
+  competencyArea!: UntypedFormControl
+  competencyTheme!: UntypedFormControl
+  competencySubtheme!: UntypedFormControl
   data: any
   compentencyKey!: ICompentencyKeys
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(private formBuilder: UntypedFormBuilder,
     private requestService: RequestServiceService,
     private activatedRouter: ActivatedRoute,
     private snackBar: MatSnackBar,
@@ -97,9 +97,9 @@ export class RequestCopyDetailsComponent implements OnInit {
     // this.fullProfile = _.get(this.activatedRouter.snapshot, 'data.configSvc')
     // this.userId = this.fullProfile.userProfile.userId
 
-    this.competencyArea = new FormControl('')
-    this.competencyTheme = new FormControl('')
-    this.competencySubtheme = new FormControl('')
+    this.competencyArea = new UntypedFormControl('')
+    this.competencyTheme = new UntypedFormControl('')
+    this.competencySubtheme = new UntypedFormControl('')
 
     // this.getFilterEntity()
     this.getFilterEntityV2()
@@ -115,20 +115,20 @@ export class RequestCopyDetailsComponent implements OnInit {
 
   initFormFroup() {
     this.requestForm = this.formBuilder.group({
-      titleName: new FormControl('', [Validators.required, preventHtmlAndJs(), Validators.pattern(this.noSpecialChar), Validators.minLength(10)]),
-      Objective: new FormControl('', [Validators.required, preventHtmlAndJs(), Validators.pattern(this.noSpecialChar)]),
-      userType: new FormControl('', [preventHtmlAndJs(), Validators.pattern(this.noSpecialChar)]),
-      learningMode: new FormControl(''),
-      compArea: new FormControl(''),
-      referenceLink: new FormControl('', preventHtmlAndJs()),
-      requestType: new FormControl('', Validators.required),
-      assignee: new FormControl(''),
-      providers: new FormControl([[]]),
-      providerText: new FormControl(''),
-      queryThemeControl: new FormControl(''),
-      querySubThemeControl: new FormControl(''),
+      titleName: new UntypedFormControl('', [Validators.required, preventHtmlAndJs(), Validators.pattern(this.noSpecialChar), Validators.minLength(10)]),
+      Objective: new UntypedFormControl('', [Validators.required, preventHtmlAndJs(), Validators.pattern(this.noSpecialChar)]),
+      userType: new UntypedFormControl('', [preventHtmlAndJs(), Validators.pattern(this.noSpecialChar)]),
+      learningMode: new UntypedFormControl(''),
+      compArea: new UntypedFormControl(''),
+      referenceLink: new UntypedFormControl('', preventHtmlAndJs()),
+      requestType: new UntypedFormControl('', Validators.required),
+      assignee: new UntypedFormControl(''),
+      providers: new UntypedFormControl([[]]),
+      providerText: new UntypedFormControl(''),
+      queryThemeControl: new UntypedFormControl(''),
+      querySubThemeControl: new UntypedFormControl(''),
       [this.compentencyKey.vKey]: [],
-      assigneeText: new FormControl(''),
+      assigneeText: new UntypedFormControl(''),
     })
   }
 
@@ -162,9 +162,9 @@ export class RequestCopyDetailsComponent implements OnInit {
     const value = this.requestForm.controls[this.compentencyKey.vKey].value || []
     this.requestObjData.competencies.map((comp: any) => {
       const obj = {
-        competencyArea: comp.select_area,
-        competencyTheme: comp.select_theme,
-        competencySubTheme: comp.select_sub_theme,
+        competencyArea: comp.area || comp.select_area,
+        competencyTheme: comp.theme || comp.select_theme,
+        competencySubTheme: comp.sub_theme || comp.select_sub_theme,
       }
       value.push(obj)
     })
@@ -290,9 +290,27 @@ export class RequestCopyDetailsComponent implements OnInit {
 
   getFilterEntityV2() {
     this.requestService.getFilterEntityV2().subscribe((res: any) => {
-      if (res) {
+      if (res && res[0] && res[1]) {
         // this.competencyList = res
-        this.allCompetencies = res
+        const competencyArea = res[0]
+        const competencyThemes = res[1].terms.filter((term: any) => term.hasOwnProperty('associations'))
+
+        const structuredResult = competencyArea.terms.map((areaTerm: any) => {
+          const areaAssociations = areaTerm.associations || []
+
+          const themes = areaAssociations.map((association: any) => {
+            const theme = competencyThemes.find((themeTerm: any) => themeTerm.identifier === association.identifier)
+
+            return theme ? { ...theme } : null
+          }).filter((theme: any) => theme)
+          return {
+            ...areaTerm,
+            themes,
+          }
+        })
+
+        // this.allCompetencies = res
+        this.allCompetencies = structuredResult
         this.filteredallCompetencies = this.allCompetencies
       }
 
@@ -414,7 +432,7 @@ export class RequestCopyDetailsComponent implements OnInit {
     this.allCompetencies.forEach((val: any) => {
       if (option.name === val.name) {
         this.seletedCompetencyArea = val
-        this.allCompetencyTheme = val.children
+        this.allCompetencyTheme = val.themes
         this.filteredallCompetencyTheme = this.allCompetencyTheme
 
       }
@@ -424,9 +442,9 @@ export class RequestCopyDetailsComponent implements OnInit {
   compThemeSelected(option: any) {
     this.enableCompetencyAdd = false
     this.allCompetencyTheme.forEach((val: any) => {
-      if (option.name === val.name) {
+      if (option.identifier === val.identifier) {
         this.seletedCompetencyTheme = val
-        this.allCompetencySubtheme = val.children
+        this.allCompetencySubtheme = val.associations
         this.filteredallCompetencySubtheme = this.allCompetencySubtheme
       }
     })
@@ -435,7 +453,7 @@ export class RequestCopyDetailsComponent implements OnInit {
   compSubThemeSelected(option: any) {
     this.enableCompetencyAdd = true
     this.allCompetencySubtheme.forEach((val: any) => {
-      if (option.name === val.name) {
+      if (option.identifier === val.identifier) {
         this.seletedCompetencySubTheme = val
       }
     })
@@ -475,11 +493,11 @@ export class RequestCopyDetailsComponent implements OnInit {
         competencyArea: this.seletedCompetencyArea.name,
         competencyAreaId: this.seletedCompetencyArea.identifier,
         competencyAreaDescription: this.seletedCompetencyArea.description,
-        competencyTheme: this.seletedCompetencyTheme.displayName,
+        competencyTheme: this.seletedCompetencyTheme.additionalProperties.displayName,
         competencyThemeId: this.seletedCompetencyTheme.identifier,
         competecnyThemeDescription: this.seletedCompetencyTheme.description,
-        competencyThemeType: this.seletedCompetencyTheme.refId,
-        competencySubTheme: this.seletedCompetencySubTheme.displayName,
+        competencyThemeType: this.seletedCompetencyTheme.refType,
+        competencySubTheme: this.seletedCompetencySubTheme.additionalProperties.displayName,
         competencySubThemeId: this.seletedCompetencySubTheme.identifier,
         competecnySubThemeDescription: this.seletedCompetencySubTheme.description,
       }
@@ -539,7 +557,7 @@ export class RequestCopyDetailsComponent implements OnInit {
   }
 
   onProviderRemoved(provider: any) {
-    const compThemeControl = this.requestForm.get('providers') as FormControl | null
+    const compThemeControl = this.requestForm.get('providers') as UntypedFormControl | null
     if (compThemeControl) {
       const themes = compThemeControl.value
       if (themes) {
