@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { MatDialog } from '@angular/material/dialog'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
 // import lodash from 'lodash'
 import { SurveyApiService } from './survey-api/survey-api.service'
 import { SolutionSurveyUploadComponent } from '../../components/solution-survey-upload/solution-survey-upload.component'

@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core'
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
-import { MatTableDataSource } from '@angular/material/table'
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms'
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog'
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table'
 import { RequestServiceService } from '../request-service.service'
 
 @Component({
@@ -11,7 +11,7 @@ import { RequestServiceService } from '../request-service.service'
 })
 export class AssignListPopupComponent implements OnInit {
 
-  requestForm!: FormGroup
+  requestForm!: UntypedFormGroup
   displayedColumns: string[] = ['select', 'providerName', 'details', 'eta']
   providerList: any[] = []
   dataSource: any
@@ -24,13 +24,13 @@ export class AssignListPopupComponent implements OnInit {
   submitAssign = ''
   currentUser: any
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private requestService: RequestServiceService,
               @Inject(MAT_DIALOG_DATA) public data: any,
               public dialogRef: MatDialogRef<AssignListPopupComponent>,
   ) {
     this.requestForm = this.fb.group({
-      assignee: new FormControl('', Validators.required),
+      assignee: new UntypedFormControl('', Validators.required),
     })
   }
 

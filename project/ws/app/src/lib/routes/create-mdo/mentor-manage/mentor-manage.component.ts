@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { MatDialog } from '@angular/material/dialog'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
 import { ActivatedRoute, Router } from '@angular/router'
 /* tslint:disable */
 import _ from 'lodash'
 /* tslint:enable */
 // import { environment } from 'src/environments/environment'
-import { PageEvent } from '@angular/material/paginator'
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator'
 import { EventService } from '@sunbird-cb/utils'
 import { NsContent } from '@sunbird-cb/collection'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'

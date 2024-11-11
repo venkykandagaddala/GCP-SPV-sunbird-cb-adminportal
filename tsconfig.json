@@ -3,14 +3,19 @@
   "compilerOptions": {
     "esModuleInterop": false,
     "skipLibCheck": true,
-    "types": ["jest"],
+    "types": [
+      "jest"
+    ],
     "alwaysStrict": true,
     "baseUrl": "./",
     "declaration": false,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
-    "lib": ["es2018", "dom"],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "module": "es2020",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
@@ -21,8 +26,12 @@
     "noUnusedParameters": true,
     "outDir": "./dist/out-tsc",
     "paths": {
-      "@ws/app": ["project/ws/app"],
-      "@ws/app/*": ["project/ws/app/*"]
+      "@ws/app": [
+        "project/ws/app"
+      ],
+      "@ws/app/*": [
+        "project/ws/app/*"
+      ]
     },
     "removeComments": true,
     "sourceMap": true,
@@ -31,8 +40,11 @@
     "strictFunctionTypes": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
-    "target": "es2015",
-    "typeRoots": ["node_modules/@types", "./custom_typings"],
+    "target": "ES2022",
+    "typeRoots": [
+      "node_modules/@types",
+      "./custom_typings"
+    ],
     "plugins": [
       {
         "name": "@angular/language-service"
@@ -44,11 +56,7 @@
         "configFile": "./tslint.json",
         "suppressWhileTypeErrorsPresent": false
       }
-    ]
-  },
-  "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true,
-    "enableIvy": true
+    ],
+    "useDefineForClassFields": false
   }
 }

@@ -1,17 +1,17 @@
 
 import { Component, OnInit } from '@angular/core'
 import { NSProfileDataV2 } from '../../models/profile-v2.model'
-import { MatDialog } from '@angular/material/dialog'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ConfigurationsService, EventService, WsEvents } from '@sunbird-cb/utils'
 /* tslint:disable */
 import _ from 'lodash'
 import { UsersService } from '../../services/users.service'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { environment } from 'src/environments/environment'
 import { LoaderService } from '../../services/loader.service'
 import { ProfileV2UtillService } from '../../services/home-utill.service'
-import { PageEvent } from '@angular/material/paginator'
+import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator'
 @Component({
   selector: 'ws-app-users-view',
   templateUrl: './users-view.component.html',

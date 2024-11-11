@@ -1,5 +1,4 @@
 
-
 import { ConfigurationsService } from '@sunbird-cb/utils'
 import { PublicLogoutComponent } from './public-logout.component'
 

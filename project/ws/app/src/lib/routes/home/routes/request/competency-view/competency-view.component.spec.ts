@@ -9,7 +9,7 @@ describe('CompetencyViewComponent', () => {
         close: jest.fn(),  // Mocking close method
     }
     const sanitized: Partial<DomSanitizer> = {
-        bypassSecurityTrustHtml: jest.fn((html) => html)  // Mocking bypassSecurityTrustHtml
+        bypassSecurityTrustHtml: jest.fn(html => html),  // Mocking bypassSecurityTrustHtml
     }
 
     const dData = {
@@ -18,7 +18,7 @@ describe('CompetencyViewComponent', () => {
         children: [
             { id: 1, description: 'Level 1 • Test 1' },
             { id: 2, description: 'Level 2 • Test 2' },
-        ]
+        ],
     }
 
     beforeAll(() => {
@@ -47,7 +47,7 @@ describe('CompetencyViewComponent', () => {
         it('should select the first child if no selectedLevelId is present', () => {
             const noSelectedLevelData = {
                 ...dData,
-                selectedLevelId: null
+                selectedLevelId: null,
             }
             component = new CompetencyViewComponent(
                 dialogRef as MatDialogRef<CompetencyViewComponent>,
@@ -72,7 +72,7 @@ describe('CompetencyViewComponent', () => {
             expect(dialogRef.close).toHaveBeenCalledWith({
                 id: 1,
                 action: 'ADD',
-                childId: 2
+                childId: 2,
             })
         })
 
@@ -82,7 +82,7 @@ describe('CompetencyViewComponent', () => {
             expect(dialogRef.close).toHaveBeenCalledWith({
                 id: 1,
                 action: 'ADD',
-                childId: ''
+                childId: '',
             })
         })
     })
@@ -92,14 +92,14 @@ describe('CompetencyViewComponent', () => {
             component.remove()
             expect(dialogRef.close).toHaveBeenCalledWith({
                 id: 1,
-                action: 'DELETE'
+                action: 'DELETE',
             })
         })
 
         it('should close the dialog with dData as id if dData.id is not present', () => {
             const noIdData = {
                 ...dData,
-                id: null
+                id: null,
             }
             component = new CompetencyViewComponent(
                 dialogRef as MatDialogRef<CompetencyViewComponent>,
@@ -109,10 +109,9 @@ describe('CompetencyViewComponent', () => {
             component.remove()
             expect(dialogRef.close).toHaveBeenCalledWith({
                 id: noIdData,
-                action: 'DELETE'
+                action: 'DELETE',
             })
         })
     })
-
 
 })
