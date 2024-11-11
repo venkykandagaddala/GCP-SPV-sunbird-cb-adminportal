@@ -14,7 +14,7 @@ import { EventThumbnailComponent } from '../event-thumbnail/event-thumbnail.comp
 import { EventService } from '@sunbird-cb/utils'
 import { NsContent } from '@sunbird-cb/collection'
 import { TelemetryEvents } from '../model/telemetry.event.model'
-import moment from 'moment'
+import * as moment from 'moment'
 import { environment } from '../../../../../../../../../../src/environments/environment'
 
 export interface IContentShareData {
