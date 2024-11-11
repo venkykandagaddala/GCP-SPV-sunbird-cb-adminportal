@@ -13,7 +13,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { COMMA, ENTER } from '@angular/cdk/keycodes'
 // tslint:disable-next-line
-import _ from 'lodash'
+import * as _ from 'lodash'
 import { RolesService } from '../../../routes/home/services/roles.service'
 import { ActivatedRoute } from '@angular/router'
 import { Observable, Subscription } from 'rxjs'

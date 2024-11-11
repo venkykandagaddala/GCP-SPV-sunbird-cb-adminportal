@@ -60,8 +60,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       ]
     } else {
       this.titles = [
-        { title: 'Directory', url: '/app/home/directory' },
-        { title: this.dept, url: `/app/home/directory/${this.urlValue}` },
+        { title: 'Directory', url: '/app/home/directory', path: '/app/home/directory' },
+        { title: this.dept, url: `/app/home/directory/${this.urlValue}`, path: `/app/home/directory/${this.urlValue}` },
         { title: this.mydept, url: 'none' },
       ]
     }

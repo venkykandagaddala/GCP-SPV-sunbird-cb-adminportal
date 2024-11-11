@@ -157,7 +157,7 @@
                         <div class="margin-bottom-s">
                             <label>Event type</label>
                             <mat-form-field appearance="outline" class="custom-width margin-top-xs">
-                                <mat-select formControlName="eventType">
+                                <mat-select formControlName="eventType" (selectionChange)="resetDateField()">
                                     <mat-option [value]="type" *ngFor="let type of evntTypesList">{{type}}
                                     </mat-option>
                                 </mat-select>
@@ -230,25 +230,52 @@
                                         aria-label="Event Date label">
                                         Date
                                     </label>
-                                    <mat-form-field color="accent" appearance="outline">
-                                        <input matInput [matDatepicker]="eventDate" formControlName="eventDate"
-                                            [max]="maxDate" [(ngModel)]="todayDate" (dateChange)="updateDate($event)">
-                                        <mat-datepicker-toggle matSuffix [for]="eventDate">
-                                        </mat-datepicker-toggle>
-                                        <mat-datepicker #eventDate></mat-datepicker>
-                                        <mat-error [hidden]="false"
-                                            aria-label="eventDate Error|Explains eventDate is required "
-                                            *ngIf="createEventForm?.controls['eventDate']?.touched && createEventForm?.controls['eventDate'].errors?.required">
-                                            Event Date is mandatory
-                                        </mat-error>
-                                        <mat-error [hidden]="false"
-                                            *ngIf="createEventForm?.controls['eventDate'].errors?.pattern"
-                                            aria-label="eventDate Error|eventDate fields cannot contain numbers and special characters except">
-                                            Event Date fields cannot contain numbers and special
-                                            characters
-                                            except '
-                                        </mat-error>
-                                    </mat-form-field>
+                                    <ng-container
+                                        *ngIf="createEventForm.get('eventType')?.value === 'Karmayogi Saptah'">
+                                        <mat-form-field color="accent" appearance="outline">
+                                            <input matInput [matDatepicker]="eventDate" formControlName="eventDate"
+                                                [min]="currentDate" [max]="maxDate" [(ngModel)]="todayDate"
+                                                (dateChange)="updateDate($event)">
+                                            <mat-datepicker-toggle matSuffix [for]="eventDate">
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker #eventDate></mat-datepicker>
+                                            <mat-error [hidden]="false"
+                                                aria-label="eventDate Error|Explains eventDate is required "
+                                                *ngIf="createEventForm?.controls['eventDate']?.touched && createEventForm?.controls['eventDate'].errors?.required">
+                                                Event Date is mandatory
+                                            </mat-error>
+                                            <mat-error [hidden]="false"
+                                                *ngIf="createEventForm?.controls['eventDate'].errors?.pattern"
+                                                aria-label="eventDate Error|eventDate fields cannot contain numbers and special characters except">
+                                                Event Date fields cannot contain numbers and special
+                                                characters
+                                                except '
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </ng-container>
+                                    <ng-container
+                                        *ngIf="!(createEventForm.get('eventType')?.value === 'Karmayogi Saptah')">
+                                        <mat-form-field color="accent" appearance="outline">
+                                            <input matInput [matDatepicker]="eventDate" formControlName="eventDate"
+                                                [max]="maxDate" [(ngModel)]="todayDate"
+                                                (dateChange)="updateDate($event)">
+                                            <mat-datepicker-toggle matSuffix [for]="eventDate">
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker #eventDate></mat-datepicker>
+                                            <mat-error [hidden]="false"
+                                                aria-label="eventDate Error|Explains eventDate is required "
+                                                *ngIf="createEventForm?.controls['eventDate']?.touched && createEventForm?.controls['eventDate'].errors?.required">
+                                                Event Date is mandatory
+                                            </mat-error>
+                                            <mat-error [hidden]="false"
+                                                *ngIf="createEventForm?.controls['eventDate'].errors?.pattern"
+                                                aria-label="eventDate Error|eventDate fields cannot contain numbers and special characters except">
+                                                Event Date fields cannot contain numbers and special
+                                                characters
+                                                except '
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </ng-container>
                                 </div>
                                 <div class="flex-child-element">
                                     <label for="eventTime" class=" margin-remove-bottom form-label required"

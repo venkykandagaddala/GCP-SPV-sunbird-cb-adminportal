@@ -95,6 +95,7 @@ import { SurveyComponent } from './routes/survey/survey.component'
 import { SurveyListComponent } from './routes/survey/survey-list/survey-list.component'
 import { SolutionSurveyUploadComponent } from './components/solution-survey-upload/solution-survey-upload.component'
 import { CapitalizePipe } from './pipes/capitalize.pipe'
+import { PipePublicURL } from './pipes/pipe-public-URL/pipe-public-URL.pipe'
 @NgModule({
   declarations: [
     HomeComponent,
@@ -224,7 +225,7 @@ import { CapitalizePipe } from './pipes/capitalize.pipe'
     InitResolver,
     { provide: MAT_DIALOG_DATA, useValue: {} },
     MatDatepickerModule, MatNativeDateModule,
-    ConfirmationPopupComponent,
+    ConfirmationPopupComponent, PipePublicURL,
   ],
   exports: [AddThumbnailComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

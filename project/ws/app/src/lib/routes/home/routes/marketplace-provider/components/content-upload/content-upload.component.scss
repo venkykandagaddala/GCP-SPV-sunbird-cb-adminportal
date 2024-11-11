@@ -1,0 +1,187 @@
+.content-upload {
+  padding: 20px;
+
+  .header {
+    /* stylelint-enable */
+    font: 700 20px / 30px Lato;
+    /* stylelint-disable */
+    color: #212529;
+  }
+
+  .info-icon {
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+    color: #a1a7ab;
+    margin-top: 5px;
+  }
+
+  .sub-header {
+    color: #000000DE;
+    /* stylelint-enable */
+    font: 400 14px Lato;
+    /* stylelint-disable */
+  }
+
+  .scv-btn {
+    background: #1B4CA1;
+    width: 82px;
+    height: 40px;
+    border-radius: 20px;
+    color: #FFFFFF;
+    /* stylelint-enable */
+    font: 700 14px Lato;
+    /* stylelint-disable */
+  }
+
+  .api-btn {
+    width: 130px;
+    height: 38px;
+    border: 1px solid #1B4CA1;
+    color: #1B4CA1;
+    /* stylelint-enable */
+    font: 700 14px Lato;
+    /* stylelint-disable */
+  }
+
+  .instructions-box {
+    border: 1px solid #00000029;
+    height: 227px;
+    padding: 24px;
+
+    .instruction-text {
+      color: #000000DE;
+      /* stylelint-enable */
+      font: 400 14px Lato;
+      /* stylelint-disable */
+    }
+
+    // .download-btn {
+    //   border: 1px solid #1B4CA1;
+    //   width: 95px;
+    //   height: 30px;
+    //   border-radius: 4px;
+    //   color: #1B4CA1;
+    //   font: 700 14px Lato;
+    // }
+
+    .file-icon {
+      width: 40px;
+      height: 40px;
+    }
+
+    .import-btn {
+      border: 1px solid #1B4CA1;
+      height: 40px;
+      width: 117px;
+      border-radius: 20px;
+      color: #1B4CA1;
+      /* stylelint-enable */
+      font: 700 14px Lato;
+      /* stylelint-disable */
+    }
+
+    .browse-file {
+      color: #1B4CA1;
+      /* stylelint-enable */
+      font: 700 14px Lato;
+      /* stylelint-disable */
+      pointer-events: all;
+      cursor: pointer;
+    }
+
+    .or-text {
+      color: #00000099;
+      /* stylelint-enable */
+      font: 400 14px Lato;
+      /* stylelint-disable */
+    }
+
+    .drag-file {
+      color: #00000099;
+      /* stylelint-enable */
+      font: 400 16px Inter;
+      /* stylelint-disable */
+    }
+
+    .file-size {
+      color: #000000DE;
+      /* stylelint-enable */
+      font: 400 12px Lato;
+      /* stylelint-disable */
+    }
+
+    .file-type{
+      color: #00000099;
+      /* stylelint-enable */
+      font: 400 12px Lato;
+      /* stylelint-disable */
+    }
+  }
+
+  .upload-box {
+    cursor: pointer;
+    border-style: dashed;
+  }
+}
+
+.samplePdf {
+  width: 186px;
+  height: 247px;
+}
+
+.pdfDetails {
+  height: 93px;
+
+  .pdfName {
+    /* stylelint-enable */
+    font: 400 16px Lato;
+    /* stylelint-disable */
+    color: #000000DE;
+  }
+
+  .fileUplaodedDate {
+    /* stylelint-enable */
+    font: 400 12px Lato;
+    /* stylelint-disable */
+    color: #000000DE;
+  }
+
+  .documentAttached {
+    color: #00000099;
+    /* stylelint-enable */
+    font: 700 12px Lato;
+    /* stylelint-disable */
+
+    .greenTick {
+      width: 20px;
+      height: 20px;
+      font-size: 20px;
+      margin-right: 5px;
+      color: #1D8923;
+    }
+  }
+}
+
+.dataLoader {
+  height: 100px;
+
+  .dataSpinner {
+    position: unset !important;
+    margin: 0px !important;
+  }
+}
+
+.cantUploadBox{
+  height: 61px;
+  padding-left: 20px;
+  background-color: #FFF7ED;
+  border: 1px solid #DCDCDC;
+
+  .cantUploadMsg{
+    /* stylelint-enable */
+    font: 400 14px Inter;
+    /* stylelint-disable */
+    color: #525252;
+  }
+}

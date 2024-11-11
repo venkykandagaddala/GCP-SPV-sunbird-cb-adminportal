@@ -71,8 +71,8 @@
             </mat-form-field>
 
             <!--Mobile number field-->
-            <label for="mobileNumber" class="margin-remove-bottom margin-top-xs form-label required"
-              aria-label="Mobile Number label">
+            <label for="mobileNumber" class="margin-remove-bottom margin-top-xs form-label"
+              aria-label="Mobile Number label" [ngClass]="{ 'required': !disableRequired }">
               Mobile Number
             </label>
             <mat-form-field appearance="outline" class="margin-top-xs">

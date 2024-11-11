@@ -1,24 +1,31 @@
 
-import { Component, OnInit, OnDestroy, AfterViewInit, ElementRef, HostListener, ViewChild } from '@angular/core'
-import { Router, Event, NavigationEnd, NavigationError, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { EventService, TelemetryService, UtilityService, ValueService } from '@sunbird-cb/utils'
-import { map } from 'rxjs/operators'
-import { _ } from 'lodash'
-import { ILeftMenu, LeftMenuService } from '@sunbird-cb/collection'
-import { NsWidgetResolver } from '@sunbird-cb/resolver'
-import { Subscription } from 'rxjs'
+import { LeftMenuService } from '@sunbird-cb/collection'
 import { HomeComponent } from './home.component'
+import { of } from 'rxjs'
 
 describe('HomeComponent', () => {
     let component: HomeComponent
 
-    const valueSvc: Partial<ValueService> = {}
-    const router: Partial<Router> = {}
+    const valueSvc: Partial<ValueService> = {
+        isLtMedium$: of(true),
+    }
+
+    const router: Partial<Router> = {
+        events: of(),
+    }
     const activeRoute: Partial<ActivatedRoute> = {}
     const telemetrySvc: Partial<TelemetryService> = {}
     const events: Partial<EventService> = {}
     const utilitySvc: Partial<UtilityService> = {}
-    const leftMenuService: Partial<LeftMenuService> = {}
+    const leftMenuService: Partial<LeftMenuService> = {
+        onMessage: () => of({
+            text: {
+                message: 'sample',
+            },
+        }),
+    }
 
     beforeAll(() => {
         component = new HomeComponent(

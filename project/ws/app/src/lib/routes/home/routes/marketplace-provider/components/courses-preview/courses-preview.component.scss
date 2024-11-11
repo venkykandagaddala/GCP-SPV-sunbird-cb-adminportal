@@ -1,0 +1,25 @@
+.back-btn{
+  width: 115px;
+  height: 40px;
+  border-radius: 4px;
+  border: 1px solid #999999;
+  color: #666666;
+  /* stylelint-enable */
+  font: 700 14px Lato;
+  /* stylelint-disable */
+
+  .back-icon {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    color: #666666;
+    margin-right: 10px;
+  }
+}
+
+.preview-header {
+  /* stylelint-enable */
+  font: 600 20px Montserrat;
+  /* stylelint-disable */
+  color: #000000DE;
+}
