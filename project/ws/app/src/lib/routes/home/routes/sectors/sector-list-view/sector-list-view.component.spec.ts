@@ -1,14 +1,13 @@
-
 import { Router } from '@angular/router'
-import { ConfigureMarketplaceProvidersComponent } from './configure-marketplace-providers.component'
+import { SectorListViewComponent } from './sector-list-view.component'
 
-describe('ConfigureMarketplaceProvidersComponent', () => {
-    let component: ConfigureMarketplaceProvidersComponent
+describe('SectorListViewComponent', () => {
+    let component: SectorListViewComponent
 
     const router: Partial<Router> = {}
 
     beforeAll(() => {
-        component = new ConfigureMarketplaceProvidersComponent(
+        component = new SectorListViewComponent(
             router as Router
         )
     })

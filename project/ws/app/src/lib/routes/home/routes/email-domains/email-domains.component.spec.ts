@@ -29,8 +29,8 @@ describe('EmailDomainsComponent', () => {
         getDomainsList: jest.fn().mockReturnValue(of({
             result: {
                 count: 'sampleCount',
-                data: 'sampledata'
-            }
+                data: 'sampledata',
+            },
         })),
     }
 
@@ -50,8 +50,6 @@ describe('EmailDomainsComponent', () => {
     it('should create an instance of the component', () => {
         expect(component).toBeTruthy()
     })
-
-
 
     it('should call getPendingList if no data in activatedRoute on ngOnInit', () => {
         component.getPendingList = jest.fn()
@@ -97,10 +95,10 @@ describe('EmailDomainsComponent', () => {
         component.getApprovedList = jest.fn()
         component.getRejectedList = jest.fn()
 
-        //act
+        // act
         component.onPaginateChange(pageEvent)
 
-        //assert
+        // assert
         expect(component.pageIndex).toBe(1)
         expect(component.limit).toBe(10)
         expect(component.currentOffset).toBe(1)

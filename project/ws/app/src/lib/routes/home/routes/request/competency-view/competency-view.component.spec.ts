@@ -6,10 +6,10 @@ describe('CompetencyViewComponent', () => {
     let component: CompetencyViewComponent
 
     const dialogRef: Partial<MatDialogRef<CompetencyViewComponent>> = {
-        close: jest.fn(),  // Mocking close method
+        close: jest.fn(),
     }
     const sanitized: Partial<DomSanitizer> = {
-        bypassSecurityTrustHtml: jest.fn(html => html),  // Mocking bypassSecurityTrustHtml
+        bypassSecurityTrustHtml: jest.fn(html => html),
     }
 
     const dData = {
@@ -57,17 +57,11 @@ describe('CompetencyViewComponent', () => {
             component.ngOnInit()
             expect(component.levelSelected.id).toBe(1)
         })
-
-        // it('should format the description text for each child', () => {
-        //     component.ngOnInit()
-        //     expect(component.dData.children[0].formatedText).toContain('<ul class="pl-6"><li>Level 1</li><li>Test 1</li></ul>')
-        //     expect(component.dData.children[1].formatedText).toContain('<ul class="pl-6"><li>Level 2</li><li>Test 2</li></ul>')
-        // })
     })
 
     describe('add', () => {
         it('should close the dialog with the correct ADD action', () => {
-            component.levelSelected = dData.children[1]  // Select a level
+            component.levelSelected = dData.children[1]
             component.add()
             expect(dialogRef.close).toHaveBeenCalledWith({
                 id: 1,
@@ -77,7 +71,7 @@ describe('CompetencyViewComponent', () => {
         })
 
         it('should close the dialog with empty childId if no level is selected', () => {
-            component.levelSelected = {}  // Empty level
+            component.levelSelected = {}
             component.add()
             expect(dialogRef.close).toHaveBeenCalledWith({
                 id: 1,

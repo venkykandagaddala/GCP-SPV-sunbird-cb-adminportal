@@ -3,8 +3,6 @@ import { HelpCenterGuideComponent } from './help-center-guide.component'
 describe('HelpCenterGuideComponent', () => {
     let component: HelpCenterGuideComponent
 
-
-
     beforeAll(() => {
         component = new HelpCenterGuideComponent(
 

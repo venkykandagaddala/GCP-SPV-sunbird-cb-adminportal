@@ -1,9 +1,7 @@
 
-
 import { ActivatedRoute } from '@angular/router'
 import { MatDialog } from '@angular/material/dialog'
 import { KCMMappingComponent } from './kcm-mapping.component'
-
 
 describe('KCMMappingComponent', () => {
     let component: KCMMappingComponent
