@@ -1,13 +1,13 @@
 
-import { ProvidersComponent } from './providers.component'
+import { AboutComponent } from './about.component'
 
-describe('ProvidersComponent', () => {
-    let component: ProvidersComponent
+describe('AboutComponent', () => {
+    let component: AboutComponent
 
 
 
     beforeAll(() => {
-        component = new ProvidersComponent(
+        component = new AboutComponent(
 
         )
     })

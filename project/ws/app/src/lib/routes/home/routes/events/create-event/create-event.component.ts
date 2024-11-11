@@ -14,7 +14,7 @@ import { ConfigurationsService, EventService } from '@sunbird-cb/utils'
 import moment from 'moment'
 import { MomentDateAdapter } from '@angular/material-moment-adapter'
 /* tslint:disable */
-import _ from 'lodash'
+import * as _ from 'lodash'
 import { TelemetryEvents } from '../../events/model/telemetry.event.model'
 import { ProfileV2UtillService } from '../services/home-utill.service'
 import { preventHtmlAndJs } from '../../../validators/prevent-html-and-js.validator'
@@ -139,7 +139,7 @@ export class CreateEventComponent implements OnInit {
     private router: Router, private configSvc: ConfigurationsService, private changeDetectorRefs: ChangeDetectorRef,
     // tslint:disable-next-line:align
     private activeRoute: ActivatedRoute, private events: EventService, private profileUtilSvc: ProfileV2UtillService,
-              private pipePublic: PipePublicURL
+    private pipePublic: PipePublicURL
   ) {
 
     if (this.configSvc.userProfile) {
@@ -602,7 +602,7 @@ export class CreateEventComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(() => {
       setTimeout(() => {
         this.router.navigate([`/app/home/events`])
-      },         700)
+      }, 700)
     })
   }
 

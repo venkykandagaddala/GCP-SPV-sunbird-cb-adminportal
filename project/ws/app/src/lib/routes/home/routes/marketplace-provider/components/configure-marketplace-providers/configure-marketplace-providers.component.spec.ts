@@ -1,25 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
+import { Router } from '@angular/router'
 import { ConfigureMarketplaceProvidersComponent } from './configure-marketplace-providers.component'
 
 describe('ConfigureMarketplaceProvidersComponent', () => {
-  let component: ConfigureMarketplaceProvidersComponent
-  let fixture: ComponentFixture<ConfigureMarketplaceProvidersComponent>
+    let component: ConfigureMarketplaceProvidersComponent
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ConfigureMarketplaceProvidersComponent],
+    const router: Partial<Router> = {}
+
+    beforeAll(() => {
+        component = new ConfigureMarketplaceProvidersComponent(
+            router as Router
+        )
     })
-    .compileComponents()
-  }))
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ConfigureMarketplaceProvidersComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    beforeEach(() => {
+        jest.clearAllMocks()
+        jest.resetAllMocks()
+    })
 
-  it('should create', () => {
-    expect(component).toBeTruthy()
-  })
+    it('should create a instance of component', () => {
+        expect(component).toBeTruthy()
+    })
 })

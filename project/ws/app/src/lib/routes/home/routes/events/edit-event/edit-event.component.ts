@@ -13,7 +13,7 @@ import { Router, ActivatedRoute } from '@angular/router'
 import { ConfigurationsService, EventService } from '@sunbird-cb/utils'
 import moment from 'moment'
 /* tslint:disable */
-import _ from 'lodash'
+import * as _ from 'lodash'
 import { TelemetryEvents } from '../model/telemetry.event.model'
 import { ProfileV2UtillService } from '../services/home-utill.service'
 import { MomentDateAdapter } from '@angular/material-moment-adapter'
@@ -577,7 +577,7 @@ export class EditEventComponent implements OnInit {
               this.displayLoader = false
               this.openSnackbar('Event details are successfuly updated.')
               this.router.navigate([`/app/home/events`])
-            },         5000)
+            }, 5000)
           }
         },
         (err: any) => {
