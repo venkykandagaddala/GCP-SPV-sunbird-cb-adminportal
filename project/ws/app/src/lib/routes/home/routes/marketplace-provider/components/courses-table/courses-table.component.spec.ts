@@ -3,8 +3,6 @@ import { CoursesTableComponent } from './courses-table.component'
 describe('CoursesTableComponent', () => {
     let component: CoursesTableComponent
 
-
-
     beforeAll(() => {
         component = new CoursesTableComponent(
 

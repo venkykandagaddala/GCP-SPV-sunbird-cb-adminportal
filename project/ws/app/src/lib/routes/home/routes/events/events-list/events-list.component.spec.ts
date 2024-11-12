@@ -1,5 +1,4 @@
 
-
 import { MatDialog } from '@angular/material/dialog'
 import { ActivatedRoute, Router } from '@angular/router'
 import { ConfigurationsService, EventService } from '@sunbird-cb/utils'
@@ -21,7 +20,7 @@ describe('EventsListComponent', () => {
                     userProfile: {
                         userId: 'sampleId',
                         rootOrgId: 'rootId',
-                        departmentName: 'department'
+                        departmentName: 'department',
                     },
                 },
             },
