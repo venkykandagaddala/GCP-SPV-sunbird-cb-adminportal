@@ -94,6 +94,8 @@ export class DirectoryViewComponent implements OnInit {
           { displayName: 'Created By', key: 'createdBy' },
           { displayName: 'Created On', key: 'createdOn' },
         ],
+        actions: [{ name: '', label: '', icon: 'remove_red_eye', type: 'menu' }],
+        link: { name: 'generate_link', label: 'Generate Link', column: 'Custom Registration' },
         needCheckBox: false,
         needHash: false,
         sortColumn: '',
@@ -265,9 +267,21 @@ export class DirectoryViewComponent implements OnInit {
               filteredData2.push(obj)
             }
           })
-        // case 'Organisation':
-        //   const organisationsList = []
-        //   filteredData2
+          break
+        case 'organisation':
+          // const organisationsList = []
+          filteredData2.push(
+            {
+              id: '1',
+              // mdo: 'Dummy ORganization',
+              organisation: 'Organization',
+              createdBy: 'MySelf',
+              createdOn: '24/08/24',
+              type: 'organisation',
+              head: 'organisation',
+              channel: 'element.channel',
+              // currentDepartment: 'organisation',
+            })
 
       }
       this.data = filteredData2.map((dept: any) => {

@@ -24,7 +24,7 @@
             </div>
           </ng-container>
           <ng-container *ngIf="openMode !== 'viewMode'; else viewMode">
-            <form [formGroup]="organisationForm">
+            <form [formGroup]="organisationForm" class="mb-20">
               <div class="flex flex-column gap-1 w-full organisation-form">
                 <div class="flex items-center gap-1 required">
                   <span class="lable">Organisation Name</span>
@@ -84,11 +84,14 @@
                   </div>
 
                   <div class="uploadLogoCard flex items-center gap-4">
+                    <input type="file" name="upload-logo" id="upload-logo" class="hidden" (change)="uploadLogo($event)"
+                      accept=".png, .jpeg, .jpg">
                     <div class="h-full flex items-center justify-center">
-                      <mat-icon class="upload-icon">arrow_upward</mat-icon>
+                      <img src="/assets/icons/upload-colored.svg" alt="upload" width="32" height="32">
                     </div>
                     <div class="flex flex-column justify-center gap-2">
-                      <div class="file-upload-header">
+                      <div class="file-upload-header hover:underline cursor-pointer"
+                        onclick="document.getElementById('upload-logo').click()">
                         Click here to upload file
                       </div>
                       <div class="upload-description">
@@ -167,7 +170,7 @@
           </ng-template>
         </div>
 
-        <div class="right-sidenav-footer flex items-center justify-end gap-4 items-center px-5 pt-3 pb-5">
+        <div class="right-sidenav-footer flex items-center justify-end gap-4 items-center px-5 pt-3 pb-5 bg-white">
           <ng-container *ngIf="openMode !== 'viewMode'">
             <button mat-button class="cancelButton" (click)="closeNaveBar()">Cancel</button>
             <button mat-button [ngClass]="{'disableBtn': !cansubmit}" class="addButton" (click)="submit()">{{openMode

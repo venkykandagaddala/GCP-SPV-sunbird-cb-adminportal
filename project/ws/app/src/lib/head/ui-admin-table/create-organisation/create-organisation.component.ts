@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import * as _ from 'lodash'
 
@@ -7,7 +7,7 @@ import * as _ from 'lodash'
   templateUrl: './create-organisation.component.html',
   styleUrls: ['./create-organisation.component.scss']
 })
-export class CreateOrganisationComponent implements OnInit {
+export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
   //#region (global variables)
 
@@ -32,11 +32,18 @@ export class CreateOrganisationComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder
-  ) { }
+  ) {
+
+    this.addOverflowHidden()
+  }
 
   //#region (ng onint)
   ngOnInit(): void {
     this.initialization()
+  }
+
+  ngOnDestroy(): void {
+    this.removeOverflowHidden()
   }
 
   initialization() {
@@ -45,7 +52,7 @@ export class CreateOrganisationComponent implements OnInit {
       category: new FormControl(_.get(this.rowData, 'category', ''), [Validators.required]),
       state: new FormControl(_.get(this.rowData, 'state', '')),
       minsitry: new FormControl(_.get(this.rowData, 'minsitry', '')),
-      description: new FormControl(_.get(this.rowData, 'description', ''), [Validators.required, Validators.minLength(1000)])
+      description: new FormControl(_.get(this.rowData, 'description', ''), [Validators.required, Validators.minLength(200)])
     })
 
     if (this.dropdownList) {
@@ -103,6 +110,31 @@ export class CreateOrganisationComponent implements OnInit {
 
   submit() { }
 
+  uploadLogo(event: Event) {
+    const input = event.target as HTMLInputElement
+    if (input.files?.length) {
+      const selectedFile = input.files[0]
+      const validFileTypes = ['image/png', 'image/jpeg', 'image/jpg']
+
+      const isFileTypeValid = validFileTypes.includes(selectedFile.type)
+
+      if (isFileTypeValid) {
+        console.log(selectedFile)
+      } else {
+        console.log('Invalid file')
+
+      }
+    }
+
+  }
   //#endregion
+
+  addOverflowHidden() {
+    document.body.classList.add('overflow-hidden')
+  }
+
+  removeOverflowHidden() {
+    document.body.classList.remove('overflow-hidden')
+  }
 
 }

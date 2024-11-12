@@ -147,7 +147,7 @@ const routes: Routes = [
       },
       {
         path: 'organisation',
-        redirectTo: 'directory/organisation',
+        // redirectTo: 'directory/organisation',
         component: DirectoryViewComponent,
         data: {
           module: 'Directory',

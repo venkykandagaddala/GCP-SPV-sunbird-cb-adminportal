@@ -12,6 +12,8 @@ import * as _ from 'lodash'
 import { Router } from '@angular/router'
 import { EventService } from '@sunbird-cb/utils'
 import { environment } from '../../../../../../../../src/environments/environment'
+import { MatDialog } from '@angular/material/dialog'
+import { InfoModalComponent } from '../../info-modal/info-modal.component'
 
 @Component({
   selector: 'ws-widget-directory-table',
@@ -78,8 +80,10 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator
   @ViewChild(MatSort, { static: true }) sort?: MatSort
   selection = new SelectionModel<any>(true, [])
+  customSelfRegistration = false
+  selfRegistrationData: any = {}
   constructor(
-    private router: Router, private events: EventService) {
+    private router: Router, private events: EventService, public dialogRef: MatDialog) {
     this.dataSource = new MatTableDataSource<any>()
     this.actionsClick = new EventEmitter()
     this.clicked = new EventEmitter()
@@ -141,8 +145,8 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
       if (this.tableData.actions && this.tableData.actions.length > 0) {
         columns.push('Actions')
       }
-      if (this.tableData.actions && this.tableData.actions.length > 0) {
-        // columns.push('Menu')
+      if (this.tableData.link) {
+        columns.push(this.tableData?.link?.column)
       }
       return columns
     }
@@ -185,7 +189,8 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
       this.openCreateNavBar = true
       // this.openMode = 'createNew'
 
-      this.openMode = 'viewMode'
+      // this.openMode = 'viewMode'
+      this.openMode = 'createNew'
       this.rowData = {
         organisationName: 'Department of Atomic Energy',
         category: 'state',
@@ -222,6 +227,23 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
 
   buttonClickAction(event: any) {
     this.openCreateNavBar = false
+    this.customSelfRegistration = false
     if (event.action === 'create') { }
+  }
+
+  generateCustRegistrationLink() {
+    const dialogRef = this.dialogRef.open(InfoModalComponent, {
+      panelClass: 'info-dialog',
+      data: { type: 'import-igot-master' }
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result)
+      this.customSelfRegistration = true
+      this.selfRegistrationData.title = 'Custom Self Registration_DAE'
+      this.selfRegistrationData.QRGenerated = false
+      this.selfRegistrationData.openMode = 'edit'
+
+    })
   }
 }

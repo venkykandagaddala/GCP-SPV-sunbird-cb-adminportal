@@ -4,6 +4,10 @@
             (buttonClick)="buttonClickAction($event)">
         </ws-app-create-organisation>
     </ng-container>
+    <ng-container *ngIf="customSelfRegistration">
+        <ws-app-custom-self-registration [initialData]="selfRegistrationData"
+            (buttonClick)="buttonClickAction($event)"></ws-app-custom-self-registration>
+    </ng-container>
     <div class="example-loading-shade">
     </div>
     <div class="example-table-container">
@@ -19,9 +23,7 @@
                         (keydown.enter)="onSearchEnter($event.target.value)" placeholder="Search">
                 </div>
             </div>
-            <button mat-raised-button type="button" *ngIf="needCreate"
-                class="text-white ws-mat-primary-background text-white margin-right-m custom-btn"
-                (click)="gotoCreateNew()">
+            <button mat-flat-button *ngIf="needCreate" class="mat-btn-flat margin-right-m" (click)="gotoCreateNew()">
                 <b class="text-white">Create new</b>
             </button>
         </div>
@@ -47,19 +49,27 @@
                 <mat-header-cell *matHeaderCellDef class="clr-darkish-blue action-header"> Actions </mat-header-cell>
                 <mat-cell *matCellDef="let row" class="action-cell">
                     <div *ngFor="let ac of tableData!.actions">
-                        <div *ngIf="ac.optional">
-                            <ws-widget-app-button *ngIf="row[ac.optional_key] === ac.optional_Value" [type]="ac.type"
-                                [icon]="ac.icon" [disabled]="ac.disabled || false" [label]="ac.label"
-                                (click)="buttonClick(ac.name,row)"></ws-widget-app-button>
-                        </div>
-                        <div *ngIf="!ac.optional" class="mar-lft">
-                            <!-- <ws-widget-app-button [type]="ac.type" [icon]="ac.icon" [label]="ac.label"
-                                [disabled]="ac.disabled || false" (click)="buttonClick(ac.name,row)">
-                            </ws-widget-app-button> -->
-                            <ws-widget-app-button [type]="ac.type" [icon]="ac.icon" [label]="ac.label"
-                                [disabled]="true">
-                            </ws-widget-app-button>
-                        </div>
+                        <ng-container *ngIf="ac.type === 'button'">
+                            <div *ngIf="ac.optional">
+                                <ws-widget-app-button *ngIf="row[ac.optional_key] === ac.optional_Value"
+                                    [type]="ac.type" [icon]="ac.icon" [disabled]="ac.disabled || false"
+                                    [label]="ac.label" (click)="buttonClick(ac.name,row)"></ws-widget-app-button>
+                            </div>
+                            <div *ngIf="!ac.optional" class="mar-lft">
+                                <!-- <ws-widget-app-button [type]="ac.type" [icon]="ac.icon" [label]="ac.label"
+                                    [disabled]="ac.disabled || false" (click)="buttonClick(ac.name,row)">
+                                </ws-widget-app-button> -->
+                                <ws-widget-app-button [type]="ac.type" [icon]="ac.icon" [label]="ac.label"
+                                    [disabled]="true">
+                                </ws-widget-app-button>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="ac.type === 'menu'">
+                            <button mat-button [matMenuTriggerFor]="actionsMenu">
+                                <mat-icon>more_horiz</mat-icon>
+                            </button>
+                        </ng-container>
+
                     </div>
                 </mat-cell>
             </ng-container>
@@ -72,6 +82,15 @@
                         class="action-btn">
                         <mat-icon>more_horiz</mat-icon>
                     </button>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container [matColumnDef]="tableData!.link.column" *ngIf="tableData!.link">
+                <mat-header-cell *matHeaderCellDef class="clr-darkish-blue action-header"> {{tableData?.link.column}}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" class="action-cell">
+                    <button mat-flat-button class="brand-color" (click)="generateCustRegistrationLink()"><span
+                            class="font-bold underline">{{tableData?.link.label}}</span></button>
                 </mat-cell>
             </ng-container>
 
@@ -124,5 +143,16 @@
                     <mat-icon>delete</mat-icon><span>Delete user</span>
                 </button>
             </div>
+        </ng-template>
+    </mat-menu>
+
+    <mat-menu #actionsMenu="matMenu">
+        <ng-template matMenuContent>
+            <button mat-menu-item>Edit</button>
+            <button mat-menu-item>Users</button>
+            <button mat-menu-item>Roles & Permissions</button>
+            <button mat-menu-item>Mentor Management</button>
+            <button mat-menu-item>Manage Designations</button>
+            <button mat-menu-item>Grades/Group</button>
         </ng-template>
     </mat-menu>
