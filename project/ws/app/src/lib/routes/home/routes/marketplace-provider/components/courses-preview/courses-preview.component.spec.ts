@@ -7,7 +7,7 @@ describe('CoursesPreviewComponent', () => {
 
     const marketPlaceSvc: Partial<MarketplaceService> = {}
     const router: Partial<Router> = {
-        navigate: jest.fn()
+        navigate: jest.fn(),
     }
 
     beforeAll(() => {
