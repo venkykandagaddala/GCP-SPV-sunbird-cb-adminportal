@@ -17,7 +17,7 @@ describe('RolesAccessComponent', () => {
                 data: {
                     configService: {
                         unMappedUser: {
-                            roles: new Map([['STATE_ADMIN', true]]),
+                            roles: ['PUBLIC', 'STATE_ADMIN'],
                         },
 
                     },
