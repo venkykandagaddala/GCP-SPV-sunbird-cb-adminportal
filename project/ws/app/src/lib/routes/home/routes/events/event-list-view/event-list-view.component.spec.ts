@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog'
 import { EventService } from '@sunbird-cb/utils'
 import { EventListViewComponent } from './event-list-view.component'
 
-
 describe('EventListViewComponent', () => {
     let component: EventListViewComponent
 

@@ -14,14 +14,14 @@ describe('EditEventComponent', () => {
 
 	const snackBar: Partial<MatSnackBar> = {}
 	const eventsSvc: Partial<EventsService> = {
-		getEventDetails: jest.fn()
+		getEventDetails: jest.fn(),
 	}
 	const matDialog: Partial<MatDialog> = {}
 	const router: Partial<Router> = {}
 	const configSvc: Partial<ConfigurationsService> = {}
 	const changeDetectorRefs: Partial<ChangeDetectorRef> = {}
 	const activeRoute: Partial<ActivatedRoute> = {
-		params: of({})
+		params: of({}),
 	}
 	const events: Partial<EventService> = {}
 	const profileUtilSvc: Partial<ProfileV2UtillService> = {}

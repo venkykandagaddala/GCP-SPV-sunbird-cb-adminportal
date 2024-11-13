@@ -11,7 +11,7 @@ describe('LearningComponent', () => {
     const router: Partial<Router> = {}
     const valueSvc: Partial<ValueService> = {}
     const searchServ: Partial<SearchServService> = {
-        getLanguageSearchIndex: jest.fn()
+        getLanguageSearchIndex: jest.fn(),
     }
     const configSvc: Partial<ConfigurationsService> = {}
     const utilitySvc: Partial<UtilityService> = {}
