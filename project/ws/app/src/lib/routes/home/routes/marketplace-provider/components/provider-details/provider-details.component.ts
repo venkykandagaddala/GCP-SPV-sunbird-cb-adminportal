@@ -87,6 +87,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   initialization() {
     this.providerFormGroup = this.formBuilder.group({
       contentPartnerName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
+      partnerCode: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/), Validators.maxLength(6)]),
       websiteUrl: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(500)]),
       providerTips: this.formBuilder.array([]),
@@ -137,10 +138,12 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   patchProviderDetails(providerDetails: any) {
     this.providerFormGroup.setValue({
       contentPartnerName: _.get(providerDetails, 'data.contentPartnerName', ''),
+      partnerCode: _.get(providerDetails, 'data.partnerCode', ''),
       websiteUrl: _.get(providerDetails, 'data.websiteUrl', ''),
       description: _.get(providerDetails, 'data.description', ''),
       providerTips: [],
     })
+    this.providerFormGroup.get('partnerCode')?.disable()
     this.imageUrl = _.get(providerDetails, 'data.link')
     this.thumbNailUrl = this.imageUrl
     if (_.get(providerDetails, 'data.documentUrl')) {
@@ -170,11 +173,11 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     const providerName = _.get(providerDetails, 'data.contentPartnerName', '').toLowerCase()
     if (providerName) {
       const configuration = this.providerConfiguration[providerName]
-      this.partnerCode = _.get(providerDetails, 'partnerCode', _.get(configuration, 'partnerCode'))
+      this.partnerCode = _.get(providerDetails, 'data.partnerCode', _.get(configuration, 'partnerCode', ''))
       this.transforamtionForm.setValue({
-        trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : _.get(configuration, 'trasformContentJson'),
-        transformProgressJson: providerDetails.transformProgressJson ? providerDetails.transformProgressJson : _.get(configuration, 'transformProgressJson'),
-        trasformCertificateJson: providerDetails.trasformCertificateJson ? providerDetails.trasformCertificateJson : _.get(configuration, 'trasformCertificateJson'),
+        trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : _.get(configuration, 'trasformContentJson', ''),
+        transformProgressJson: providerDetails.transformProgressJson ? providerDetails.transformProgressJson : _.get(configuration, 'transformProgressJson', ''),
+        trasformCertificateJson: providerDetails.trasformCertificateJson ? providerDetails.trasformCertificateJson : _.get(configuration, 'trasformCertificateJson', ''),
       })
     }
   }
@@ -376,6 +379,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         link: this.thumbNailUrl,
         documentUrl: this.uploadedPdfUrl,
         documentUploadedDate: this.fileUploadedDate,
+        partnerCode: formDetails.partnerCode,
       }
 
       if (this.providerDetails) {
@@ -385,6 +389,19 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         if (this.partnerCode) {
           formBody['partnerCode'] = this.partnerCode
           const tranforamtions = this.transforamtionForm.value
+          formBody['trasformContentJson'] = tranforamtions.trasformContentJson
+          formBody['transformProgressJson'] = tranforamtions.transformProgressJson
+          formBody['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
+        }
+      } else {
+        const providerDetails = {
+          data: {
+            contentPartnerName: formDetails.contentPartnerName,
+          },
+        }
+        this.setTransformationDetails(providerDetails)
+        const tranforamtions = this.transforamtionForm.value
+        if (tranforamtions.trasformContentJson !== '') {
           formBody['trasformContentJson'] = tranforamtions.trasformContentJson
           formBody['transformProgressJson'] = tranforamtions.transformProgressJson
           formBody['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
