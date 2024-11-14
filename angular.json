@@ -18,14 +18,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "preserveSymlinks": true,
-            "assets": [
-              "src/favicon.png",
-              "src/dashboard-assets/"
-            ],
+            "assets": ["src/favicon.png", "src/dashboard-assets/"],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/styles"
-              ]
+              "includePaths": ["src/styles"]
             },
             "styles": [
               {
@@ -220,26 +215,16 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.png"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.png"],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json", "e2e/tsconfig.json"],
+            "exclude": ["**/node_modules/**", "**/**/*.spec.ts"]
           }
         },
         "e2e": {
@@ -267,13 +252,13 @@
           "options": {
             "tsConfig": "project/ws/app/tsconfig.lib.json",
             "project": "project/ws/app/ng-package.json"
-          }
-        ,          "configurations": {
+          },
+          "configurations": {
             "production": {
               "tsConfig": "project/ws/app/tsconfig.lib.prod.json"
             }
           }
-},
+        },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -285,13 +270,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "project/ws/app/tsconfig.lib.json",
-              "project/ws/app/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["project/ws/app/tsconfig.lib.json", "project/ws/app/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
