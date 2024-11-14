@@ -16,10 +16,13 @@ import { MatSnackBar } from '@angular/material/snack-bar'
   providers: [DatePipe],
 })
 export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit {
+  //#region (global variables)
+  //#region (view chaild, input and output)
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>
 
   @Input() providerDetails?: any
+  //#endregion
 
   helpCenterGuide = {
     header: 'Content Upload Details: Video Guides and Tips',
@@ -59,8 +62,6 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
   unPublishedCoursesSearchKey = ''
   unPublishedCoursesTablePaginationDetails: any
 
-  // contentFileUploaded = false
-  // contentFileUploadCondition: any
   FILE_UPLOAD_MAX_SIZE: number = 100 * 1024 * 1024
   contentFile: any
   fileName = ''
@@ -75,6 +76,7 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   delayTabLoad = true
+  //#endregion
 
   constructor(
     private router: Router,
@@ -85,7 +87,10 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.providerDetails && changes.providerDetails.currentValue) {
+    if (
+      changes.providerDetails &&
+      changes.providerDetails.currentValue &&
+      changes.providerDetails.currentValue.isAuthenticated) {
       this.tableDataInitialzation()
       this.getContentList()
       this.getPublishedCoursesList()
@@ -372,7 +377,7 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
               this.getContentList()
               this.getUnPublishedCoursesList()
               this.getPublishedCoursesList()
-            },         1000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
