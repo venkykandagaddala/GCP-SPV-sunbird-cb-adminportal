@@ -258,7 +258,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    }, 'image/png')
+    },            'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -379,7 +379,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         link: this.thumbNailUrl,
         documentUrl: this.uploadedPdfUrl,
         documentUploadedDate: this.fileUploadedDate,
-        partnerCode: formDetails.partnerCode
+        partnerCode: formDetails.partnerCode,
       }
 
       if (this.providerDetails) {
@@ -396,8 +396,8 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       } else {
         const providerDetails = {
           data: {
-            contentPartnerName: formDetails.contentPartnerName
-          }
+            contentPartnerName: formDetails.contentPartnerName,
+          },
         }
         this.setTransformationDetails(providerDetails)
         const tranforamtions = this.transforamtionForm.value
@@ -416,7 +416,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            }, 1000)
+            },         1000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -452,7 +452,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Provider details updated successfully.'
               this.showSnackBar(successMsg)
               this.navigateToProvidersDashboard()
-            }, 1000)
+            },         1000)
           }
         },
         error: (error: HttpErrorResponse) => {
