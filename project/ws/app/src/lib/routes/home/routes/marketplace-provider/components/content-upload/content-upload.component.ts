@@ -216,15 +216,15 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       //   keyword: this.publishedCoursesSerachKey,
       // }
       const formBody = {
-        "filterCriteriaMap": {
-          "partnerCode": _.get(this.providerDetails, 'data.partnerCode'),
-          "status": ["live"]
+        filterCriteriaMap: {
+          partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
+          status: ['live'],
         },
-        "pageNumber": this.publishedCoursesTablePaginationDetails.pageIndex,
-        "pageSize": this.publishedCoursesTablePaginationDetails.pageSize,
+        pageNumber: this.publishedCoursesTablePaginationDetails.pageIndex,
+        pageSize: this.publishedCoursesTablePaginationDetails.pageSize,
         // "orderBy": "duration",
         // "orderDirection": "desc",
-        "searchString": this.publishedCoursesSerachKey,
+        searchString: this.publishedCoursesSerachKey,
       }
       this.marketPlaceSvc.getCoursesList(formBody)
         .pipe(map((responce: any) => {
@@ -261,15 +261,15 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       //   keyword: this.unPublishedCoursesSearchKey,
       // }
       const formBody = {
-        "filterCriteriaMap": {
-          "status": ["draft", "notInitiated"],
-          "partnerCode": _.get(this.providerDetails, 'data.partnerCode'),
+        filterCriteriaMap: {
+          status: ['draft', 'notInitiated'],
+          partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
         },
-        "pageNumber": this.unPublishedCoursesTablePaginationDetails.pageIndex,
-        "pageSize": this.unPublishedCoursesTablePaginationDetails.pageSize,
+        pageNumber: this.unPublishedCoursesTablePaginationDetails.pageIndex,
+        pageSize: this.unPublishedCoursesTablePaginationDetails.pageSize,
         // "orderBy": "duration",
         // "orderDirection": "desc",
-        "searchString": this.unPublishedCoursesSearchKey,
+        searchString: this.unPublishedCoursesSearchKey,
       }
       this.marketPlaceSvc.getCoursesList(formBody)
         .pipe(map((responce: any) => {
@@ -436,7 +436,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             const successMsg = 'Additional details updated successfully.'
             this.showSnackBar(successMsg)
             this.sendDetailsUpdateEvent()
-          }, 1000)
+          },         1000)
         }
       },
       error: (error: HttpErrorResponse) => {
@@ -485,7 +485,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
                 this.getContentList()
                 this.getUnPublishedCoursesList()
                 this.getPublishedCoursesList()
-              }, 1000)
+              },         1000)
             }
           },
           error: (error: HttpErrorResponse) => {
@@ -541,7 +541,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             this.showSnackBar(msg)
             setTimeout(() => {
               this.getUnPublishedCoursesList()
-            }, 2000)
+            },         2000)
           }
         },
         error: (error: HttpErrorResponse) => {

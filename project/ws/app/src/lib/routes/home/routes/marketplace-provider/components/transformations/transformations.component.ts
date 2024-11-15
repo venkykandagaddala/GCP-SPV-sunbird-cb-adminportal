@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'
 
 @Component({
   selector: 'ws-app-transformations',
   templateUrl: './transformations.component.html',
-  styleUrls: ['./transformations.component.scss']
+  styleUrls: ['./transformations.component.scss'],
 })
 export class TransformationsComponent implements OnInit {
 

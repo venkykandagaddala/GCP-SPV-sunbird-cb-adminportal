@@ -51,7 +51,7 @@ const routes: Routes = [
     },
     resolve: {
       pageData: PageResolve,
-      providerDetails: ProviderResolveService
+      providerDetails: ProviderResolveService,
     },
   },
   {

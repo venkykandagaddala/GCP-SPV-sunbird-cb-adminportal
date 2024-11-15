@@ -8,7 +8,7 @@ import * as _ from 'lodash'
 // import { catchError, map } from 'rxjs/operators'
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProviderResolveService implements Resolve<IResolveResponse<any>> {
 
