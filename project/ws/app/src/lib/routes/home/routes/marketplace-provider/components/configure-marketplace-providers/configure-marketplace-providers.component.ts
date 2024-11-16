@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
+import { ActivatedRoute } from '@angular/router'
 import * as _ from 'lodash'
+import { MarketplaceService } from '../../services/marketplace.service'
+import { MatSnackBar } from '@angular/material/snack-bar'
+import { HttpErrorResponse } from '@angular/common/http'
 
 @Component({
   selector: 'ws-app-configure-marketplace-providers',
@@ -22,39 +25,55 @@ export class ConfigureMarketplaceProvidersComponent implements OnInit {
     'contentUpload',
   ]
   selectedIndex = 0
-  providerDetails = ''
+  providerDetails: any
+  disableCourseCatalog = true
 
   constructor(
-    private router: Router
+    private activateRoute: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private marketPlaceSvc: MarketplaceService
   ) {
   }
 
   ngOnInit() {
-    this.getRouterParams()
+    this.getRoutesData()
   }
 
-  getRouterParams() {
-    const navigation = this.router.getCurrentNavigation()
-    this.routerParams = _.get(navigation, 'extras.state')
-    if (this.routerParams) {
-      this.providerDetails = _.get(this.routerParams, 'providerDetails')
-      this.setCurrentTab(this.routerParams.tab)
-    } else {
-      this.navigateToProviderDashboard()
-    }
-  }
-
-  navigateToProviderDashboard() {
-    this.router.navigate(['/app/home/marketplace-providers'])
+  getRoutesData() {
+    this.activateRoute.data.subscribe(data => {
+      if (data.providerDetails && data.providerDetails.data) {
+        this.disableCourseCatalog = false
+        this.providerDetails = data.providerDetails.data.result
+      }
+    })
   }
 
   setCurrentTab(tab: any) {
     const tabIndex = this.tabIdsList.findIndex(tabId => tabId === tab)
     if (tabIndex >= 0) {
       this.selectedIndex = tabIndex
-    } else {
-      this.navigateToProviderDashboard()
     }
+  }
+
+  getProviderDetails(event: any) {
+    if (this.providerDetails && this.providerDetails.id && event) {
+      const providerId = this.providerDetails.id
+      this.providerDetails = null
+      this.marketPlaceSvc.getProviderDetails(providerId).subscribe({
+        next: (responce: any) => {
+          this.disableCourseCatalog = false
+          this.providerDetails = responce.result
+        },
+        error: (error: HttpErrorResponse) => {
+          const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
+          this.showSnackBar(errmsg)
+        },
+      })
+    }
+  }
+
+  showSnackBar(message: string) {
+    this.snackBar.open(message)
   }
 
 }

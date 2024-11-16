@@ -2,15 +2,60 @@
   <ws-app-help-center-guide [helpCenterGuide]="helpCenterGuide"></ws-app-help-center-guide>
 </div>
 
-<mat-card class="content-upload m-1">
-  <div class="flex flex-col mb-6">
-    <div class="flex gap-1 items-center">
-      <span class="header">Manage Course Catalog</span>
+<form [formGroup]="transforamtionForm">
+  <mat-card class="content-upload m-1 mb-5">
+    <div class="flex flex-col mb-6">
+      <div class="flex gap-1 items-center justify-between">
+        <span class="header">Additional Properties</span>
+        <button mat-button class="save-properties" (click)="upDateTransforamtionDetails()">
+          {{providerDetalsBeforUpdate!.trasformContentJson ? 'Update Properties' : 'Save Properties'}}</button>
+      </div>
     </div>
-    <!-- <span class="sub-header">Select the type how will you want to fetch data.</span> -->
-  </div>
-  <mat-card-content>
-    <ng-container *ngIf="(providerDetails && providerDetails.isAuthenticated); else cantUpload">
+    <mat-card-content>
+      <mat-accordion class="flex flex-column gap-2">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Trasform Content</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <json-editor [options]="contentEeditorOptions" formControlName="trasformContentJson"
+              class="transformationEditor">
+            </json-editor>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Transform Progress</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <json-editor [options]="progressEditorOptions" formControlName="transformProgressJson"
+              class="transformationEditor">
+            </json-editor>
+          </div>
+        </mat-expansion-panel><mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Trasform Certificate</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <json-editor [options]="certificateEditorOptions" formControlName="trasformCertificateJson"
+              class="transformationEditor">
+            </json-editor>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+</form>
+
+<ng-container *ngIf="providerDetalsBeforUpdate!.trasformContentJson">
+  <mat-card class="content-upload m-1">
+    <div class="flex flex-col mb-6">
+      <div class="flex gap-1 items-center">
+        <span class="header">Manage Course Catalog</span>
+      </div>
+    </div>
+    <mat-card-content>
+      <!-- <ng-container *ngIf="(providerDetails && providerDetails.isAuthenticated); else cantUpload"> -->
       <div class="flex flex-col gap-5">
         <div class="flex gap-2">
           <button mat-button class="scv-btn">Via CSV</button>
@@ -41,67 +86,68 @@
               <span class="file-type">Supported file types: CSV, .xlsx</span>
             </div>
             <!-- </ng-container>
-            <ng-template #fileUploaded>
-              <div class="flex items-center my-2">
-                <img src="/assets/icons/samplePdf.svg" class="samplePdf">
-                <div class="flex flex-column justify-between pdfDetails">
-                  <span class="pdfName">{{fileName}}</span>
-                  <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>
-                  <span class="documentAttached flex items-center">
-                    <mat-icon class="greenTick">check_circle</mat-icon>
-                    Document attached
-                  </span>
+              <ng-template #fileUploaded>
+                <div class="flex items-center my-2">
+                  <img src="/assets/icons/samplePdf.svg" class="samplePdf">
+                  <div class="flex flex-column justify-between pdfDetails">
+                    <span class="pdfName">{{fileName}}</span>
+                    <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>
+                    <span class="documentAttached flex items-center">
+                      <mat-icon class="greenTick">check_circle</mat-icon>
+                      Document attached
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </ng-template> -->
+              </ng-template> -->
             <input type="file" style="display: none;" #fileInput accept=".xlsx, .csv"
               (change)="onDrop($event.target.files[0]); fileInput.value = null" />
           </div>
         </div>
       </div>
-    </ng-container>
-    <ng-template #cantUpload>
-      <div class="cantUploadBox flex items-center">
-        <span class="cantUploadMsg">Course catalog upload is not available right now. We’ll enable it once the catalog
-          mapping with content provider is
-          complete.For furthur information contact the technical team.</span>
-      </div>
-    </ng-template>
-  </mat-card-content>
-</mat-card>
+      <!-- </ng-container>
+      <ng-template #cantUpload>
+        <div class="cantUploadBox flex items-center">
+          <span class="cantUploadMsg">Course catalog upload is not available right now. We’ll enable it once the catalog
+            mapping with content provider is
+            complete.For furthur information contact the technical team.</span>
+        </div>
+      </ng-template> -->
+    </mat-card-content>
+  </mat-card>
 
-<ng-container *ngIf="providerDetails && providerDetails.isAuthenticated && !delayTabLoad">
-  <mat-tab-group class="">
-    <mat-tab label="Upload Status">
-      <div class="w-full mt-3 flex flex-col">
+  <ng-container *ngIf="!delayTabLoad">
+    <mat-tab-group class="">
+      <mat-tab label="Upload Status">
+        <div class="w-full mt-3 flex flex-col">
+          <ng-container *ngIf="!showUploadedStatusLoader; else showLoader">
+            <div>
+              <ws-app-courses-table [tableData]="contentTableData" [data]="uploadedContentList"
+                [menuItems]="contenetMenuItems" (actionsClick)="contentEvents($event)"></ws-app-courses-table>
+            </div>
+          </ng-container>
+        </div>
+      </mat-tab>
+      <mat-tab label="Not Published Courses">
         <ng-container *ngIf="!showUploadedStatusLoader; else showLoader">
-          <div>
-            <ws-app-courses-table [tableData]="contentTableData" [data]="uploadedContentList"
-              [menuItems]="contenetMenuItems" (actionsClick)="contentEvents($event)"></ws-app-courses-table>
+          <div class="w-full mt-4 flex flex-col gap-1">
+            <ws-app-courses-table [tableData]="unPublishedCoursesTableData" [data]="unPublishedCoursesList"
+              [menuItems]="unpublishedCoursesMenuItems" [paginationDetails]="unPublishedCoursesTablePaginationDetails"
+              (searchKey)="searchCourses(false, $event)" (pageChange)="pageChange($event, 'notPublished')"
+              (actionsClick)="contentEvents($event)"></ws-app-courses-table>
           </div>
         </ng-container>
-      </div>
-    </mat-tab>
-    <mat-tab label="Not Published Courses">
-      <ng-container *ngIf="!showUploadedStatusLoader; else showLoader">
-        <div class="w-full mt-4 flex flex-col gap-1">
-          <ws-app-courses-table [tableData]="unPublishedCoursesTableData" [data]="unPublishedCoursesList"
-            [menuItems]="unpublishedCoursesMenuItems" [paginationDetails]="unPublishedCoursesTablePaginationDetails"
-            (searchKey)="searchCourses(false, $event)" (pageChange)="pageChange($event, 'notPublished')"
-            (actionsClick)="contentEvents($event)"></ws-app-courses-table>
-        </div>
-      </ng-container>
-    </mat-tab>
-    <mat-tab label="Published Courses">
-      <ng-container *ngIf="!showPublishedCoursesLoader; else showLoader">
-        <div class="w-full mt-4 flex flex-col gap-1">
-          <ws-app-courses-table [tableData]="publishedCoursesTableData" [data]="publishedCoursesList"
-            [paginationDetails]="publishedCoursesTablePaginationDetails" (searchKey)="searchCourses(true, $event)"
-            (pageChange)="pageChange($event, 'published')"></ws-app-courses-table>
-        </div>
-      </ng-container>
-    </mat-tab>
-  </mat-tab-group>
+      </mat-tab>
+      <mat-tab label="Published Courses">
+        <ng-container *ngIf="!showPublishedCoursesLoader; else showLoader">
+          <div class="w-full mt-4 flex flex-col gap-1">
+            <ws-app-courses-table [tableData]="publishedCoursesTableData" [data]="publishedCoursesList"
+              [paginationDetails]="publishedCoursesTablePaginationDetails" (searchKey)="searchCourses(true, $event)"
+              (pageChange)="pageChange($event, 'published')"></ws-app-courses-table>
+          </div>
+        </ng-container>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-container>
 </ng-container>
 
 <ng-template #showLoader>

@@ -1,12 +1,25 @@
-.content-upload {
-  padding: 20px;
-
-  .header {
+.header {
     /* stylelint-enable */
     font: 700 20px / 30px Lato;
     /* stylelint-disable */
     color: #212529;
   }
+
+.save-properties {
+  background-color: #1B4CA1 !important;
+  width: fit-content;
+  padding: '0px 15px';
+  height: 40px;
+  border-radius: 8px;
+
+  /* stylelint-enable */
+  font: 700 14px Lato;
+  /* stylelint-disable */
+  color: #FFFFFF !important;
+}
+
+.content-upload {
+  padding: 20px;
 
   .info-icon {
     width: 14px;
@@ -184,4 +197,8 @@
     /* stylelint-disable */
     color: #525252;
   }
+}
+
+.additional-properties {
+  padding: 5px;
 }

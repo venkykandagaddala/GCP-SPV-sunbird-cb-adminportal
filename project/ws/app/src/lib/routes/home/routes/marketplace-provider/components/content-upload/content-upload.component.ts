@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core'
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { map } from 'rxjs/operators'
@@ -8,6 +8,8 @@ import { HttpErrorResponse } from '@angular/common/http'
 import { ConformationPopupComponent } from '../../dialogs/conformation-popup/conformation-popup.component'
 import { MatDialog } from '@angular/material/dialog'
 import { MatSnackBar } from '@angular/material/snack-bar'
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms'
+import { JsonEditorOptions } from 'ang-jsoneditor'
 
 @Component({
   selector: 'ws-app-content-upload',
@@ -15,13 +17,16 @@ import { MatSnackBar } from '@angular/material/snack-bar'
   styleUrls: ['./content-upload.component.scss'],
   providers: [DatePipe],
 })
-export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit {
+export class ContentUploadComponent implements OnInit, OnChanges {
   //#region (global variables)
   //#region (view chaild, input and output)
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>
   @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>
 
   @Input() providerDetails?: any
+  @Input() selectedTabIndex = 0
+
+  @Output() loadProviderDetails = new EventEmitter<Boolean>()
   //#endregion
 
   helpCenterGuide = {
@@ -32,6 +37,14 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
     ],
     helpVideoLink: 'url',
   }
+
+  //#region (transformation variables)
+  transforamtionForm!: FormGroup
+  providerDetalsBeforUpdate: any
+  public contentEeditorOptions: JsonEditorOptions | undefined
+  public progressEditorOptions: JsonEditorOptions | undefined
+  public certificateEditorOptions: JsonEditorOptions | undefined
+  //#endregion
 
   contentTableData: any
   uploadedContentList = []
@@ -81,25 +94,68 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
   constructor(
     private router: Router,
     private marketPlaceSvc: MarketplaceService,
+    private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
-  ) { }
+  ) {
+    this.initialization()
+    this.setJsonEditorOptions()
+  }
+
+  initialization() {
+    this.transforamtionForm = this.formBuilder.group({
+      trasformContentJson: new FormControl(''),
+      transformProgressJson: new FormControl(''),
+      trasformCertificateJson: new FormControl(''),
+    })
+  }
+
+  setJsonEditorOptions() {
+    this.contentEeditorOptions = this.getEditorOptions
+    this.progressEditorOptions = this.getEditorOptions
+    this.certificateEditorOptions = this.getEditorOptions
+  }
+
+  get getEditorOptions(): JsonEditorOptions {
+    const editorOptions = new JsonEditorOptions()
+    editorOptions.mode = 'text'
+    editorOptions.mainMenuBar = false // Hide the menu bar
+    editorOptions.navigationBar = false // Hide the navigation bar
+    editorOptions.statusBar = false // Hide the status bar at the bottom
+    editorOptions.enableSort = false // Disable sorting
+    editorOptions.enableTransform = false // Disable transformation
+    return editorOptions
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes.providerDetails &&
-      changes.providerDetails.currentValue &&
-      changes.providerDetails.currentValue.isAuthenticated) {
+      changes.providerDetails.currentValue) {
+      this.providerDetalsBeforUpdate = JSON.parse(JSON.stringify(changes.providerDetails.currentValue))
+      this.setTransformationDetails(changes.providerDetails.currentValue)
       this.tableDataInitialzation()
-      this.getContentList()
-      this.getPublishedCoursesList()
-      this.getUnPublishedCoursesList()
+      if (changes.providerDetails.currentValue.trasformContentJson) {
+        this.getContentList()
+        this.getPublishedCoursesList()
+        this.getUnPublishedCoursesList()
+      }
+    }
+
+    if (changes.selectedTabIndex && changes.selectedTabIndex.currentValue === 1) {
+      this.delayTabLoad = false
     }
   }
 
-  ngAfterViewInit(): void {
-    setTimeout(() => { this.delayTabLoad = false }, 1500)
+  setTransformationDetails(providerDetails: any) {
+    const providerName = _.get(providerDetails, 'data.contentPartnerName', '').toLowerCase()
+    if (providerName) {
+      this.transforamtionForm.setValue({
+        trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : '',
+        transformProgressJson: providerDetails.transformProgressJson ? providerDetails.transformProgressJson : '',
+        trasformCertificateJson: providerDetails.trasformCertificateJson ? providerDetails.trasformCertificateJson : '',
+      })
+    }
   }
 
   //#region (content files)
@@ -149,21 +205,32 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
 
   //#region (courses)
   getPublishedCoursesList() {
-    if (this.providerDetails && this.providerDetails.partnerCode) {
+    if (_.get(this.providerDetails, 'data.partnerCode')) {
       this.showPublishedCoursesLoader = true
       this.publishedCoursesList = []
+      // const formBody = {
+      //   partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
+      //   size: this.publishedCoursesTablePaginationDetails.pageSize,
+      //   page: this.publishedCoursesTablePaginationDetails.pageIndex,
+      //   isActive: true,
+      //   keyword: this.publishedCoursesSerachKey,
+      // }
       const formBody = {
-        partnerCode: this.providerDetails.partnerCode,
-        size: this.publishedCoursesTablePaginationDetails.pageSize,
-        page: this.publishedCoursesTablePaginationDetails.pageIndex,
-        isActive: true,
-        keyword: this.publishedCoursesSerachKey,
+        filterCriteriaMap: {
+          partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
+          status: ['live'],
+        },
+        pageNumber: this.publishedCoursesTablePaginationDetails.pageIndex,
+        pageSize: this.publishedCoursesTablePaginationDetails.pageSize,
+        // "orderBy": "duration",
+        // "orderDirection": "desc",
+        searchString: this.publishedCoursesSerachKey,
       }
       this.marketPlaceSvc.getCoursesList(formBody)
         .pipe(map((responce: any) => {
           const formatedData = {
-            totalCount: _.get(responce, 'totalElements', 0),
-            formatedList: this.formateCoursesList(_.get(responce, 'result', [])),
+            totalCount: _.get(responce, 'totalCount', 0),
+            formatedList: this.formateCoursesList(_.get(responce, 'data', [])),
           }
           return formatedData
         }))
@@ -183,21 +250,32 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   getUnPublishedCoursesList() {
-    if (this.providerDetails && this.providerDetails.partnerCode) {
+    if (_.get(this.providerDetails, 'data.partnerCode')) {
       this.showUnpublishedCoursesLoader = true
       this.unPublishedCoursesList = []
+      // const formBody = {
+      //   partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
+      //   size: this.unPublishedCoursesTablePaginationDetails.pageSize,
+      //   page: this.unPublishedCoursesTablePaginationDetails.pageIndex,
+      //   isActive: false,
+      //   keyword: this.unPublishedCoursesSearchKey,
+      // }
       const formBody = {
-        partnerCode: this.providerDetails.partnerCode,
-        size: this.unPublishedCoursesTablePaginationDetails.pageSize,
-        page: this.unPublishedCoursesTablePaginationDetails.pageIndex,
-        isActive: false,
-        keyword: this.unPublishedCoursesSearchKey,
+        filterCriteriaMap: {
+          status: ['draft', 'notInitiated'],
+          partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
+        },
+        pageNumber: this.unPublishedCoursesTablePaginationDetails.pageIndex,
+        pageSize: this.unPublishedCoursesTablePaginationDetails.pageSize,
+        // "orderBy": "duration",
+        // "orderDirection": "desc",
+        searchString: this.unPublishedCoursesSearchKey,
       }
       this.marketPlaceSvc.getCoursesList(formBody)
         .pipe(map((responce: any) => {
           const formatedData = {
-            totalCount: _.get(responce, 'totalElements', 0),
-            formatedList: this.formateCoursesList(_.get(responce, 'result', [])),
+            totalCount: _.get(responce, 'totalCount', 0),
+            formatedList: this.formateCoursesList(_.get(responce, 'data', [])),
           }
           return formatedData
         }))
@@ -219,12 +297,12 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
   formateCoursesList(responce: any[]) {
     const formatedList: any = []
     responce.forEach((course: any) => {
-      const publishedOnDate = new Date(_.get(course, 'ciosData.content.publishedOn'))
+      const publishedOnDate = new Date(_.get(course, 'publishedOn'))
       const formateCourse = {
-        id: _.get(course, 'ciosData.content.externalId', ''),
-        courseName: _.get(course, 'ciosData.content.name', ''),
-        courseImg: _.get(course, 'ciosData.content.appIcon', ''),
-        source: _.get(course, 'ciosData.content.source', ''),
+        id: _.get(course, 'externalId', ''),
+        courseName: _.get(course, 'name', ''),
+        courseImg: _.get(course, 'appIcon', ''),
+        source: _.get(course, 'source', ''),
         courseStatus: course.isActive ? 'Published' : 'Not Published',
         publishedOn: isNaN(publishedOnDate.getTime()) ? 'N/A'
           : this.datePipe.transform(publishedOnDate, 'MMM dd, yyyy'),
@@ -344,6 +422,34 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
     }
   }
 
+  upDateTransforamtionDetails() {
+    this.providerDetalsBeforUpdate['data']['isActive'] = true
+    const tranforamtions = this.transforamtionForm.value
+    this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
+    this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson
+    this.providerDetalsBeforUpdate['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
+
+    this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
+      next: (responce: any) => {
+        if (responce) {
+          setTimeout(() => {
+            const successMsg = 'Additional details updated successfully.'
+            this.showSnackBar(successMsg)
+            this.sendDetailsUpdateEvent()
+          },         1000)
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
+        this.showSnackBar(errmsg)
+      },
+    })
+  }
+
+  sendDetailsUpdateEvent() {
+    this.loadProviderDetails.emit(true)
+  }
+
   onDrop(file: File) {
     this.fileName = file.name.replace(/[^A-Za-z0-9_.]/g, '')
     if (!(this.fileName.toLowerCase().endsWith('.csv') || this.fileName.toLowerCase().endsWith('.xlsx'))) {
@@ -368,27 +474,29 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
         this.contentFile as Blob,
         (this.contentFile as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
       )
-      this.marketPlaceSvc.uploadContent(formData, this.providerDetails.partnerCode, this.providerDetails.id).subscribe({
-        next: (res: any) => {
-          if (res) {
-            setTimeout(() => {
-              this.showSnackBar('File imported successfully')
-              this.dialogRef.close()
-              this.getContentList()
-              this.getUnPublishedCoursesList()
-              this.getPublishedCoursesList()
-            }, 1000)
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          let errmsg = _.get(error, 'error.code', 'Some thig went wrong while uploading. Please try again')
-          if (error && error.error && error.error.includes('unsupported file type')) {
-            errmsg = 'Uploaded file format is not supported. Please try again with a supported file format.'
-          }
-          this.dialogRef.close()
-          this.showSnackBar(errmsg)
-        },
-      })
+      const partnerCode = _.get(this.providerDetails, 'data.partnerCode')
+      this.marketPlaceSvc.uploadContent(formData, partnerCode, this.providerDetails.id)
+        .subscribe({
+          next: (res: any) => {
+            if (res) {
+              setTimeout(() => {
+                this.showSnackBar('File imported successfully')
+                this.dialogRef.close()
+                this.getContentList()
+                this.getUnPublishedCoursesList()
+                this.getPublishedCoursesList()
+              },         1000)
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            let errmsg = _.get(error, 'error.code', 'Some thig went wrong while uploading. Please try again')
+            if (error && error.error && error.error.includes('unsupported file type')) {
+              errmsg = 'Uploaded file format is not supported. Please try again with a supported file format.'
+            }
+            this.dialogRef.close()
+            this.showSnackBar(errmsg)
+          },
+        })
     } else {
       this.showSnackBar('Please upload a file to import')
     }
@@ -422,7 +530,7 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
   deletedSelectedCourses(event: any) {
     if (event && event.rows && event.rows.length !== 0) {
       const formBody = {
-        partnerCode: this.providerDetails.partnerCode,
+        partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
         externalId: event.rows.length ? event.rows.map((item: any) => item.id) : [event.rows.id],
       }
       this.marketPlaceSvc.deleteUnPublishedCourses(formBody).subscribe({
@@ -431,7 +539,9 @@ export class ContentUploadComponent implements OnInit, OnChanges, AfterViewInit 
             const msg = event.rows.length && event.rows.length > 1
               ? 'Selected courses are deleted successfully' : 'Selected course is deleted successfully'
             this.showSnackBar(msg)
-            this.getUnPublishedCoursesList()
+            setTimeout(() => {
+              this.getUnPublishedCoursesList()
+            },         2000)
           }
         },
         error: (error: HttpErrorResponse) => {

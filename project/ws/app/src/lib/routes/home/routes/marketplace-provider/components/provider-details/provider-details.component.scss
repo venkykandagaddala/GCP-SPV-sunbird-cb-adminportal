@@ -67,6 +67,14 @@
 
   .provider-input-form {
     height: 50px;
+
+    .partnerCode {
+      text-transform: uppercase
+    }
+
+    .partnerCode::placeholder {
+      text-transform: none;
+    }
   }
 
   .input-note{

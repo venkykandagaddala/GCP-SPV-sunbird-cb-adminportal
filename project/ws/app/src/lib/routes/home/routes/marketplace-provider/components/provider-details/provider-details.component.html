@@ -46,12 +46,12 @@
             </mat-hint>
           </mat-form-field>
         </div>
-        <div class="flex flex-column gap-1 w-full" [ngClass]="{'disableControl': partnerCode !== ''}">
+        <div class="flex flex-column gap-1 w-full" [ngClass]="{'disableControl': providerDetalsBeforUpdate}">
           <div class="flex items-center gap-1 required">
             <span class="lable">Partner Code</span>
           </div>
           <mat-form-field class="w-full provider-input-form">
-            <input formControlName="partnerCode" matInput placeholder="Type here" maxlength="6">
+            <input class="partnerCode" formControlName="partnerCode" matInput placeholder="Type here" maxlength="6">
             <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
               *ngIf="getControlValidation('partnerCode', 'required')">
               Partner Code is mandatory
@@ -179,7 +179,7 @@
         </ng-template>
       </div>
 
-      <ng-container *ngIf="providerDetails">
+      <!-- <ng-container *ngIf="providerDetalsBeforUpdate">
         <form [formGroup]="transforamtionForm">
           <div class=" mb-2"><span class="lable">Additional Properties</span></div>
           <mat-accordion class="flex flex-column gap-2">
@@ -214,11 +214,11 @@
             </mat-expansion-panel>
           </mat-accordion>
         </form>
-      </ng-container>
+      </ng-container> -->
 
       <div class="flex items-center gap-4">
         <button mat-button type="button" class="cancelBtn" (click)="navigateToProvidersDashboard()">Cancel</button>
-        <button mat-button type="submit" class="saveBtn">{{providerDetails ? 'Update' : 'Save'}}</button>
+        <button mat-button type="submit" class="saveBtn">{{providerDetalsBeforUpdate ? 'Update' : 'Save'}}</button>
       </div>
     </form>
   </mat-card-content>
