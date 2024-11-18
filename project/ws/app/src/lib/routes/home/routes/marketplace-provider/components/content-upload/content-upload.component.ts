@@ -191,7 +191,8 @@ export class ContentUploadComponent implements OnInit, OnChanges {
         })
         .map((element: any) => {
           return {
-            status: element.status === 'success' ? 'Live' : 'Failed',
+            status: element.status === 'success' ? 'Live' :
+              element.status === 'InProgress' ? 'In Progress' : 'Failed',
             name: element.fileName,
             intiatedOn: this.datePipe.transform(new Date(element.initiatedOn), 'dd MMM yyyy hh:mm a'),
             completedOn: this.datePipe.transform(new Date(element.completedOn), 'dd MMM yyyy hh:mm a'),
@@ -419,6 +420,11 @@ export class ContentUploadComponent implements OnInit, OnChanges {
           this.downloadLog(event.rows.gcpfileName, event.rows.name)
         }
         break
+      case 'refresh':
+        this.getContentList()
+        this.getUnPublishedCoursesList()
+        this.getPublishedCoursesList()
+        break
     }
   }
 
@@ -436,7 +442,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             const successMsg = 'Additional details updated successfully.'
             this.showSnackBar(successMsg)
             this.sendDetailsUpdateEvent()
-          },         1000)
+          }, 1000)
         }
       },
       error: (error: HttpErrorResponse) => {
@@ -485,7 +491,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
                 this.getContentList()
                 this.getUnPublishedCoursesList()
                 this.getPublishedCoursesList()
-              },         1000)
+              }, 1000)
             }
           },
           error: (error: HttpErrorResponse) => {
@@ -541,7 +547,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             this.showSnackBar(msg)
             setTimeout(() => {
               this.getUnPublishedCoursesList()
-            },         2000)
+            }, 2000)
           }
         },
         error: (error: HttpErrorResponse) => {
