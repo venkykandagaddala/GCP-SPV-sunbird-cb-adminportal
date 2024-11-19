@@ -209,12 +209,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     if (_.get(this.providerDetails, 'data.partnerCode')) {
       this.showPublishedCoursesLoader = true
       this.publishedCoursesList = []
-      // const formBody = {
-      //   partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
-      //   size: this.publishedCoursesTablePaginationDetails.pageSize,
-      //   page: this.publishedCoursesTablePaginationDetails.pageIndex,
-      //   isActive: true,
-      //   keyword: this.publishedCoursesSerachKey,
       // }
       const formBody = {
         filterCriteriaMap: {
@@ -244,7 +238,10 @@ export class ContentUploadComponent implements OnInit, OnChanges {
           error: (error: HttpErrorResponse) => {
             const errmsg = _.get(error, 'error.params.errMsg', 'Some thing went wrong please try again')
             this.showPublishedCoursesLoader = false
-            this.showSnackBar(errmsg)
+            const message = _.get(error, 'error.message')
+            if (!(error.status === 400 && message.includes('index_not_found_exception'))) {
+              this.showSnackBar(errmsg)
+            }
           },
         })
     }
@@ -254,13 +251,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     if (_.get(this.providerDetails, 'data.partnerCode')) {
       this.showUnpublishedCoursesLoader = true
       this.unPublishedCoursesList = []
-      // const formBody = {
-      //   partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
-      //   size: this.unPublishedCoursesTablePaginationDetails.pageSize,
-      //   page: this.unPublishedCoursesTablePaginationDetails.pageIndex,
-      //   isActive: false,
-      //   keyword: this.unPublishedCoursesSearchKey,
-      // }
       const formBody = {
         filterCriteriaMap: {
           status: ['draft', 'notInitiated'],
@@ -289,7 +279,10 @@ export class ContentUploadComponent implements OnInit, OnChanges {
           error: (error: HttpErrorResponse) => {
             const errmsg = _.get(error, 'error.params.errMsg', 'Some thing went wrong please try again')
             this.showPublishedCoursesLoader = false
-            this.showSnackBar(errmsg)
+            const message = _.get(error, 'error.message')
+            if (!(error.status === 400 && message.includes('index_not_found_exception'))) {
+              this.showSnackBar(errmsg)
+            }
           },
         })
     }
