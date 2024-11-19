@@ -38,10 +38,10 @@
             </mat-error>
             <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
               *ngIf="getControlValidation('contentPartnerName', 'pattern')">
-              Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported
+              Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported
             </mat-error>
             <mat-hint class="w-full flex justify-between items-center">
-              <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
+              <span class="input-note">Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported</span>
               <span class="input-note">{{getTextLength('contentPartnerName')}}/70</span>
             </mat-hint>
           </mat-form-field>
@@ -58,7 +58,7 @@
             </mat-error>
             <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
               *ngIf="getControlValidation('partnerCode', 'pattern')">
-              Only ( a-z/A-Z , 0-9) characters are supported
+              Only ( a-z/A-Z/0-9) characters are supported
             </mat-error>
             <mat-hint class="w-full flex justify-between items-center">
               <span class="input-note">Only ( a-z/A-Z , 0-9) characters are supported</span>
@@ -80,10 +80,10 @@
           </mat-error>
           <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
             *ngIf="getControlValidation('websiteUrl', 'pattern')">
-            Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported
+            Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported
           </mat-error>
           <mat-hint class="w-full flex justify-between items-center">
-            <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
+            <span class="input-note">Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported</span>
             <span class="input-note">{{getTextLength('websiteUrl')}}/70</span>
           </mat-hint>
         </mat-form-field>
@@ -104,10 +104,10 @@
           </mat-error>
           <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
             *ngIf="getControlValidation('description', 'pattern')">
-            Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported
+            Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported
           </mat-error>
           <mat-hint class="w-full flex justify-between items-center">
-            <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
+            <span class="input-note">Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported</span>
             <span class="input-note">{{getTextLength('description')}}/500</span>
           </mat-hint>
         </mat-form-field>
