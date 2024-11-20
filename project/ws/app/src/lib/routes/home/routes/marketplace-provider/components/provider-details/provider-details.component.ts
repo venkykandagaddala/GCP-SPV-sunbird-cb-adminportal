@@ -199,15 +199,23 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     const fileName = event.name.replace(/[^A-Za-z0-9_.]/g, '')
     if (this.thumbnailFile) {
       if (fileName.toLowerCase().endsWith('.svg') || fileName.toLowerCase().endsWith('.png')) {
-        const reader = new FileReader()
-        reader.onload = (e: any) => {
-          const img = new Image()
-          img.onload = () => {
-            this.cropImage(img)
+        const fileSizeInKB = this.thumbnailFile.size / 1000
+        const minSizeKB = 300
+        const maxSizeMB = 2
+        const maxSizeKB = maxSizeMB * 1000
+        if (fileSizeInKB >= minSizeKB && fileSizeInKB <= maxSizeKB) {
+          const reader = new FileReader()
+          reader.onload = (e: any) => {
+            const img = new Image()
+            img.onload = () => {
+              this.cropImage(img)
+            }
+            img.src = e.target.result
           }
-          img.src = e.target.result
+          reader.readAsDataURL(this.thumbnailFile)
+        } else {
+          this.showSnackBar('Please upload image sized between 300 KB and 2 MB')
         }
-        reader.readAsDataURL(this.thumbnailFile)
       } else {
         this.showSnackBar('Please upload svg or png image')
       }
@@ -411,6 +419,8 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           this.showSnackBar(errmsg)
         },
       })
+    } else {
+      this.showSnackBar('Please fill all the mandator fields with proper data')
     }
   }
 
@@ -447,6 +457,8 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           this.showSnackBar(errmsg)
         },
       })
+    } else {
+      this.showSnackBar('Please fill all the mandator fields with proper data')
     }
   }
 
