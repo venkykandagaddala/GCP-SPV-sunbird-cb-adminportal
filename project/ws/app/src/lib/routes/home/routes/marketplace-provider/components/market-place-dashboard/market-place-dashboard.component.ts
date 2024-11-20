@@ -19,8 +19,8 @@ export class MarketPlaceDashboardComponent implements OnInit {
   helpCenterGuide = {
     header: 'SPV Help Center: Video Guides and Tips',
     guideNotes: [
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
+      'Ensure all mandatory fields in the onboarding form regarding the content provider are filled. Once completed, proceed to uploading course catalog for the content provider.',
+      'Reach out to support team for authenticating the content provider',
     ],
     helpVideoLink: 'url',
   }
@@ -224,7 +224,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
         if (res) {
           setTimeout(() => {
             this.getProviders()
-          },         2000)
+          }, 2000)
         } else {
           this.displayLoader = false
         }

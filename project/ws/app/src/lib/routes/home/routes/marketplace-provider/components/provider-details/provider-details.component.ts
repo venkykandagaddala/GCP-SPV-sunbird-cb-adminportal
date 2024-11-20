@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core'
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { ActivatedRoute, Router } from '@angular/router'
+import { Router } from '@angular/router'
 import * as _ from 'lodash'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { HttpErrorResponse } from '@angular/common/http'
@@ -29,8 +29,8 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   helpCenterGuide = {
     header: 'Provider Details: Video Guides and Tips',
     guideNotes: [
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
+      'Ensure all mandatory fields in the onboarding form regarding the content provider are filled. Once completed, proceed to uploading course catalog for the content provider.',
+      'Partner code is a unique code that helps to differentiate the content provider.',
     ],
     helpVideoLink: 'url',
   }
@@ -49,7 +49,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   fileUploadedDate: string | null = ''
   thumbnailResourceId = ''
   pdfResourceId = ''
-  providerConfiguration: any
+  // providerConfiguration: any
   // partnerCode = ''
   // transforamtionForm!: FormGroup
   // public contentEeditorOptions: JsonEditorOptions | undefined
@@ -62,7 +62,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     private marketPlaceSvc: MarketplaceService,
     private snackBar: MatSnackBar,
     private datePipe: DatePipe,
-    private activateRoute: ActivatedRoute,
+    // private activateRoute: ActivatedRoute,
     private loaderService: LoaderService,
   ) {
     this.initialization()
@@ -102,16 +102,16 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.getRoutesData()
+    // this.getRoutesData()
   }
 
-  getRoutesData() {
-    this.activateRoute.data.subscribe(data => {
-      if (data.pageData.data) {
-        this.providerConfiguration = data.pageData.data
-      }
-    })
-  }
+  // getRoutesData() {
+  //   this.activateRoute.data.subscribe(data => {
+  //     if (data.pageData.data) {
+  //       this.providerConfiguration = data.pageData.data
+  //     }
+  //   })
+  // }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.providerDetails && changes.providerDetails.currentValue) {
@@ -243,7 +243,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    },            'image/png')
+    }, 'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -402,7 +402,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               this.showSnackBar(successMsg)
               const providerId = _.get(responce, 'result.id')
               this.router.navigate([`/app/home/marketplace-providers/onboard-partner/${providerId}`])
-            },         1000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -438,7 +438,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
               const successMsg = 'Provider details updated successfully.'
               this.showSnackBar(successMsg)
               this.sendDetailsUpdateEvent()
-            },         1000)
+            }, 1000)
           }
         },
         error: (error: HttpErrorResponse) => {

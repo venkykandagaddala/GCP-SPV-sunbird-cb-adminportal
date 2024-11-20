@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core'
-import { Router } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { map } from 'rxjs/operators'
 import * as _ from 'lodash'
@@ -32,8 +32,8 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   helpCenterGuide = {
     header: 'Content Upload Details: Video Guides and Tips',
     guideNotes: [
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
+      'While uploading the course catalog, ensure to define key properties such as Content Details, Certificate Configuration, and Progress Transform Settings. These are essential for accurate tracking and effective learner engagement. you will have the provision to update the properties later also.',
+      'Upload the course catalog using a CSV or XLSX file. Once uploaded, the system will indicate whether the courses are live. Non-published courses and published courses will be displayed in separate tabs for better organization. Additionally, you can download detailed logs for reference and troubleshooting.',
     ],
     helpVideoLink: 'url',
   }
@@ -44,6 +44,9 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   public contentEeditorOptions: JsonEditorOptions | undefined
   public progressEditorOptions: JsonEditorOptions | undefined
   public certificateEditorOptions: JsonEditorOptions | undefined
+  transformationsUpdated = false
+  providerConfiguration: any
+  executed = false
   //#endregion
 
   contentTableData: any
@@ -77,6 +80,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
 
   FILE_UPLOAD_MAX_SIZE: number = 100 * 1024 * 1024
   contentFile: any
+  contentFileUploaded = false
   fileName = ''
   fileUploadedDate: string | null = ''
   dialogRef: any
@@ -97,17 +101,19 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private activateRoute: ActivatedRoute,
   ) {
     this.initialization()
     this.setJsonEditorOptions()
+    this.getRoutesData()
   }
 
   initialization() {
     this.transforamtionForm = this.formBuilder.group({
       trasformContentJson: new FormControl(''),
-      transformProgressJson: new FormControl(''),
-      trasformCertificateJson: new FormControl(''),
+      // transformProgressJson: new FormControl(''),
+      // trasformCertificateJson: new FormControl(''),
     })
   }
 
@@ -135,11 +141,11 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.providerDetalsBeforUpdate = JSON.parse(JSON.stringify(changes.providerDetails.currentValue))
       this.setTransformationDetails(changes.providerDetails.currentValue)
       this.tableDataInitialzation()
-      if (changes.providerDetails.currentValue.trasformContentJson) {
-        this.getContentList()
-        this.getPublishedCoursesList()
-        this.getUnPublishedCoursesList()
-      }
+      // if (changes.providerDetails.currentValue.trasformContentJson) {
+      //   this.getContentList()
+      //   this.getPublishedCoursesList()
+      //   this.getUnPublishedCoursesList()
+      // }
     }
 
     if (changes.selectedTabIndex && changes.selectedTabIndex.currentValue === 1) {
@@ -148,14 +154,12 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   setTransformationDetails(providerDetails: any) {
-    const providerName = _.get(providerDetails, 'data.contentPartnerName', '').toLowerCase()
-    if (providerName) {
-      this.transforamtionForm.setValue({
-        trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : '',
-        transformProgressJson: providerDetails.transformProgressJson ? providerDetails.transformProgressJson : '',
-        trasformCertificateJson: providerDetails.trasformCertificateJson ? providerDetails.trasformCertificateJson : '',
-      })
-    }
+    const configuration = this.providerConfiguration['ecornel']
+    this.transforamtionForm.setValue({
+      trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : _.get(configuration, 'trasformContentJson', ''),
+      // transformProgressJson: providerDetails.transformProgressJson ? providerDetails.transformProgressJson : _.get(configuration, 'transformProgressJson', ''),
+      // trasformCertificateJson: providerDetails.trasformCertificateJson ? providerDetails.trasformCertificateJson : _.get(configuration, 'trasformCertificateJson', ''),
+    })
   }
 
   //#region (content files)
@@ -333,6 +337,19 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   //#endregion
 
   ngOnInit() {
+    if (this.providerDetails.trasformContentJson) {
+      this.getContentList()
+      this.getPublishedCoursesList()
+      this.getUnPublishedCoursesList()
+    }
+  }
+
+  getRoutesData() {
+    this.activateRoute.data.subscribe(data => {
+      if (data.pageData.data) {
+        this.providerConfiguration = data.pageData.data
+      }
+    })
   }
 
   tableDataInitialzation() {
@@ -423,16 +440,17 @@ export class ContentUploadComponent implements OnInit, OnChanges {
 
   upDateTransforamtionDetails() {
     this.providerDetalsBeforUpdate['data']['isActive'] = true
+    const hasTransformationAlready = this.providerDetalsBeforUpdate['trasformContentJson'] ? true : false
     const tranforamtions = this.transforamtionForm.value
     this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
-    this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson
-    this.providerDetalsBeforUpdate['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
+    // this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson
+    // this.providerDetalsBeforUpdate['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
 
     this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
       next: (responce: any) => {
         if (responce) {
           setTimeout(() => {
-            const successMsg = 'Additional details updated successfully.'
+            const successMsg = hasTransformationAlready ? 'Transform Content updated successfully.' : 'Transform Content saved successfully.'
             this.showSnackBar(successMsg)
             this.sendDetailsUpdateEvent()
           }, 1000)
@@ -446,6 +464,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   sendDetailsUpdateEvent() {
+    this.transformationsUpdated = true
     this.loadProviderDetails.emit(true)
   }
 
@@ -457,15 +476,15 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.showSnackBar('Please upload a file less than 100 MB')
     } else {
       this.contentFile = file
-      // this.contentFileUploaded = true
+      this.contentFileUploaded = true
       this.fileUploadedDate = this.datePipe.transform(new Date(), 'dd/MM/yyyy')
-      this.uploadFile()
-      // this.showSnackBar('File uploaded')
+      // this.uploadFile()
     }
   }
 
   uploadFile() {
-    if (this.contentFile) {
+    this.executed = true
+    if (this.contentFile && this.transformationsUpdated) {
       this.openFileUploadPopup()
       const formData = new FormData()
       formData.append(
@@ -477,9 +496,12 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.marketPlaceSvc.uploadContent(formData, partnerCode, this.providerDetails.id)
         .subscribe({
           next: (res: any) => {
+            this.executed = false
             if (res) {
               setTimeout(() => {
                 this.showSnackBar('File imported successfully')
+                this.transformationsUpdated = false
+                this.contentFileUploaded = false
                 this.dialogRef.close()
                 this.getContentList()
                 this.getUnPublishedCoursesList()
@@ -488,6 +510,8 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             }
           },
           error: (error: HttpErrorResponse) => {
+            this.executed = false
+            this.transformationsUpdated = false
             let errmsg = _.get(error, 'error.code', 'Some thig went wrong while uploading. Please try again')
             if (error && error.error && error.error.includes('unsupported file type')) {
               errmsg = 'Uploaded file format is not supported. Please try again with a supported file format.'
@@ -496,8 +520,12 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             this.showSnackBar(errmsg)
           },
         })
-    } else {
+    } else if (!this.contentFile) {
       this.showSnackBar('Please upload a file to import')
+    } else {
+      const message = this.providerDetalsBeforUpdate.trasformContentJson ?
+        'Please update transform content' : 'Please add transform content'
+      this.showSnackBar(message)
     }
   }
 
