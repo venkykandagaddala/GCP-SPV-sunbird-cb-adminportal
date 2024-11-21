@@ -146,6 +146,16 @@ const routes: Routes = [
         },
       },
       {
+        path: 'organisation',
+        // redirectTo: 'directory/organisation',
+        component: DirectoryViewComponent,
+        data: {
+          module: 'Directory',
+          pageType: 'feature',
+          pageKey: 'Directory',
+        },
+      },
+      {
         path: 'moderation',
         component: ModerationViewComponent,
         // data: {

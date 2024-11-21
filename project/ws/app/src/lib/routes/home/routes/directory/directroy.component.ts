@@ -7,13 +7,14 @@ import { ConfigurationsService, EventService, WsEvents } from '@sunbird-cb/utils
 import _ from 'lodash'
 import { DirectoryService } from '../../services/directory.services'
 import { UIDirectoryTableComponent } from '../../../../head/ui-admin-table/directory-list/directory-table.component'
+import { DatePipe } from '@angular/common'
 
 @Component({
   selector: 'ws-app-directory',
   templateUrl: './directory.component.html',
   styleUrls: ['./directory.component.scss'],
   /* tslint:disable */
-  host: { class: 'flex flex-1 margin-top-l' },
+  host: { class: 'flex flex-1' },
   /* tslint:enable */
 })
 export class DirectoryViewComponent implements OnInit {
@@ -42,6 +43,7 @@ export class DirectoryViewComponent implements OnInit {
     private directoryService: DirectoryService,
     private router: Router,
     private events: EventService,
+    private datePipe: DatePipe
   ) {
     this.currentUser = this.configSvc.userProfile && this.configSvc.userProfile.userId
     this.tabsData = this.route.parent && this.route.parent.snapshot.data.pageData.data.tabs || []
@@ -77,6 +79,7 @@ export class DirectoryViewComponent implements OnInit {
           }
         }
       })
+      this.departmentHearders.push('Organisation') // need to remove befor commit
       if (this.departmentHearders && this.departmentHearders.length) {
         this.getDepartDataByKey(this.currentFilter)
         this.createTableHeader()
@@ -85,31 +88,62 @@ export class DirectoryViewComponent implements OnInit {
   }
   createTableHeader() {
     this.tabledata = []
-    this.tabledata = {
-      actions: [{ name: 'Edit', label: 'Edit info', icon: 'remove_red_eye', type: 'button' }],
-      columns: [
-        { displayName: 'Department', key: 'mdo' },
-        { displayName: 'Type', key: 'type' },
-      ],
-      needCheckBox: false,
-      needHash: false,
-      sortColumn: '',
-      sortState: 'asc',
+    if (this.currentFilter === 'organisation') {
+      this.tabledata = {
+        columns: [
+          { displayName: 'Organisation', key: 'organisation' },
+          { displayName: 'Type', key: 'type' },
+          { displayName: 'Created By', key: 'createdBy' },
+          { displayName: 'Created On', key: 'createdOn' },
+        ],
+        actions: [{ name: '', label: '', icon: 'remove_red_eye', type: 'menu' }],
+        link: { name: 'generate_link', generateLabel: 'Generate Link', column: 'Custom Registration', viewLabel: 'View Link' },
+        needCheckBox: false,
+        needHash: false,
+        sortColumn: '',
+        sortState: 'asc',
+        showNewNoContent: true,
+        loader: true
+      }
+    } else {
+      this.tabledata = {
+        actions: [{ name: 'Edit', label: 'Edit info', icon: 'remove_red_eye', type: 'button' }],
+        columns: [
+          { displayName: 'Department', key: 'mdo' },
+          { displayName: 'Type', key: 'type' },
+        ],
+        needCheckBox: false,
+        needHash: false,
+        sortColumn: '',
+        sortState: 'asc',
+        loader: true
 
+      }
     }
     // console.log(key, 'key-------')
   }
   getAllDepartments(queryText: any) {
+    this.tabledata.loader = true
     const query = queryText ? queryText : ''
     this.directoryService.getAllDepartmentsKong(query, this.currentTab).subscribe(res => {
       this.wholeData2 = res.result.response.content
+      this.wholeData2 = _.orderBy(this.wholeData2, ['createdDate'], ['desc'])
       if (this.departmentHearders && this.departmentHearders.length) {
         this.getDepartDataByKey(this.currentFilter)
       }
     })
   }
-  onRoleClick(role: any) {
-    this.router.navigate([`/app/roles/${role.id}/users`], { queryParams: { currentDept: this.currentFilter, roleId: role.id, depatName: role.channel, orgName: role.mdo } })
+  onRoleClick(role: any,) {
+    this.router.navigate([`/app/roles/${role.data.id}/users`], {
+      queryParams:
+      {
+        currentDept: this.currentFilter,
+        roleId: role.data.id,
+        depatName: role.data.channel,
+        orgName: role.data.mdo || role.data.organisation,
+        tab: role.type
+      }
+    })
   }
 
   filter(value: string) {
@@ -128,6 +162,8 @@ export class DirectoryViewComponent implements OnInit {
       key = 'state'
     } else if (value === 'ministry') {
       key = 'ministry'
+    } else if (value === 'organisation') {
+      key = 'organisation'
     }
     if (key === 'cbc') {
       index = 1
@@ -247,6 +283,33 @@ export class DirectoryViewComponent implements OnInit {
               filteredData2.push(obj)
             }
           })
+          break
+        case 'organisation':
+          this.wholeData2.forEach((element: any) => {
+            let department = key
+            // if (element.isMinistry || element.isState || element.isCbc || element.isMdo) {
+            const obj = {
+              id: element.id,
+              currentDepartment: department,
+              type: element.isState ? 'State' : 'Ministry',
+              user: element.noOfMembers || 0,
+              head: department,
+              typeid: element.organisationSubType,
+              organisation: element.orgName,
+              createdBy: element.createdBy,
+              createdOn: this.transformDate(element.createdDate),
+              channel: element.channel,
+              logo: element.logo,
+              description: element.description,
+              qrRegistrationLink: element?.qrRegistrationLink || null,
+              registrationLink: element?.registrationLink || null,
+              startDateRegistration: element?.startDateRegistration || null,
+              endDateRegistration: element?.endDateRegistration || null,
+
+            }
+            filteredData2.push(obj)
+            // }
+          })
       }
       this.data = filteredData2.map((dept: any) => {
         return {
@@ -257,8 +320,19 @@ export class DirectoryViewComponent implements OnInit {
           user: dept.user,
           head: dept.head,
           typeid: dept.typeid,
+          createdBy: dept.createdBy,
+          createdOn: dept.createdOn,
+          organisation: dept.organisation,
+          logo: dept.logo,
+          description: dept.description,
+          qrRegistrationLink: dept.qrRegistrationLink,
+          registrationLink: dept.registrationLink,
+          startDateRegistration: dept.startDateRegistration,
+          endDateRegistration: dept.endDateRegistration,
+
         }
       })
+      this.tabledata.loader = false
       // this.data.sort((a: any, b: any) => {
       //   const textA = a.mdo.trimStart().toUpperCase()
       //   const textB = b.mdo.trimStart().toUpperCase()
@@ -277,5 +351,10 @@ export class DirectoryViewComponent implements OnInit {
 
   onEnterkySearch(enterValue: any) {
     this.getAllDepartments(enterValue)
+  }
+
+  transformDate(dateString: string): string | null {
+    const isoDateString = dateString.replace(' ', 'T').replace(/:(\d{3})\+/, '.$1+').replace(/(\+\d{2})(\d{2})$/, '$1:$2')
+    return this.datePipe.transform(isoDateString, 'dd/MM/yyyy, HH:mm')
   }
 }

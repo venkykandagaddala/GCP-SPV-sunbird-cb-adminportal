@@ -30,33 +30,67 @@ import { MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy
 import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips'
 import { ImageCropperModule } from 'ngx-image-cropper'
 import { ReverseDateFormatPipe } from './user-list/reverse-date-format.pipe'
+import { CreateOrganisationComponent } from './create-organisation/create-organisation.component'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { InfoModalModule } from '../info-modal/info-modal.module'
+import { CustomSelfRegistrationComponent } from './custom-self-registration/custom-self-registration.component'
 // import { BtnPageBackModule } from '../btn-page-back/btn-page-back.module'
+import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatLegacyProgressSpinnerModule as MatProgressBarModule } from '@angular/material/legacy-progress-spinner'
+import { ClipboardModule } from '@angular/cdk/clipboard'
+import { LoaderService } from '../../routes/home/services/loader.service'
+import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete'
 @NgModule({
-    declarations: [UIAdminUserTableComponent, UIDirectoryTableComponent, UserPopupComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, DialogTextProfanityComponent, ReverseDateFormatPipe],
-    imports: [
-        AppButtonModule,
-        CommonModule,
-        MatTableModule,
-        MatTooltipModule,
-        MatSortModule,
-        MatCardModule,
-        MatIconModule,
-        MatMenuModule,
-        DefaultThumbnailModule, PipeCountTransformModule,
-        PipeDurationTransformModule, PipeHtmlTagRemovalModule,
-        PipePartialContentModule,
-        BtnChannelAnalyticsModule,
-        BtnContentFeedbackV2Module,
-        MatPaginatorModule,
-        MatDialogModule, MatButtonModule,
-        MatCheckboxModule,
-        FormsModule,
-        MatRadioModule,
-        MatInputModule, MatOptionModule, MatSelectModule, ReactiveFormsModule,
-        MatChipsModule,
-        ImageCropperModule,
-        // MatRadioButton, MatRadioGroup
-    ],
-    exports: [UIAdminUserTableComponent, UIDirectoryTableComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, ReverseDateFormatPipe]
+  declarations: [
+    UIAdminUserTableComponent,
+    UIDirectoryTableComponent,
+    UserPopupComponent,
+    UIUserTablePopUpComponent,
+    UIDiscussionPostComponent,
+    DialogTextProfanityComponent,
+    ReverseDateFormatPipe,
+    CreateOrganisationComponent,
+    CustomSelfRegistrationComponent
+  ],
+  imports: [
+    AppButtonModule,
+    CommonModule,
+    MatTableModule,
+    MatTooltipModule,
+    MatSortModule,
+    MatCardModule,
+    MatIconModule,
+    MatMenuModule,
+    DefaultThumbnailModule, PipeCountTransformModule,
+    PipeDurationTransformModule, PipeHtmlTagRemovalModule,
+    PipePartialContentModule,
+    BtnChannelAnalyticsModule,
+    BtnContentFeedbackV2Module,
+    MatPaginatorModule,
+    MatDialogModule, MatButtonModule,
+    MatCheckboxModule,
+    FormsModule,
+    MatRadioModule,
+    MatInputModule, MatOptionModule, MatSelectModule, ReactiveFormsModule,
+    MatChipsModule,
+    ImageCropperModule,
+    MatSidenavModule,
+    InfoModalModule,
+    MatDatepickerModule,
+    MatSnackBarModule,
+    MatProgressBarModule,
+    ClipboardModule,
+    MatAutocompleteModule
+    // MatRadioButton, MatRadioGroup
+  ],
+  exports: [
+    UIAdminUserTableComponent,
+    UIDirectoryTableComponent,
+    UIUserTablePopUpComponent,
+    UIDiscussionPostComponent,
+    ReverseDateFormatPipe
+  ],
+  providers: [LoaderService]
 })
 export class UIAdminTableModule { }

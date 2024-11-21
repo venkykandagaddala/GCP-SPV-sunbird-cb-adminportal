@@ -17,6 +17,7 @@ export const environment: IEnvironment = {
   connectionType: (window as { [key: string]: any })['env']['connectionType'] || '',
   KCMframeworkName: (window as { [key: string]: any })['env']['KCMframeworkName'] || '',
   compentencyVersionKey: (window as { [key: string]: any })['env']['compentencyVersionKey'] || '',
+  ODCSMasterFramework: (window as { [key: string]: any })['env']['ODCSMasterFramework'] || '',
 }
 interface IEnvironment {
   contentBucket: any
@@ -33,6 +34,7 @@ interface IEnvironment {
   connectionType?: string,
   KCMframeworkName?: string
   compentencyVersionKey: string
+  ODCSMasterFramework?: string
 }
 
 /*

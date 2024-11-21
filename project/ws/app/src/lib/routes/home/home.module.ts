@@ -1,6 +1,6 @@
 import { CommsComponent } from './routes/comms/comms.component'
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core'
-import { CommonModule } from '@angular/common'
+import { CommonModule, DatePipe } from '@angular/common'
 import { PipeFilterModule, PipeHtmlTagRemovalModule, PipeOrderByModule, PipeRelativeTimeModule } from '@sunbird-cb/utils'
 import { MatGridListModule } from '@angular/material/grid-list'
 import { MatExpansionModule } from '@angular/material/expansion'
@@ -13,7 +13,7 @@ import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/
 import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips'
 import { MatNativeDateModule } from '@angular/material/core'
 import { MatDatepickerModule } from '@angular/material/datepicker'
-import { MatLegacyDialogModule as MatDialogModule, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog'
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field'
 import { MatIconModule } from '@angular/material/icon'
 import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input'
@@ -96,6 +96,10 @@ import { SurveyListComponent } from './routes/survey/survey-list/survey-list.com
 import { SolutionSurveyUploadComponent } from './components/solution-survey-upload/solution-survey-upload.component'
 import { CapitalizePipe } from './pipes/capitalize.pipe'
 import { PipePublicURL } from './pipes/pipe-public-URL/pipe-public-URL.pipe'
+import { ConfirmationBoxComponent } from './components/confirmation-box/confirmation.box.component'
+import { SelectedDesignationPopupComponent } from './components/selected-designation-popup/selected-designation-popup.component'
+import { ConformationPopupDesignationComponent } from './components/conformation-popup/conformation-popup-designation.component'
+import { FileProgressComponent } from './components/file-progress/file-progress.component'
 @NgModule({
     declarations: [
         HomeComponent,
@@ -146,6 +150,10 @@ import { PipePublicURL } from './pipes/pipe-public-URL/pipe-public-URL.pipe'
         SurveyListComponent,
         SolutionSurveyUploadComponent,
         CapitalizePipe,
+        ConfirmationBoxComponent,
+        SelectedDesignationPopupComponent,
+        ConformationPopupDesignationComponent,
+        FileProgressComponent
     ],
     imports: [
         CommonModule,
@@ -211,6 +219,7 @@ import { PipePublicURL } from './pipes/pipe-public-URL/pipe-public-URL.pipe'
         { provide: MAT_DIALOG_DATA, useValue: {} },
         MatDatepickerModule, MatNativeDateModule,
         ConfirmationPopupComponent, PipePublicURL,
+        DatePipe
     ],
     exports: [AddThumbnailComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
