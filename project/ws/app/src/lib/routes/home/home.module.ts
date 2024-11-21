@@ -99,6 +99,7 @@ import { PipePublicURL } from './pipes/pipe-public-URL/pipe-public-URL.pipe'
 import { ConfirmationBoxComponent } from './components/confirmation-box/confirmation.box.component'
 import { SelectedDesignationPopupComponent } from './components/selected-designation-popup/selected-designation-popup.component'
 import { ConformationPopupDesignationComponent } from './components/conformation-popup/conformation-popup-designation.component'
+import { FileProgressComponent } from './components/file-progress/file-progress.component'
 @NgModule({
     declarations: [
         HomeComponent,
@@ -151,7 +152,8 @@ import { ConformationPopupDesignationComponent } from './components/conformation
         CapitalizePipe,
         ConfirmationBoxComponent,
         SelectedDesignationPopupComponent,
-        ConformationPopupDesignationComponent
+        ConformationPopupDesignationComponent,
+        FileProgressComponent
     ],
     imports: [
         CommonModule,
