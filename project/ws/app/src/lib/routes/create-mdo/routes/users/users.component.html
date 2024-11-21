@@ -8,13 +8,30 @@
     </div>
   </div>
   <div class="flex-display">
-    <ws-widget-ui-user-table [hidden]="currentTab==='rolesandaccess' || currentTab === 'mentormanage'"
-      [tableData]="tabledata" [data]="data" [otherInput]="createdDepartment" [needAddAdmin]="true"
-      [needCreateUser]="true" (actionsClick)="editUser($event)" (searchByEnterKey)="onEnterkySearch($event)">
+
+    <ws-widget-ui-user-table [hidden]="currentTab==='rolesandaccess'
+      || currentTab === 'mentormanage'
+      || currentTab === 'grade_setting'
+      || currentTab === 'designation_master'" [tableData]="tabledata" [data]="data" [otherInput]="createdDepartment"
+      [needAddAdmin]="true" [needCreateUser]="true" (actionsClick)="editUser($event)"
+      (searchByEnterKey)="onEnterkySearch($event)">
     </ws-widget-ui-user-table>
-    <ws-app-roles-access [hidden]="currentTab==='users' || currentTab === 'mentormanage'"
-      (clickedDepartment)="fClickedDepartment($event)">
+
+    <ws-app-roles-access [hidden]="currentTab==='users'
+      || currentTab === 'mentormanage'
+      || currentTab === 'grade_setting'
+      || currentTab === 'designation_master'" (clickedDepartment)="fClickedDepartment($event)">
     </ws-app-roles-access>
-    <ws-app-mentor-manage [hidden]="currentTab==='users' || currentTab === 'rolesandaccess'"></ws-app-mentor-manage>
+
+    <ws-app-mentor-manage [hidden]="currentTab==='users'
+      || currentTab === 'rolesandaccess'
+      || currentTab === 'grade_setting'
+      || currentTab === 'designation_master'">
+    </ws-app-mentor-manage>
+
+    <ws-app-grade-setting *ngIf="currentTab === 'grade_setting'"></ws-app-grade-setting>
+    <ws-app-designations *ngIf="currentTab === 'designation_master'"
+      [goToImportMaster]="goToImportMaster"></ws-app-designations>
+
   </div>
 </div>

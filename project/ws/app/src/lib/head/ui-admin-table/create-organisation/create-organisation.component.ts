@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
+import { MatSnackBar } from '@angular/material/snack-bar'
 import * as _ from 'lodash'
-
+import { CreateMDOService } from '../../../routes/home/services/create-mdo.services'
+import { ActivatedRoute } from '@angular/router'
+import { LoaderService } from '../../../routes/home/services/loader.service'
 @Component({
   selector: 'ws-app-create-organisation',
   templateUrl: './create-organisation.component.html',
@@ -22,16 +25,27 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
     }
   @Input() openMode: string = ''
   @Output() buttonClick = new EventEmitter()
+  @Output() organizationCreated = new EventEmitter<any>()
   //#endregion
 
   organisationForm!: FormGroup
   statesList: any = []
   ministriesList: any = []
-
-  //#endregion
+  selectedLogo: any
+  selectedLogoName = ''
+  validFileTypes = ['image/png', 'image/jpeg', 'image/jpg']
+  maxFileSize = 500  // In KB
+  loggedInUserId = ""
+  isLoading = false
+  filteredStates: any[] = []
+  filteredMinistry: any[] = []
 
   constructor(
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar,
+    private createMDOService: CreateMDOService,
+    private activatedRoute: ActivatedRoute,
+    private loaderService: LoaderService
   ) {
 
     this.addOverflowHidden()
@@ -39,6 +53,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
   //#region (ng onint)
   ngOnInit(): void {
+    this.loggedInUserId = _.get(this.activatedRoute, 'snapshot.parent.data.configService.userProfile.userId')
     this.initialization()
   }
 
@@ -47,20 +62,46 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   }
 
   initialization() {
-    this.organisationForm = this.formBuilder.group({
-      organisationName: new FormControl(_.get(this.rowData, 'organisationName', ''), [Validators.required]),
-      category: new FormControl(_.get(this.rowData, 'category', ''), [Validators.required]),
-      state: new FormControl(_.get(this.rowData, 'state', '')),
-      minsitry: new FormControl(_.get(this.rowData, 'minsitry', '')),
-      description: new FormControl(_.get(this.rowData, 'description', ''), [Validators.required, Validators.minLength(200)])
-    })
-
     if (this.dropdownList) {
       this.statesList = _.get(this.dropdownList, 'statesList', [])
+      this.filteredStates = [...this.statesList]
+
       this.ministriesList = _.get(this.dropdownList, 'ministriesList', [])
+      this.filteredMinistry = [...this.ministriesList]
     }
 
+    this.organisationForm = this.formBuilder.group({
+      organisationName: new FormControl(_.get(this.rowData, 'organisation', ''), [Validators.required]),
+      category: new FormControl(_.get(this.rowData, 'type', ''), [Validators.required]),
+      state: new FormControl(_.get(this.rowData, 'state', '')),
+      ministry: new FormControl(_.get(this.rowData, 'ministry', '')),
+      description: new FormControl(_.get(this.rowData, 'description', ''), [Validators.required, Validators.maxLength(1000)])
+    })
+
+    this.selectedLogo = this.rowData?.logo
     this.valueChangeEvents()
+  }
+
+  get controls() {
+    return this.organisationForm.controls
+  }
+
+  displayFn(option: any): string {
+    return option ? option.orgName : ''
+  }
+
+  filterStates(value: string): void {
+    const filterValue = value.toLowerCase()
+    this.filteredStates = this.statesList.filter((option: any) =>
+      option.orgName.toLowerCase().includes(filterValue)
+    )
+  }
+
+  filterMinistry(value: string): void {
+    const filterValue = value.toLowerCase()
+    this.filteredMinistry = this.ministriesList.filter((option: any) =>
+      option.orgName.toLowerCase().includes(filterValue)
+    )
   }
 
   valueChangeEvents() {
@@ -69,12 +110,12 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
         if (val === 'state') {
           this.organisationForm.controls.state.setValidators([Validators.required])
           this.organisationForm.controls.state.updateValueAndValidity()
-          this.organisationForm.controls.minsitry.setValue('')
-          this.organisationForm.controls.minsitry.clearValidators()
-          this.organisationForm.controls.minsitry.updateValueAndValidity()
+          this.organisationForm.controls.ministry.setValue('')
+          this.organisationForm.controls.ministry.clearValidators()
+          this.organisationForm.controls.ministry.updateValueAndValidity()
         } else if (val === 'center') {
-          this.organisationForm.controls.minsitry.setValidators([Validators.required])
-          this.organisationForm.controls.minsitry.updateValueAndValidity()
+          this.organisationForm.controls.ministry.setValidators([Validators.required])
+          this.organisationForm.controls.ministry.updateValueAndValidity()
           this.organisationForm.controls.state.setValue('')
           this.organisationForm.controls.state.clearValidators()
           this.organisationForm.controls.state.updateValueAndValidity()
@@ -97,35 +138,104 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
     this.buttonClick?.emit(event)
   }
 
-  get cansubmit(): boolean {
-    let formValid = false
-    if (this.openMode === 'editMode' && this.organisationForm.valid) {
-      formValid = true
+  onSubmitCreateOrganization() {
+    const payload = {
+      "orgName": this.controls['organisationName'].value,
+      "channel": this.controls['organisationName'].value,
+      "organisationType": "",
+      "organisationSubType": "",
+      "isTenant": true,
+      "requestedBy": this.loggedInUserId,
+
+      "logo": this.selectedLogo,
+      "description": this.controls['description'].value,
+      "parentMapId": "",
+      "sbRootOrgId": "",
     }
-    if (this.openMode === 'createNew' && this.organisationForm.valid) {
-      formValid = true
+
+    if (this.controls['category'].value === "state") {
+      payload.organisationType = this.controls['state'].value.sbOrgType
+      payload.organisationSubType = this.controls['state'].value.sbOrgSubType
+      payload.parentMapId = this.controls['state'].value.parentMapId
+      payload.sbRootOrgId = this.controls['state'].value.sbOrgId
+    } else {
+      payload.organisationType = this.controls['ministry'].value.sbOrgType
+      payload.organisationSubType = this.controls['ministry'].value.sbOrgSubType
+      payload.parentMapId = this.controls['ministry'].value.parentMapId
+      payload.sbRootOrgId = this.controls['ministry'].value.sbOrgId
     }
-    return formValid
+
+    if (this.openMode === 'editMode') {
+      this.updateOrganization(payload)
+    } else {
+      this.createOrganization(payload)
+    }
   }
 
-  submit() { }
+  private createOrganization(payload: any): void {
+    this.loaderService.changeLoad.next(true)
+    this.isLoading = true
+    this.createMDOService.createOrganization(payload).subscribe({
+      next: (response: any) => {
+        if (response.result) {
+          this.organizationCreated.emit(payload)
+          this.snackBar.open('Organization successfully created.', 'Close', { panelClass: ['success'] })
+          this.closeNaveBar()
+          this.loaderService.changeLoad.next(false)
+          this.isLoading = false
+        }
+      },
+      error: () => {
+        this.loaderService.changeLoad.next(false)
+        this.isLoading = false
+      }
+    })
+  }
+  private updateOrganization(payload: any): void {
+    this.loaderService.changeLoad.next(true)
+    this.isLoading = true
+
+    this.createMDOService.updateStateOrMinistry(payload).subscribe({
+      next: (response: any) => {
+        if (response.result) {
+          this.organizationCreated.emit(payload)
+          this.snackBar.open('Organization successfully updated.', 'Close', { panelClass: ['success'] })
+          this.closeNaveBar()
+          this.loaderService.changeLoad.next(false)
+          this.isLoading = false
+        }
+      },
+      error: (error: any) => {
+        console.error(error)
+        this.loaderService.changeLoad.next(false)
+        this.isLoading = false
+      }
+    })
+  }
 
   uploadLogo(event: Event) {
     const input = event.target as HTMLInputElement
     if (input.files?.length) {
       const selectedFile = input.files[0]
-      const validFileTypes = ['image/png', 'image/jpeg', 'image/jpg']
+      this.selectedLogoName = selectedFile.name
+      const maxFileSize = this.maxFileSize * 1024
 
-      const isFileTypeValid = validFileTypes.includes(selectedFile.type)
-
-      if (isFileTypeValid) {
-        console.log(selectedFile)
-      } else {
-        console.log('Invalid file')
-
+      if (!this.validFileTypes.includes(selectedFile.type)) {
+        this.snackBar.open('Invalid file type', 'Close', { panelClass: ['error'] })
+        return
       }
-    }
 
+      if (selectedFile.size > maxFileSize) {
+        this.snackBar.open(`File size exceeds ${this.maxFileSize} KB. Please select a smaller file.`, 'Close', { panelClass: ['error'] })
+        return
+      }
+
+      const reader = new FileReader()
+      reader.onload = () => {
+        this.selectedLogo = reader.result
+      }
+      reader.readAsDataURL(selectedFile)
+    }
   }
   //#endregion
 

@@ -17,8 +17,11 @@ export class InfoModalComponent {
 
   confirmed() {
     let sendToParent: any = {}
-    if (this.data.type === 'import-igot-master') {
+    if (this.data.type === 'import-igot-master-create') {
       sendToParent.startImporting = true
+    }
+    else if (this.data.type === 'import-igot-master-review') {
+      sendToParent.reviewImporting = false
     }
     else if (this.data.type === 'delete') {
       sendToParent.isDelete = true
@@ -28,8 +31,12 @@ export class InfoModalComponent {
 
   rejected() {
     let sendToParent: any = {}
-    if (this.data.type === 'import-igot-master') {
-      sendToParent.startImporting = false
+    if (this.data.type === 'import-igot-master-create') {
+      sendToParent.close = true
+    }
+    else if (this.data.type === 'import-igot-master-review') {
+      sendToParent.reviewImporting = true
+
     }
     else if (this.data.type === 'delete') {
       sendToParent.isDelete = false

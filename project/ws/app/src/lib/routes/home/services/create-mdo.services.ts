@@ -14,6 +14,7 @@ const API_END_POINTS = {
   GET_ORGS_OF_DEPT: '/apis/public/v8/org/v1/list',
   CREATE_STATE_OR_MINISTRY: '/apis/proxies/v8/org/ext/v1/create',
   UPDATE_STATE_OR_MINISTRY: '/apis/proxies/v8/org/ext/v1/update',
+
 }
 
 @Injectable({
@@ -99,5 +100,9 @@ export class CreateMDOService {
       request: req,
     }
     return this.http.post<any>(`${API_END_POINTS.UPDATE_STATE_OR_MINISTRY}`, request)
+  }
+
+  createOrganization(request: any) {
+    return this.http.post<any>(`${API_END_POINTS.CREATE_STATE_OR_MINISTRY}`, { request: request })
   }
 }

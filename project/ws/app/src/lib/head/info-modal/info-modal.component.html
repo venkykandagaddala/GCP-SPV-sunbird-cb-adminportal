@@ -15,19 +15,17 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="data.type === 'adding-courses-loader'">
+<ng-container *ngIf="data.type === 'generate-link-loader'">
   <div class="info-dialog-wrapper">
-    <div class="text-center mt-8">
-
-      <p class="font-montserrat text-base font-semibold">Adding Your Courses</p>
-      <p class="text-sm">Wait a second , your adding in processing….</p>
-      <img src="/assets/icons/collections/info-loader.svg" alt="i-icon" class="my-4">
+    <div class="text-center mt-12">
+      <p class="text-xl mt-6 font-semibold">Generating link...</p>
+      <img src="/assets/icons/vega.svg" alt="i-icon" class="my-4">
 
     </div>
   </div>
 </ng-container>
 
-<ng-container *ngIf="data.type === 'import-igot-master'">
+<ng-container *ngIf="data.type === 'import-igot-master-create'">
   <div class="info-dialog-wrapper">
     <div class="text-center mt-8">
       <img src="/assets/icons/i-icon-large.svg" alt="i-icon" class="mb-4">
@@ -41,6 +39,25 @@
       <ng-container>
         <button mat-stroked-button (click)="rejected()" class="mat-btn-outline" i18n>Cancel</button>
         <button mat-flat-button (click)="confirmed()" class="mat-btn-flat" i18n> Start Importing </button>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="data.type === 'import-igot-master-review'">
+  <div class="info-dialog-wrapper">
+    <div class="text-center mt-8">
+      <img src="/assets/icons/i-icon-large.svg" alt="i-icon" class="mb-4">
+      <ng-container>
+        <span class="brand-color text-base max-w-456 block">Please review the Designation Master to continue.</span>
+        <p class="brand-color text-base max-w-456">Once completed, follow the same steps to generate a personalized
+          self-registration link.</p>
+      </ng-container>
+    </div>
+    <div class="actions flex justify-center items-center gap-4 my-6">
+      <ng-container>
+        <button mat-stroked-button (click)="rejected()" class="mat-btn-outline" i18n>Review designations</button>
+        <button mat-flat-button (click)="confirmed()" class="mat-btn-flat" i18n> Continue</button>
       </ng-container>
     </div>
   </div>

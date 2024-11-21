@@ -10,27 +10,32 @@
         <div class="px-5 pt-6">
           <ng-container *ngIf="openMode !== 'createNew'">
             <div class="flex items-end gap-6 mb-10">
-              <div class="flex justify-center items-center log-frame">
-                <img class="log" [src]="rowData?.log" alt="log">
-              </div>
+              <ng-container *ngIf="rowData?.logo">
+                <div class="flex justify-center items-center log-frame">
+                  <img class="log" [src]="rowData?.logo" alt="log">
+                </div>
+
+              </ng-container>
               <div>
                 <div class="organisationLable">
                   Organisation
                 </div>
                 <div class="organisationNameHeader mt-2">
-                  {{rowData?.organisationName}}
+                  {{rowData?.organisation}}
                 </div>
               </div>
             </div>
           </ng-container>
           <ng-container *ngIf="openMode !== 'viewMode'; else viewMode">
             <form [formGroup]="organisationForm" class="mb-20">
-              <div class="flex flex-column gap-1 w-full organisation-form">
+              <div class="flex flex-column gap-1 organisation-form mat-field-rounded">
                 <div class="flex items-center gap-1 required">
                   <span class="lable">Organisation Name</span>
                 </div>
                 <mat-form-field class="w-full">
                   <input formControlName="organisationName" matInput placeholder="Add organisation name here">
+                  <mat-error *ngIf="controls['organisationName'].errors?.['required']">Organization name is
+                    required.</mat-error>
                 </mat-form-field>
               </div>
 
@@ -50,30 +55,38 @@
               </mat-radio-group>
 
               <ng-container *ngIf="getCategory === 'state'">
-                <div class="grayBox p-4 mt-5 flex flex-column gap-1 w-full organisation-form">
+                <div class="grayBox p-4 mt-5 flex flex-column gap-1 organisation-form mat-field-rounded">
                   <div class="flex items-center gap-1 required">
                     <span class="lable">State</span>
                   </div>
+
                   <mat-form-field class="w-full">
-                    <mat-select formControlName="state" placeholder="Type to search">
-                      <ng-container *ngFor="let option of statesList">
-                        <mat-option value="{{ option.name }}">{{ option.name }}</mat-option>
+                    <input type="text" placeholder="Type to search" aria-label="Type to search" matInput
+                      (input)="filterStates($event.target.value)" formControlName="state" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                      <ng-container *ngFor="let option of filteredStates">
+                        <mat-option [value]="option">{{ option.orgName }}</mat-option>
                       </ng-container>
-                    </mat-select>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="controls['state'].errors?.['required']">State is required.</mat-error>
                   </mat-form-field>
                 </div>
               </ng-container>
               <ng-container *ngIf="getCategory === 'center'">
-                <div class="grayBox p-4 mt-5 flex flex-column gap-1 w-full organisation-form">
+                <div class="grayBox p-4 mt-5 flex flex-column gap-1 organisation-form mat-field-rounded">
                   <div class="flex items-center gap-1 required">
                     <span class="lable">Ministry</span>
                   </div>
+
                   <mat-form-field class="w-full">
-                    <mat-select formControlName="minsitry" placeholder="Type to search">
-                      <ng-container *ngFor="let option of ministriesList">
-                        <mat-option value="{{ option.name }}">{{ option.name }}</mat-option>
+                    <input type="text" placeholder="Type to search" aria-label="Type to search" matInput
+                      (input)="filterMinistry($event.target.value)" formControlName="ministry" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                      <ng-container *ngFor="let option of filteredMinistry">
+                        <mat-option [value]="option">{{ option.orgName }}</mat-option>
                       </ng-container>
-                    </mat-select>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="controls['ministry'].errors?.['required']">Center is required.</mat-error>
                   </mat-form-field>
                 </div>
               </ng-container>
@@ -84,20 +97,33 @@
                   </div>
 
                   <div class="uploadLogoCard flex items-center gap-4">
-                    <input type="file" name="upload-logo" id="upload-logo" class="hidden" (change)="uploadLogo($event)"
-                      accept=".png, .jpeg, .jpg">
-                    <div class="h-full flex items-center justify-center">
-                      <img src="/assets/icons/upload-colored.svg" alt="upload" width="32" height="32">
-                    </div>
-                    <div class="flex flex-column justify-center gap-2">
-                      <div class="file-upload-header hover:underline cursor-pointer"
-                        onclick="document.getElementById('upload-logo').click()">
-                        Click here to upload file
+                    <ng-container *ngIf="!selectedLogo">
+                      <input type="file" name="upload-logo" id="upload-logo" class="hidden"
+                        (change)="uploadLogo($event)" accept=".png, .jpeg, .jpg">
+
+                      <div class="h-full flex items-center justify-center">
+                        <img src="/assets/icons/upload-colored.svg" alt="upload" width="32" height="32">
                       </div>
-                      <div class="upload-description">
-                        Max file size: 5 MB, Supports file types: JPG, PNG, JPEG
+                      <div class="flex flex-column justify-center gap-2">
+                        <div class="file-upload-header hover:underline cursor-pointer"
+                          onclick="document.getElementById('upload-logo').click()">
+                          Click here to upload file
+                        </div>
+                        <div class="upload-description">
+                          Max file size: 5 MB, Supports file types: JPG, PNG, JPEG
+                        </div>
                       </div>
-                    </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="selectedLogo">
+                      <div class="flex justify-between items-center w-full">
+                        <div class="flex gap-4 items-center">
+                          <img [src]="selectedLogo" alt="logo" width="50px" height="50px">
+                          <p class="upload-description font-bold">{{selectedLogoName}}</p>
+                        </div>
+                        <div (click)="selectedLogo = null"><mat-icon>close</mat-icon></div>
+                      </div>
+                    </ng-container>
                   </div>
                 </div>
               </ng-container>
@@ -120,6 +146,9 @@
                   </div>
                   <mat-form-field class="w-full">
                     <textarea matInput formControlName="description" rows="5" placeholder="Start typing"></textarea>
+                    <mat-error *ngIf="controls['description'].errors?.['maxlength']">Description must not exceed 1000
+                      characters.</mat-error>
+                    <mat-error *ngIf="controls['description'].errors?.['required']">Description is required.</mat-error>
                   </mat-form-field>
                   <div class="flex justify-end">
                     <span class="descriptionLength">{{organisationForm.value.description.length}}/1000</span>
@@ -133,18 +162,18 @@
               <div class="flex gap-8">
                 <div class="w-full flex flex-col gap-2">
                   <div class="viewModeLable">Category</div>
-                  <div class="viewModeValue">{{rowData?.category}}</div>
+                  <div class="viewModeValue">{{rowData?.type}}</div>
                 </div>
-                <ng-container *ngIf="rowData?.category === 'state'">
+                <ng-container *ngIf="rowData?.type === 'State'">
                   <div class="w-full flex flex-col gap-2">
                     <div class="viewModeLable">State</div>
-                    <div class="viewModeValue">{{rowData?.state}}</div>
+                    <div class="viewModeValue">{{rowData?.type}}</div>
                   </div>
                 </ng-container>
-                <ng-container *ngIf="rowData?.category === 'center'">
+                <ng-container *ngIf="rowData?.type !== 'State'">
                   <div class="w-full flex flex-col gap-2">
                     <div class="viewModeLable">Ministry</div>
-                    <div class="viewModeValue">{{rowData?.minsitry}}</div>
+                    <div class="viewModeValue">{{rowData?.type}}</div>
                   </div>
                 </ng-container>
               </div>
@@ -173,7 +202,8 @@
         <div class="right-sidenav-footer flex items-center justify-end gap-4 items-center px-5 pt-3 pb-5 bg-white">
           <ng-container *ngIf="openMode !== 'viewMode'">
             <button mat-button class="cancelButton" (click)="closeNaveBar()">Cancel</button>
-            <button mat-button [ngClass]="{'disableBtn': !cansubmit}" class="addButton" (click)="submit()">{{openMode
+            <button mat-flat-button class="mat-btn-flat" [disabled]="isLoading || this.organisationForm.valid"
+              (click)="onSubmitCreateOrganization()">{{openMode
               === 'editMode' ? 'Update' : 'Add'}}</button>
           </ng-container>
           <ng-container *ngIf="openMode === 'viewMode'">

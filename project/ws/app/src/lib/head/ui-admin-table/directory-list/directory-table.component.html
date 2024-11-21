@@ -1,23 +1,21 @@
 <div class="example-container">
+    <div class="left-overlay" *ngIf="openCreateNavBar || customSelfRegistration"></div>
     <ng-container *ngIf="openCreateNavBar">
         <ws-app-create-organisation [openMode]="openMode" [dropdownList]="dropdownList" [rowData]="rowData"
-            (buttonClick)="buttonClickAction($event)">
+            (buttonClick)="buttonClickAction($event)" (organizationCreated)="organizationCreatedEmit($event)">
         </ws-app-create-organisation>
     </ng-container>
     <ng-container *ngIf="customSelfRegistration">
-        <ws-app-custom-self-registration [initialData]="selfRegistrationData"
-            (buttonClick)="buttonClickAction($event)"></ws-app-custom-self-registration>
+        <ws-app-custom-self-registration [initialData]="selfRegistrationData" (buttonClick)="buttonClickAction($event)"
+            (linkGenerated)="linkGeneratedEmit($event)"></ws-app-custom-self-registration>
     </ng-container>
     <div class="example-loading-shade">
     </div>
     <div class="example-table-container">
 
-        <div class="search">
-            <!-- <div class="lsearch">
-                <span class="searchText">Search:</span>
-            </div> -->
+        <div class="search items-center">
             <div class=rsearch>
-                <div class="sinput">
+                <div class="sinput mat-field-rounded">
                     <span class="material-icons"> search </span>
                     <input type="Standard" id="search" label="" #searchInput (input)="applyFilter($event.target.value)"
                         (keydown.enter)="onSearchEnter($event.target.value)" placeholder="Search">
@@ -68,6 +66,20 @@
                             <button mat-button [matMenuTriggerFor]="actionsMenu">
                                 <mat-icon>more_horiz</mat-icon>
                             </button>
+                            <mat-menu #actionsMenu="matMenu">
+                                <ng-template matMenuContent>
+                                    <button mat-menu-item (click)="editOrganization(row)">Edit</button>
+                                    <button mat-menu-item (click)="goToRoute('users', row)">Users</button>
+                                    <button mat-menu-item (click)="goToRoute('rolesandaccess', row)">Roles &
+                                        Permissions</button>
+                                    <button mat-menu-item (click)="goToRoute('mentormanage', row)">Mentor
+                                        Management</button>
+                                    <button mat-menu-item (click)="goToRoute('designation_master', row)">Manage
+                                        Designations</button>
+                                    <button mat-menu-item
+                                        (click)="goToRoute('grade_setting', row)">Grades/Group</button>
+                                </ng-template>
+                            </mat-menu>
                         </ng-container>
 
                     </div>
@@ -89,8 +101,11 @@
                 <mat-header-cell *matHeaderCellDef class="clr-darkish-blue action-header"> {{tableData?.link.column}}
                 </mat-header-cell>
                 <mat-cell *matCellDef="let row" class="action-cell">
-                    <button mat-flat-button class="brand-color" (click)="generateCustRegistrationLink()"><span
-                            class="font-bold underline">{{tableData?.link.label}}</span></button>
+                    <button mat-flat-button class="brand-color" (click)="generateCustRegistrationLink(row)">
+                        <span class="font-bold underline">
+                            {{row?.qrRegistrationLink ? tableData?.link?.viewLabel :
+                            tableData?.link?.generateLabel}}</span>
+                    </button>
                 </mat-cell>
             </ng-container>
 
@@ -103,10 +118,17 @@
         </mat-table>
         <ng-container *ngIf="dataSource.filteredData.length===0">
             <ng-container *ngIf="showNewNoContent; else noDirectories">
-                <div class="w-full flex flex-column items-center justify-center gap-2 py-10">
-                    <img src="/assets/icons/noFile.svg" alt="no content">
-                    <span class="noContent">No Content Found</span>
-                </div>
+                <ng-container *ngIf="tableData.loader">
+                    <div class="spinner-min-h flex items-center justify-center">
+                        <mat-spinner class="display-inline-block mb-5" [diameter]="50" [strokeWidth]="3"></mat-spinner>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="!tableData.loader">
+                    <div class="w-full flex flex-column items-center justify-center gap-2 py-10">
+                        <img src="/assets/icons/noFile.svg" alt="no content">
+                        <span class="noContent">No Content Found</span>
+                    </div>
+                </ng-container>
             </ng-container>
             <ng-template #noDirectories>
                 <div class="no-information-found">No directories found
@@ -143,16 +165,5 @@
                     <mat-icon>delete</mat-icon><span>Delete user</span>
                 </button>
             </div>
-        </ng-template>
-    </mat-menu>
-
-    <mat-menu #actionsMenu="matMenu">
-        <ng-template matMenuContent>
-            <button mat-menu-item>Edit</button>
-            <button mat-menu-item>Users</button>
-            <button mat-menu-item>Roles & Permissions</button>
-            <button mat-menu-item>Mentor Management</button>
-            <button mat-menu-item>Manage Designations</button>
-            <button mat-menu-item>Grades/Group</button>
         </ng-template>
     </mat-menu>

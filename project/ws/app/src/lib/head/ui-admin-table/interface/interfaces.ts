@@ -25,3 +25,8 @@ export interface ITableData {
   needUserMenus: boolean,
   actionColumnName?: string,
 }
+
+export interface CustomRegistrationQRCodeResponse {
+  registrationLink: string,
+  qrRegistrationLink: string
+}

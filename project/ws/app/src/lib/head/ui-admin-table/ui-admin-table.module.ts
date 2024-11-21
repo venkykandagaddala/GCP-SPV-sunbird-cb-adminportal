@@ -36,8 +36,23 @@ import { InfoModalModule } from '../info-modal/info-modal.module'
 import { CustomSelfRegistrationComponent } from './custom-self-registration/custom-self-registration.component'
 // import { BtnPageBackModule } from '../btn-page-back/btn-page-back.module'
 import { MatDatepickerModule } from '@angular/material/datepicker'
+import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatLegacyProgressSpinnerModule as MatProgressBarModule } from '@angular/material/legacy-progress-spinner'
+import { ClipboardModule } from '@angular/cdk/clipboard'
+import { LoaderService } from '../../routes/home/services/loader.service'
+import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete'
 @NgModule({
-  declarations: [UIAdminUserTableComponent, UIDirectoryTableComponent, UserPopupComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, DialogTextProfanityComponent, ReverseDateFormatPipe, CreateOrganisationComponent, CustomSelfRegistrationComponent],
+  declarations: [
+    UIAdminUserTableComponent,
+    UIDirectoryTableComponent,
+    UserPopupComponent,
+    UIUserTablePopUpComponent,
+    UIDiscussionPostComponent,
+    DialogTextProfanityComponent,
+    ReverseDateFormatPipe,
+    CreateOrganisationComponent,
+    CustomSelfRegistrationComponent
+  ],
   imports: [
     AppButtonModule,
     CommonModule,
@@ -63,8 +78,19 @@ import { MatDatepickerModule } from '@angular/material/datepicker'
     MatSidenavModule,
     InfoModalModule,
     MatDatepickerModule,
+    MatSnackBarModule,
+    MatProgressBarModule,
+    ClipboardModule,
+    MatAutocompleteModule
     // MatRadioButton, MatRadioGroup
   ],
-  exports: [UIAdminUserTableComponent, UIDirectoryTableComponent, UIUserTablePopUpComponent, UIDiscussionPostComponent, ReverseDateFormatPipe]
+  exports: [
+    UIAdminUserTableComponent,
+    UIDirectoryTableComponent,
+    UIUserTablePopUpComponent,
+    UIDiscussionPostComponent,
+    ReverseDateFormatPipe
+  ],
+  providers: [LoaderService]
 })
 export class UIAdminTableModule { }

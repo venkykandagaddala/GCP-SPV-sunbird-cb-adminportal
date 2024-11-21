@@ -14,6 +14,8 @@ import { EventService } from '@sunbird-cb/utils'
 import { environment } from '../../../../../../../../src/environments/environment'
 import { MatDialog } from '@angular/material/dialog'
 import { InfoModalComponent } from '../../info-modal/info-modal.component'
+import { CreateMDOService } from '../../../routes/home/services/create-mdo.services'
+import { DesignationsService } from '../../../routes/create-mdo/routes/designation/services/designations.service'
 
 @Component({
   selector: 'ws-widget-directory-table',
@@ -48,42 +50,20 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
     statesList: any[],
     ministriesList: any[]
   } = {
-      statesList: [
-        {
-          name: 'state 1',
-          id: 1
-        },
-        {
-          name: 'state 2',
-          id: 2
-        },
-        {
-          name: 'state 3',
-          id: 3
-        },
-      ],
-      ministriesList: [
-        {
-          name: 'ministry 1',
-          id: 1
-        },
-        {
-          name: 'ministry 2',
-          id: 2
-        },
-        {
-          name: 'ministry 3',
-          id: 3
-        },
-      ],
+      statesList: [],
+      ministriesList: [],
     }
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator
   @ViewChild(MatSort, { static: true }) sort?: MatSort
   selection = new SelectionModel<any>(true, [])
   customSelfRegistration = false
   selfRegistrationData: any = {}
+  dialogRef: any
   constructor(
-    private router: Router, private events: EventService, public dialogRef: MatDialog) {
+    private router: Router, private events: EventService, public dialog: MatDialog,
+    private designationsService: DesignationsService,
+    private createMdoService: CreateMDOService,
+  ) {
     this.dataSource = new MatTableDataSource<any>()
     this.actionsClick = new EventEmitter()
     this.clicked = new EventEmitter()
@@ -101,6 +81,7 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort
 
+    this.initializeValuesAndAPIs()
   }
 
   ngOnChanges(data: SimpleChanges) {
@@ -115,14 +96,27 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
 
   applyFilter(filterValue: any) {
     if (filterValue) {
-      // let fValue = filterValue.trim()
-      // fValue = filterValue.toLowerCase()
-      // this.dataSource.filter = fValue
+      this.dataSource.filter = filterValue.trim().toLowerCase()
     } else {
       // this.dataSource.filter = ''
       this.searchByEnterKey.emit(filterValue)
     }
   }
+
+  initializeValuesAndAPIs() {
+    this.createMdoService.getStatesOrMinisteries('state').subscribe(res => {
+      if (res && res.result && res.result && res.result.response && res.result.response.content) {
+        this.dropdownList.statesList = _.orderBy(res.result.response.content, ['orgName'], ['asc'])
+      }
+    })
+
+    this.createMdoService.getStatesOrMinisteries('ministry').subscribe(res => {
+      if (res && res.result && res.result && res.result.response && res.result.response.content) {
+        this.dropdownList.ministriesList = _.orderBy(res.result.response.content, ['orgName'], ['asc'])
+      }
+    })
+  }
+
 
   buttonClick(action: string, row: any) {
     if (this.tableData) {
@@ -180,29 +174,18 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   }
 
   onRowClick(e: any) {
-    this.eOnRowClick.emit(e)
+    this.eOnRowClick.emit({ data: e, type: 'users' })
     this.raiseTelemetryForRow('row', e)
   }
 
   gotoCreateNew() {
     if (this.selectedDepartment === 'organisation') {
       this.openCreateNavBar = true
-      // this.openMode = 'createNew'
+      this.openMode = 'createNew'
+      this.toggleOverlay(true)
 
       // this.openMode = 'viewMode'
-      this.openMode = 'createNew'
-      this.rowData = {
-        organisationName: 'Department of Atomic Energy',
-        category: 'state',
-        state: 'state 1',
-        minsitry: '',
-        description: `Lorem ipsum, placeholder or dummy text used in typesetting and graphic design for
-        previewing layouts. It features scrambled Latin text, which emphasizes the design over content
-        of the layout. It is the standard placeholder text of the printing and publishing industries.`,
-        log: '/assets/icons/noFile.svg',
-        createdBy: 'Manasvi.malav@gov.in',
-        createdOn: '24/12/2023, 4:00PM'
-      }
+      this.rowData = {}
     } else {
       this.router.navigate([`/app/home/${this.selectedDepartment}/create-department`, { needAddAdmin: true }])
     }
@@ -228,22 +211,110 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   buttonClickAction(event: any) {
     this.openCreateNavBar = false
     this.customSelfRegistration = false
-    if (event.action === 'create') { }
+    this.toggleOverlay(false)
+
+    if (event.action === 'create') {
+
+    }
   }
 
-  generateCustRegistrationLink() {
-    const dialogRef = this.dialogRef.open(InfoModalComponent, {
-      panelClass: 'info-dialog',
-      data: { type: 'import-igot-master' }
+  generateCustRegistrationLink(row: any) {
+    this.designationsService.getOrgReadData(row.id).subscribe((res: any) => {
+      const frameworkId = _.get(res, 'frameworkid')
+
+      if (frameworkId) {
+        this.designationsService.getFrameworkInfo(frameworkId).subscribe({
+          next: res => {
+            const frameworkDetails = _.get(res, 'result.framework')
+            if (frameworkDetails && Array.isArray(frameworkDetails.categories) && frameworkDetails.categories.length > 0) {
+              const categoryDesignation = frameworkDetails.categories[0]
+
+              if (
+                categoryDesignation?.terms &&
+                Array.isArray(categoryDesignation.terms) &&
+                categoryDesignation.terms.length > 0 &&
+                Array.isArray(categoryDesignation.terms[0]?.associations) &&
+                categoryDesignation.terms[0].associations.length > 0
+              ) {
+                this.dialogRef = this.dialog.open(InfoModalComponent, {
+                  panelClass: 'info-dialog',
+                  data: { type: 'import-igot-master-review' }
+                })
+              } else {
+                this.dialogRef = this.dialog.open(InfoModalComponent, {
+                  panelClass: 'info-dialog',
+                  data: { type: 'import-igot-master-create' }
+                })
+              }
+              this.subscribeToAfterClosedModal(row)
+
+            }
+
+          },
+          error: () => {
+          },
+        })
+
+      } else {
+        this.dialogRef = this.dialog.open(InfoModalComponent, {
+          panelClass: 'info-dialog',
+          data: { type: 'import-igot-master-create' }
+        })
+        this.subscribeToAfterClosedModal(row)
+      }
+
     })
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result)
-      this.customSelfRegistration = true
-      this.selfRegistrationData.title = 'Custom Self Registration_DAE'
-      this.selfRegistrationData.QRGenerated = false
-      this.selfRegistrationData.openMode = 'edit'
+  }
+
+  subscribeToAfterClosedModal(row: any) {
+    this.dialogRef.afterClosed().subscribe((result: any) => {
+      if (result && result.hasOwnProperty('reviewImporting') && !result.reviewImporting) {
+        this.customSelfRegistration = true
+        this.selfRegistrationData.title = 'Custom Self Registration_DAE'
+        this.selfRegistrationData.QRGenerated = false
+        this.selfRegistrationData.openMode = 'edit'
+        this.selfRegistrationData.orgId = row.id
+        this.selfRegistrationData.qrRegistrationLink = row.qrRegistrationLink
+        this.selfRegistrationData.registrationLink = row.registrationLink
+        this.selfRegistrationData.startDateRegistration = row.startDateRegistration
+        this.selfRegistrationData.endDateRegistration = row.endDateRegistration
+        this.selfRegistrationData.orgName = row.organisation
+
+        this.toggleOverlay(true)
+      }
+      else if (result && result.reviewImporting || result.startImporting) {
+        this.goToRoute('designation_master/import-designation', row)
+      }
+      else return
 
     })
+  }
+
+  organizationCreatedEmit(event: any) {
+    this.searchByEnterKey.emit(event.orgName)
+
+  }
+
+  goToRoute(type: string, data: any) {
+    this.eOnRowClick.emit({ data: data, type: type })
+    this.raiseTelemetryForRow('row', data)
+  }
+
+  editOrganization(data: any) {
+    this.openCreateNavBar = true
+    this.openMode = 'editMode'
+    this.rowData = data
+  }
+
+  linkGeneratedEmit(event: any): void {
+    if (event) this.searchByEnterKey.emit('')
+  }
+
+  toggleOverlay(showOverlay: boolean): void {
+    const sidenav = document.querySelector('ws-app-home mat-sidenav') as HTMLElement
+    if (sidenav) {
+      sidenav.style.zIndex = showOverlay ? '0' : '2'
+    }
   }
 }
