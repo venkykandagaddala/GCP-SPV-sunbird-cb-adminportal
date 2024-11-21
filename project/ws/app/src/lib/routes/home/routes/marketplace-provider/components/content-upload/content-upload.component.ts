@@ -453,7 +453,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             const successMsg = hasTransformationAlready ? 'Transform Content updated successfully.' : 'Transform Content saved successfully.'
             this.showSnackBar(successMsg)
             this.sendDetailsUpdateEvent()
-          }, 1000)
+          },         1000)
         }
       },
       error: (error: HttpErrorResponse) => {
@@ -506,14 +506,14 @@ export class ContentUploadComponent implements OnInit, OnChanges {
                 this.getContentList()
                 this.getUnPublishedCoursesList()
                 this.getPublishedCoursesList()
-              }, 1000)
+              },         1000)
             }
           },
           error: (error: HttpErrorResponse) => {
             this.executed = false
             this.transformationsUpdated = false
             this.contentFileUploaded = false
-            let errmsg = _.get(error, 'error.params.errmsg', 'Some thing went wrong while uploading. Please try again')
+            const errmsg = _.get(error, 'error.params.errmsg', 'Some thing went wrong while uploading. Please try again')
             // if (error && error.error && error.error.includes('unsupported file type')) {
             //   errmsg = 'Uploaded file format is not supported. Please try again with a supported file format.'
             // }
@@ -569,7 +569,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             this.showSnackBar(msg)
             setTimeout(() => {
               this.getUnPublishedCoursesList()
-            }, 2000)
+            },         2000)
           }
         },
         error: (error: HttpErrorResponse) => {
