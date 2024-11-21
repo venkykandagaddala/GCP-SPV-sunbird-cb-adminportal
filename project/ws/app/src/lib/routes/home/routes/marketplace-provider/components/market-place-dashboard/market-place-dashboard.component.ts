@@ -22,7 +22,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
       'Ensure all mandatory fields in the onboarding form regarding the content provider are filled. Once completed, proceed to uploading course catalog for the content provider.',
       'Reach out to support team for authenticating the content provider',
     ],
-    helpVideoLink: 'url',
+    helpVideoLink: `/assets/public/content/guide-videos/CIOS_Updated_demo.mp4`,
   }
 
   providersList: any = []

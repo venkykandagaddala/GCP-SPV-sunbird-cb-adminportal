@@ -35,7 +35,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       'While uploading the course catalog, ensure to define key properties such as Content Details, Certificate Configuration, and Progress Transform Settings. These are essential for accurate tracking and effective learner engagement. you will have the provision to update the properties later also.',
       'Upload the course catalog using a CSV or XLSX file. Once uploaded, the system will indicate whether the courses are live. Non-published courses and published courses will be displayed in separate tabs for better organization. Additionally, you can download detailed logs for reference and troubleshooting.',
     ],
-    helpVideoLink: 'url',
+    helpVideoLink: `/assets/public/content/guide-videos/CIOS_Updated_demo.mp4`,
   }
 
   //#region (transformation variables)
@@ -453,7 +453,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             const successMsg = hasTransformationAlready ? 'Transform Content updated successfully.' : 'Transform Content saved successfully.'
             this.showSnackBar(successMsg)
             this.sendDetailsUpdateEvent()
-          }, 1000)
+          },         1000)
         }
       },
       error: (error: HttpErrorResponse) => {
@@ -506,16 +506,17 @@ export class ContentUploadComponent implements OnInit, OnChanges {
                 this.getContentList()
                 this.getUnPublishedCoursesList()
                 this.getPublishedCoursesList()
-              }, 1000)
+              },         1000)
             }
           },
           error: (error: HttpErrorResponse) => {
             this.executed = false
             this.transformationsUpdated = false
-            let errmsg = _.get(error, 'error.code', 'Some thig went wrong while uploading. Please try again')
-            if (error && error.error && error.error.includes('unsupported file type')) {
-              errmsg = 'Uploaded file format is not supported. Please try again with a supported file format.'
-            }
+            this.contentFileUploaded = false
+            const errmsg = _.get(error, 'error.params.errmsg', 'Some thing went wrong while uploading. Please try again')
+            // if (error && error.error && error.error.includes('unsupported file type')) {
+            //   errmsg = 'Uploaded file format is not supported. Please try again with a supported file format.'
+            // }
             this.dialogRef.close()
             this.showSnackBar(errmsg)
           },
@@ -568,7 +569,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             this.showSnackBar(msg)
             setTimeout(() => {
               this.getUnPublishedCoursesList()
-            }, 2000)
+            },         2000)
           }
         },
         error: (error: HttpErrorResponse) => {
