@@ -35,7 +35,7 @@
                 </div>
                 <div class="flex flex-col gap-1 mt-1 items-center">
                   <span class="file-size">Max file size: 100 MB</span>
-                  <span class="file-type">Supported file types: CSV, .xlsx</span>
+                  <span class="file-type">Supported file types: .csv, .xlsx</span>
                 </div>
               </div>
             </ng-container>
@@ -198,7 +198,7 @@
             </div>
             <div class="flex flex-col gap-1 mt-1 items-center">
               <span class="file-size">Max file size: 100 MB</span>
-              <span class="file-type">Supported file types: CSV, .xlsx</span>
+              <span class="file-type">Supported file types: csv, .xlsx</span>
             </div>
             <input type="file" style="display: none;" #fileInput accept=".xlsx, .csv"
               (change)="onDrop($event.target.files[0]); fileInput.value = null" />
