@@ -2,19 +2,180 @@
   <ws-app-help-center-guide [helpCenterGuide]="helpCenterGuide"></ws-app-help-center-guide>
 </div>
 
-<mat-card class="content-upload m-1">
+<mat-card class="content-upload m-1 mb-5">
   <div class="flex flex-col mb-6">
     <div class="flex gap-1 items-center">
       <span class="header">Manage Course Catalog</span>
     </div>
-    <!-- <span class="sub-header">Select the type how will you want to fetch data.</span> -->
   </div>
   <mat-card-content>
-    <ng-container *ngIf="(providerDetails && providerDetails.isAuthenticated); else cantUpload">
+    <div class="flex flex-col w-full gap-10">
+      <div class="flex flex-col gap-4">
+        <span class="instruction-text mb-2">Open & follow these instruction</span>
+        <span class="instruction-text">1.Please ensure the course catalog file is named correctly and data is
+          accurate.</span>
+        <span class="instruction-text">2.Download the log report from 'Download Log' for details on the uploaded
+          file.</span>
+      </div>
+
+      <div class="flex gap-4">
+        <div class="flex w-full flex-col gap-1">
+          <div>
+            <span class="header">Upload Course Catalog</span>
+          </div>
+          <div class="flex flex-col file-upload-box justify-center gap-4" wsAuthDragDrop (fileDropped)="onDrop($event)"
+            (click)="fileInput.click()">
+            <ng-container *ngIf="!contentFileUploaded; else fileUploaded">
+              <div class="flex flex-col gap-1 items-center justify-center w-full">
+                <img class="file-icon" src="/assets/icons/csv.svg" alt="pdf icon">
+                <div class="flex flex-col gap-2 items-center">
+                  <a class="browse-file">Browse files</a>
+                  <span class="or-text">or</span>
+                  <span class="drag-file">Drag file to upload</span>
+                </div>
+                <div class="flex flex-col gap-1 mt-1 items-center">
+                  <span class="file-size">Max file size: 100 MB</span>
+                  <span class="file-type">Supported file types: .csv, .xlsx</span>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #fileUploaded>
+              <div class="flex items-center">
+                <img src="/assets/icons/samplePdf.svg" alt="file" class="samplePdf">
+                <div class="flex flex-column justify-between pdfDetails">
+                  <span class="pdfName">{{fileName}}</span>
+                  <span class="documentAttached flex items-center">
+                    <mat-icon class="greenTick">check_circle</mat-icon>
+                    File attached
+                  </span>
+                </div>
+              </div>
+            </ng-template>
+            <input type="file" style="display: none;" #fileInput accept=".xlsx, .csv"
+              (change)="onDrop($event.target.files[0]); fileInput.value = null" />
+          </div>
+        </div>
+
+        <div class="flex w-full flex-col gap-1">
+          <div>
+            <span class="header">Transform Content</span>
+          </div>
+          <div class="flex flex-col gap-4 transformation-box"
+            [ngClass]="{'transformation-required': (!transformationsUpdated && executed)}">
+            <form [formGroup]="transforamtionForm">
+              <div>
+                <json-editor [options]="contentEeditorOptions" formControlName="trasformContentJson"
+                  class="transformationEditor">
+                </json-editor>
+              </div>
+              <!-- <mat-accordion class="flex flex-column gap-2">
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Transform Content</mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div>
+                    <json-editor [options]="contentEeditorOptions" formControlName="trasformContentJson"
+                      class="transformationEditor">
+                    </json-editor>
+                  </div>
+                </mat-expansion-panel>
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Transform Progress</mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div>
+                    <json-editor [options]="progressEditorOptions" formControlName="transformProgressJson"
+                      class="transformationEditor">
+                    </json-editor>
+                  </div>
+                </mat-expansion-panel>
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>Transform Certificate</mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div>
+                    <json-editor [options]="certificateEditorOptions" formControlName="trasformCertificateJson"
+                      class="transformationEditor">
+                    </json-editor>
+                  </div>
+                </mat-expansion-panel>
+              </mat-accordion> -->
+              <div class="flex w-full justify-end mt-6">
+                <button mat-button class="save-properties" (click)="upDateTransforamtionDetails()">
+                  {{providerDetalsBeforUpdate!.trasformContentJson ? 'Update Transform Content' : 'Save
+                  Transform Content'}}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex w-full justify-center">
+        <button mat-button class="save-properties" (click)="uploadFile()">
+          Execute</button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+
+<!-- <form [formGroup]="transforamtionForm">
+  <mat-card class="content-upload m-1 mb-5">
+    <div class="flex flex-col mb-6">
+      <div class="flex gap-1 items-center justify-between">
+        <span class="header">Additional Properties</span>
+        <button mat-button class="save-properties" (click)="upDateTransforamtionDetails()">
+          {{providerDetalsBeforUpdate!.trasformContentJson ? 'Update Properties' : 'Save Properties'}}</button>
+      </div>
+    </div>
+    <mat-card-content>
+      <mat-accordion class="flex flex-column gap-2">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Trasform Content</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <json-editor [options]="contentEeditorOptions" formControlName="trasformContentJson"
+              class="transformationEditor">
+            </json-editor>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Transform Progress</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <json-editor [options]="progressEditorOptions" formControlName="transformProgressJson"
+              class="transformationEditor">
+            </json-editor>
+          </div>
+        </mat-expansion-panel><mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Trasform Certificate</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <json-editor [options]="certificateEditorOptions" formControlName="trasformCertificateJson"
+              class="transformationEditor">
+            </json-editor>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+</form> -->
+
+<!-- <ng-container *ngIf="providerDetalsBeforUpdate!.trasformContentJson">
+  <mat-card class="content-upload m-1">
+    <div class="flex flex-col mb-6">
+      <div class="flex gap-1 items-center">
+        <span class="header">Manage Course Catalog</span>
+      </div>
+    </div>
+    <mat-card-content>
       <div class="flex flex-col gap-5">
         <div class="flex gap-2">
           <button mat-button class="scv-btn">Via CSV</button>
-          <!-- <button mat-button class="api-btn">Via API</button> -->
         </div>
 
         <div class="flex gap-4">
@@ -29,7 +190,6 @@
           </div>
           <div class="flex flex-col gap-1 items-center justify-center w-full instructions-box upload-box" wsAuthDragDrop
             (fileDropped)="onDrop($event)" (click)="fileInput.click()">
-            <!-- <ng-container *ngIf="!contentFileUploaded; else fileUploaded"> -->
             <img class="file-icon" src="/assets/icons/csv.svg" alt="pdf icon">
             <div class="flex flex-col gap-2 items-center">
               <a class="browse-file">Browse files</a>
@@ -38,40 +198,53 @@
             </div>
             <div class="flex flex-col gap-1 mt-1 items-center">
               <span class="file-size">Max file size: 100 MB</span>
-              <span class="file-type">Supported file types: CSV, .xlsx</span>
+              <span class="file-type">Supported file types: csv, .xlsx</span>
             </div>
-            <!-- </ng-container>
-            <ng-template #fileUploaded>
-              <div class="flex items-center my-2">
-                <img src="/assets/icons/samplePdf.svg" class="samplePdf">
-                <div class="flex flex-column justify-between pdfDetails">
-                  <span class="pdfName">{{fileName}}</span>
-                  <span class="fileUplaodedDate">File uploaded : {{fileUploadedDate}}</span>
-                  <span class="documentAttached flex items-center">
-                    <mat-icon class="greenTick">check_circle</mat-icon>
-                    Document attached
-                  </span>
-                </div>
-              </div>
-            </ng-template> -->
             <input type="file" style="display: none;" #fileInput accept=".xlsx, .csv"
               (change)="onDrop($event.target.files[0]); fileInput.value = null" />
           </div>
         </div>
       </div>
-    </ng-container>
-    <ng-template #cantUpload>
-      <div class="cantUploadBox flex items-center">
-        <span class="cantUploadMsg">Course catalog upload is not available right now. We’ll enable it once the catalog
-          mapping with content provider is
-          complete.For furthur information contact the technical team.</span>
-      </div>
-    </ng-template>
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
 
-<ng-container *ngIf="providerDetails && providerDetails.isAuthenticated">
-  <mat-tab-group class="" [(selectedIndex)]="selectedIndex">
+  <ng-container *ngIf="!delayTabLoad">
+    <mat-tab-group class="">
+      <mat-tab label="Upload Status">
+        <div class="w-full mt-3 flex flex-col">
+          <ng-container *ngIf="!showUploadedStatusLoader; else showLoader">
+            <div>
+              <ws-app-courses-table [tableData]="contentTableData" [data]="uploadedContentList"
+                [menuItems]="contenetMenuItems" (actionsClick)="contentEvents($event)"></ws-app-courses-table>
+            </div>
+          </ng-container>
+        </div>
+      </mat-tab>
+      <mat-tab label="Not Published Courses">
+        <ng-container *ngIf="!showUploadedStatusLoader; else showLoader">
+          <div class="w-full mt-4 flex flex-col gap-1">
+            <ws-app-courses-table [tableData]="unPublishedCoursesTableData" [data]="unPublishedCoursesList"
+              [menuItems]="unpublishedCoursesMenuItems" [paginationDetails]="unPublishedCoursesTablePaginationDetails"
+              (searchKey)="searchCourses(false, $event)" (pageChange)="pageChange($event, 'notPublished')"
+              (actionsClick)="contentEvents($event)"></ws-app-courses-table>
+          </div>
+        </ng-container>
+      </mat-tab>
+      <mat-tab label="Published Courses">
+        <ng-container *ngIf="!showPublishedCoursesLoader; else showLoader">
+          <div class="w-full mt-4 flex flex-col gap-1">
+            <ws-app-courses-table [tableData]="publishedCoursesTableData" [data]="publishedCoursesList"
+              [paginationDetails]="publishedCoursesTablePaginationDetails" (searchKey)="searchCourses(true, $event)"
+              (pageChange)="pageChange($event, 'published')"></ws-app-courses-table>
+          </div>
+        </ng-container>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-container>
+</ng-container> -->
+
+<ng-container *ngIf="!delayTabLoad">
+  <mat-tab-group class="">
     <mat-tab label="Upload Status">
       <div class="w-full mt-3 flex flex-col">
         <ng-container *ngIf="!showUploadedStatusLoader; else showLoader">

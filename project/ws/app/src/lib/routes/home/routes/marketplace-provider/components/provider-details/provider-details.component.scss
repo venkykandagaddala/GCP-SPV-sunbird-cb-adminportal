@@ -2,17 +2,23 @@
   padding: 20px;
 
   .card-titel {
+    /* stylelint-enable */
     font: 600 20px Montserrat;
+    /* stylelint-disable */
     margin-bottom: 24px;
   }
 
   .lable {
+    /* stylelint-enable */
     font: 700 14px Lato;
+    /* stylelint-disable */
     color: #212529;
   }
 
   .img-note {
+    /* stylelint-enable */
     font: 400 14px Lato;
+    /* stylelint-disable */
     color: #000000DE;
   }
 
@@ -48,6 +54,10 @@
     z-index: 1;
   }
 
+  .logoErrorMsg {
+    font-size: 13px;
+  }
+
   .info-icon {
     width: 13.33px;
     height: 13.33px;
@@ -57,11 +67,21 @@
 
   .provider-input-form {
     height: 50px;
+
+    .partnerCode {
+      text-transform: uppercase
+    }
+
+    .partnerCode::placeholder {
+      text-transform: none;
+    }
   }
 
   .input-note{
     color: #00000099;
+    /* stylelint-enable */
     font: 400 14px Lato;
+    /* stylelint-disable */
   }
 
   .fileUploadCard {
@@ -76,23 +96,31 @@
     }
 
     .browseFileText {
+      /* stylelint-enable */
       font: 700 14px Lato;
+      /* stylelint-disable */
       color: #1B4CA1;
       cursor: pointer;
     }
 
     .fileUploadDescription {
+      /* stylelint-enable */
       font: 400 14px Lato;
+      /* stylelint-disable */
       color: #00000099;
     }
 
     .fileSizeText {
+      /* stylelint-enable */
       font: 400 12px Lato;
+      /* stylelint-disable */
       color: #000000DE;
     }
 
     .fileTypeText {
+      /* stylelint-enable */
       font: 400 12px Lato;
+      /* stylelint-disable */
       color: #00000099;
     }
 
@@ -129,7 +157,9 @@
   }
 
   .VisibleToLearner {
+    /* stylelint-enable */
     font: 400 12px Lato;
+    /* stylelint-disable */
     color: #212529;
     margin: 0px 2px;
   }
@@ -142,7 +172,9 @@
   }
 
   .addTipsText {
+    /* stylelint-enable */
     font: 500 14px Lato;
+    /* stylelint-disable */
     color: #1B4CA1;
   }
 
@@ -151,7 +183,9 @@
     height: 46px;
 
     .tipText {
+      /* stylelint-enable */
       font: 400 14px Lato;
+      /* stylelint-disable */
       color: #000000;
     }
   }
@@ -179,7 +213,9 @@
   border-radius: 8px;
 
   color: #000000DE;
+  /* stylelint-enable */
   font: 700 14px Lato
+  /* stylelint-disable */
 }
 
 .saveBtn {
@@ -188,7 +224,9 @@
   height: 40px;
   border-radius: 8px;
 
+  /* stylelint-enable */
   font: 700 14px Lato;
+  /* stylelint-disable */
   color: #FFFFFF !important;
 }
 
@@ -205,15 +243,36 @@
   }
 }
 
-:host ::ng-deep .provider-input-form .mat-form-field-flex {
+:host ::ng-deep .provider-input-form{
+   .mat-form-field-flex {
     height: 50px;
     align-items: center;
   }
 
-:host ::ng-deep .description .mat-form-field-wrapper {
+  .mat-form-field-hint-spacer {
+    flex: none;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    padding: 0px !important;
+  }
+}
+
+:host ::ng-deep .description {
+  .mat-form-field-wrapper {
     padding-bottom: 0px;
     margin-bottom: 0px;
   }
+
+  .mat-form-field-hint-spacer {
+    flex: none;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    padding: 0px !important;
+    margin-top: 30px !important;
+  }
+}
 
 :host ::ng-deep .tipsCard {
   .mat-form-field-appearance-outline .mat-form-field-wrapper {
@@ -253,7 +312,9 @@
   width: 50%;
 
   .pdfName {
+    /* stylelint-enable */
     font: 400 16px Lato;
+    /* stylelint-disable */
     color: #000000DE;
     width: 95%;
     display: -webkit-box;
@@ -266,13 +327,17 @@
   }
 
   .fileUplaodedDate {
+    /* stylelint-enable */
     font: 400 12px Lato;
+    /* stylelint-disable */
     color: #000000DE;
   }
 
   .documentAttached {
     color: #00000099;
+    /* stylelint-enable */
     font: 700 12px Lato;
+    /* stylelint-disable */
 
     .greenTick {
       width: 20px;
@@ -297,4 +362,9 @@
     position: unset !important;
     margin: 0px !important;
   }
+}
+
+.disableControl {
+  opacity: 0.6;
+  pointer-events: none;
 }

@@ -1,3 +1,9 @@
+(window as any)['env'] = {
+    name: 'test-environment',
+    sitePath: '/test-site-path',
+    karmYogiPath: '/test-karm-yogi-path',
+    cbpPath: '/test-cbp-path',
+}
 
 import { Router } from '@angular/router'
 import { EventService } from '@sunbird-cb/utils'

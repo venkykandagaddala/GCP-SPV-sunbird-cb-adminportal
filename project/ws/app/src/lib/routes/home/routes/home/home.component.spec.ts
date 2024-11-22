@@ -9,7 +9,7 @@ describe('HomeComponent', () => {
     let component: HomeComponent
 
     const valueSvc: Partial<ValueService> = {
-    isLtMedium$: of(true),
+        isLtMedium$: of(true),
     }
 
     const router: Partial<Router> = {
@@ -25,26 +25,30 @@ describe('HomeComponent', () => {
                 message: 'sample',
             },
         }),
+        message: 'sample',
+    },
+}),
     }
 
-    beforeAll(() => {
-        component = new HomeComponent(
-            valueSvc as ValueService,
-            router as Router,
-            activeRoute as ActivatedRoute,
-            telemetrySvc as TelemetryService,
-            events as EventService,
-            utilitySvc as UtilityService,
-            leftMenuService as LeftMenuService
-        )
-    })
-
-    beforeEach(() => {
-        jest.clearAllMocks()
-        jest.resetAllMocks()
-    })
-
-    it('should create a instance of component', () => {
-        expect(component).toBeTruthy()
-    })
+beforeAll(() => {
+    component = new HomeComponent(
+        valueSvc as ValueService,
+        router as Router,
+        activeRoute as ActivatedRoute,
+        telemetrySvc as TelemetryService,
+        events as EventService,
+        utilitySvc as UtilityService,
+        leftMenuService as LeftMenuService
+    )
 })
+
+beforeEach(() => {
+    jest.clearAllMocks()
+    jest.resetAllMocks()
+})
+
+it('should create a instance of component', () => {
+    expect(component).toBeTruthy()
+})
+})
+
