@@ -25,30 +25,27 @@ describe('HomeComponent', () => {
                 message: 'sample',
             },
         }),
-        message: 'sample',
-    },
-}),
     }
 
-beforeAll(() => {
-    component = new HomeComponent(
-        valueSvc as ValueService,
-        router as Router,
-        activeRoute as ActivatedRoute,
-        telemetrySvc as TelemetryService,
-        events as EventService,
-        utilitySvc as UtilityService,
-        leftMenuService as LeftMenuService
-    )
-})
+    beforeAll(() => {
+        component = new HomeComponent(
+            valueSvc as ValueService,
+            router as Router,
+            activeRoute as ActivatedRoute,
+            telemetrySvc as TelemetryService,
+            events as EventService,
+            utilitySvc as UtilityService,
+            leftMenuService as LeftMenuService
+        )
+    })
 
-beforeEach(() => {
-    jest.clearAllMocks()
-    jest.resetAllMocks()
-})
+    beforeEach(() => {
+        jest.clearAllMocks()
+        jest.resetAllMocks()
+    })
 
-it('should create a instance of component', () => {
-    expect(component).toBeTruthy()
-})
-})
+    it('should create a instance of component', () => {
+        expect(component).toBeTruthy()
+    })
 
+})

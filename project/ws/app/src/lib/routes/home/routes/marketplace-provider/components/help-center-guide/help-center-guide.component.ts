@@ -40,7 +40,7 @@ export class HelpCenterGuideComponent implements OnInit {
     if (document.querySelector('.flex')) {
       setTimeout(() => {
         window.dispatchEvent(new Event('resize'))
-      }, 100)
+      },         100)
     }
   }
 
