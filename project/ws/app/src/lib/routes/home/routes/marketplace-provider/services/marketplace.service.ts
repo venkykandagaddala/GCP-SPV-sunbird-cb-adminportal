@@ -23,8 +23,6 @@ const API_END_POINTS = {
 })
 export class MarketplaceService {
 
-  selectedCourse: any
-
   constructor(
     private http: HttpClient,
   ) { }
@@ -111,13 +109,5 @@ export class MarketplaceService {
 
   downloadLogs(gcpfileName: string) {
     return this.http.get<any>(API_END_POINTS.DOWNLOAD_LOG(gcpfileName), { responseType: 'blob' as 'json' })
-  }
-
-  setSelectedCourse(course: any) {
-    this.selectedCourse = course
-  }
-
-  get getSelectedCourse() {
-    return this.selectedCourse
   }
 }

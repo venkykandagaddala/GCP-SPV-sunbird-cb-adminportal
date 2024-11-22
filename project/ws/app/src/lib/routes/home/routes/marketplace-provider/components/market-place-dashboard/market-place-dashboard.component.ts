@@ -224,7 +224,7 @@ export class MarketPlaceDashboardComponent implements OnInit {
         if (res) {
           setTimeout(() => {
             this.getProviders()
-          }, 2000)
+          },         2000)
         } else {
           this.displayLoader = false
         }

@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
+import { ActivatedRoute } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { map } from 'rxjs/operators'
 import * as _ from 'lodash'
@@ -96,7 +96,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   //#endregion
 
   constructor(
-    private router: Router,
     private marketPlaceSvc: MarketplaceService,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
@@ -112,8 +111,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   initialization() {
     this.transforamtionForm = this.formBuilder.group({
       trasformContentJson: new FormControl(''),
-      // transformProgressJson: new FormControl(''),
-      // trasformCertificateJson: new FormControl(''),
     })
   }
 
@@ -141,11 +138,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.providerDetalsBeforUpdate = JSON.parse(JSON.stringify(changes.providerDetails.currentValue))
       this.setTransformationDetails(changes.providerDetails.currentValue)
       this.tableDataInitialzation()
-      // if (changes.providerDetails.currentValue.trasformContentJson) {
-      //   this.getContentList()
-      //   this.getPublishedCoursesList()
-      //   this.getUnPublishedCoursesList()
-      // }
     }
 
     if (changes.selectedTabIndex && changes.selectedTabIndex.currentValue === 1) {
@@ -157,8 +149,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     const configuration = this.providerConfiguration['ecornel']
     this.transforamtionForm.setValue({
       trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : _.get(configuration, 'trasformContentJson', ''),
-      // transformProgressJson: providerDetails.transformProgressJson ? providerDetails.transformProgressJson : _.get(configuration, 'transformProgressJson', ''),
-      // trasformCertificateJson: providerDetails.trasformCertificateJson ? providerDetails.trasformCertificateJson : _.get(configuration, 'trasformCertificateJson', ''),
     })
   }
 
@@ -213,7 +203,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     if (_.get(this.providerDetails, 'data.partnerCode')) {
       this.showPublishedCoursesLoader = true
       this.publishedCoursesList = []
-      // }
       const formBody = {
         filterCriteriaMap: {
           partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
@@ -419,9 +408,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
 
   contentEvents(event: any) {
     switch (event.action) {
-      case 'view':
-        this.navigateToPreview(event.rows)
-        break
       case 'delete':
         this.deletedSelectedCourses(event)
         break
@@ -443,8 +429,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     const hasTransformationAlready = this.providerDetalsBeforUpdate['trasformContentJson'] ? true : false
     const tranforamtions = this.transforamtionForm.value
     this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
-    // this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson
-    // this.providerDetalsBeforUpdate['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
 
     this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
       next: (responce: any) => {
@@ -478,7 +462,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.contentFile = file
       this.contentFileUploaded = true
       this.fileUploadedDate = this.datePipe.transform(new Date(), 'dd/MM/yyyy')
-      // this.uploadFile()
     }
   }
 
@@ -580,11 +563,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     } else {
       this.showSnackBar('Please select course to delete.')
     }
-  }
-
-  navigateToPreview(course: any) {
-    this.marketPlaceSvc.setSelectedCourse(course)
-    this.router.navigateByUrl('/app/home/marketplace-providers/course-preview')
   }
 
   downloadLog(gcpfileName: string, fileName: string) {

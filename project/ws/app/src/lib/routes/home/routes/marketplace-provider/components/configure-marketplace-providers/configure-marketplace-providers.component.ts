@@ -14,7 +14,7 @@ export class ConfigureMarketplaceProvidersComponent implements OnInit {
 
   widgetData = {
     titles: [
-      { title: 'Marketplace Providers', url: 'app/home/marketplace-providers' },
+      { title: 'Marketplace Providers', url: '/app/home/marketplace-providers', path: '/app/home/marketplace-providers' },
       { title: 'Onboard Provider', url: 'none' },
       { title: 'Configure', url: 'none' },
     ],

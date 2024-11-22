@@ -11,7 +11,6 @@ import { ProvidersComponent } from './components/providers/providers.component'
 import { ConformationPopupComponent } from './dialogs/conformation-popup/conformation-popup.component'
 import { ContentUploadComponent } from './components/content-upload/content-upload.component'
 import { CoursesTableComponent } from './components/courses-table/courses-table.component'
-import { CoursesPreviewComponent } from './components/courses-preview/courses-preview.component'
 import { DragDropDirective } from './directives/drag-drop.directive'
 import { PageResolve } from '@sunbird-cb/utils'
 import { NgJsonEditorModule } from 'ang-jsoneditor'
@@ -30,7 +29,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatPaginatorModule } from '@angular/material/paginator'
 import { MatTableModule } from '@angular/material/table'
 import { LoaderService } from '../../services/loader.service'
-import { TransformationsComponent } from './components/transformations/transformations.component'
 import { ProviderResolveService } from './services/provider-resolve.service'
 
 const routes: Routes = [
@@ -68,11 +66,6 @@ const routes: Routes = [
       pageData: PageResolve,
     },
   },
-  {
-    path: 'course-preview',
-    pathMatch: 'full',
-    component: CoursesPreviewComponent,
-  },
 ]
 
 @NgModule({
@@ -85,9 +78,7 @@ const routes: Routes = [
     ProvidersComponent,
     ContentUploadComponent,
     CoursesTableComponent,
-    CoursesPreviewComponent,
     DragDropDirective,
-    TransformationsComponent,
   ],
   imports: [
     CommonModule,
