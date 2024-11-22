@@ -11,7 +11,7 @@ describe('RequestCopyDetailsComponent', () => {
     let component: RequestCopyDetailsComponent
 
     const formBuilder: Partial<FormBuilder> = {
-        group: jest.fn().mockReturnValue({})
+        group: jest.fn().mockReturnValue({}),
     }
     const requestService: Partial<RequestServiceService> = {
     }
@@ -19,13 +19,13 @@ describe('RequestCopyDetailsComponent', () => {
 
     }
     const snackBar: Partial<MatSnackBar> = {
-        open: jest.fn()
+        open: jest.fn(),
     }
     const router: Partial<Router> = {
-        navigate: jest.fn()
+        navigate: jest.fn(),
     }
     const dialog: Partial<MatDialog> = {
-        open: jest.fn().mockReturnValue({ afterClosed: () => of(true) })
+        open: jest.fn().mockReturnValue({ afterClosed: () => of(true) }),
     }
     const initService: Partial<InitService> = {
     }
