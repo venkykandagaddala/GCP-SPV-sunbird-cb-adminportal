@@ -9,7 +9,7 @@ describe('CompetencyViewComponent', () => {
         close: jest.fn(),
     }
     const sanitized: Partial<DomSanitizer> = {
-        bypassSecurityTrustHtml: jest.fn(html => html),
+        bypassSecurityTrustHtml: jest.fn(html => html),  // Mocking bypassSecurityTrustHtml
     }
 
     const dData = {
