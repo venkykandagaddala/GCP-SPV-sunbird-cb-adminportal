@@ -7,7 +7,6 @@ import { ConfigureMarketplaceProvidersComponent } from './components/configure-m
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { BreadcrumbsOrgModule } from '@sunbird-cb/collection'
 import { HelpCenterGuideComponent } from './components/help-center-guide/help-center-guide.component'
-import { ProvidersComponent } from './components/providers/providers.component'
 import { ConformationPopupComponent } from './dialogs/conformation-popup/conformation-popup.component'
 import { ContentUploadComponent } from './components/content-upload/content-upload.component'
 import { CoursesTableComponent } from './components/courses-table/courses-table.component'
@@ -75,7 +74,6 @@ const routes: Routes = [
     ProviderDetailsComponent,
     ConfigureMarketplaceProvidersComponent,
     HelpCenterGuideComponent,
-    ProvidersComponent,
     ContentUploadComponent,
     CoursesTableComponent,
     DragDropDirective,
