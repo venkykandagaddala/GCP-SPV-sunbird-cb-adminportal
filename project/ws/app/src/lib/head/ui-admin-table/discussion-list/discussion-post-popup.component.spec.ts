@@ -1,17 +1,15 @@
+
 import { MatDialogRef } from '@angular/material/dialog'
 import { FormBuilder } from '@angular/forms'
-import { DialogTextProfanityComponent, IDialogData } from './discussion-post-popup.component'
+import { DialogTextProfanityComponent } from './discussion-post-popup.component'
+import { IDialogData } from './discussion-post.component'
 
 describe('DialogTextProfanityComponent', () => {
     let component: DialogTextProfanityComponent
 
-    const fb: Partial<FormBuilder> = {
-        group: jest.fn(),
-    }
+    const fb: Partial<FormBuilder> = {}
     const dialogRef: Partial<MatDialogRef<DialogTextProfanityComponent>> = {}
-    const data: Partial<IDialogData> = {
-        profaneCategories: [],
-    }
+    const data: Partial<IDialogData> = {}
 
     beforeAll(() => {
         component = new DialogTextProfanityComponent(
