@@ -47,4 +47,5 @@ describe('HomeComponent', () => {
     it('should create a instance of component', () => {
         expect(component).toBeTruthy()
     })
+
 })
