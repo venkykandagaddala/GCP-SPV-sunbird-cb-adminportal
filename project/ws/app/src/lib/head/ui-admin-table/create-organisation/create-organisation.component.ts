@@ -39,7 +39,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   isLoading = false
   filteredStates: any[] = []
   filteredMinistry: any[] = []
-
+  heirarchyObject: any
   constructor(
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
@@ -55,6 +55,9 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loggedInUserId = _.get(this.activatedRoute, 'snapshot.parent.data.configService.userProfile.userId')
     this.initialization()
+    if (this.openMode === 'editMode') {
+      this.getOrganization(this.rowData.organisation, this.rowData.type.toLowerCase())
+    }
   }
 
   ngOnDestroy(): void {
@@ -62,6 +65,8 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   }
 
   initialization() {
+    console.log(this.rowData)
+
     if (this.dropdownList) {
       this.statesList = _.get(this.dropdownList, 'statesList', [])
       this.filteredStates = [...this.statesList]
@@ -113,7 +118,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
           this.organisationForm.controls.ministry.setValue('')
           this.organisationForm.controls.ministry.clearValidators()
           this.organisationForm.controls.ministry.updateValueAndValidity()
-        } else if (val === 'center') {
+        } else if (val === 'ministry') {
           this.organisationForm.controls.ministry.setValidators([Validators.required])
           this.organisationForm.controls.ministry.updateValueAndValidity()
           this.organisationForm.controls.state.setValue('')
@@ -140,17 +145,17 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
   onSubmitCreateOrganization() {
     const payload = {
-      "orgName": this.controls['organisationName'].value,
-      "channel": this.controls['organisationName'].value,
-      "organisationType": "",
-      "organisationSubType": "",
-      "isTenant": true,
-      "requestedBy": this.loggedInUserId,
+      orgName: this.controls['organisationName'].value,
+      channel: this.controls['organisationName'].value,
+      organisationType: this.heirarchyObject?.sbOrgType || "",
+      organisationSubType: this.heirarchyObject?.sbOrgSubType || "",
+      isTenant: true,
+      requestedBy: this.loggedInUserId,
 
-      "logo": this.selectedLogo,
-      "description": this.controls['description'].value,
-      "parentMapId": "",
-      "sbRootOrgId": "",
+      logo: this.selectedLogo,
+      description: this.controls['description'].value,
+      parentMapId: this.heirarchyObject?.parentMapId || "",
+      sbRootOrgId: this.heirarchyObject?.parentMapId || "",
     }
 
     if (this.controls['category'].value === "state") {
@@ -191,11 +196,19 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
       }
     })
   }
-  private updateOrganization(payload: any): void {
+  private updateOrganization(request: any): void {
     this.loaderService.changeLoad.next(true)
     this.isLoading = true
+    const payload = {
+      orgName: request.orgName,
+      channel: request.channel,
+      organisationSubType: this.heirarchyObject.sbOrgSubType,
+      orgId: this.rowData.id,
+      logo: request.logo,
+      description: request.description
+    }
 
-    this.createMDOService.updateStateOrMinistry(payload).subscribe({
+    this.createMDOService.updateOrganization(payload).subscribe({
       next: (response: any) => {
         if (response.result) {
           this.organizationCreated.emit(payload)
@@ -245,6 +258,24 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
   removeOverflowHidden() {
     document.body.classList.remove('overflow-hidden')
+  }
+
+  getOrganization(orgName: string, type: string) {
+    this.createMDOService.searchOrgs(orgName, type).subscribe({
+      next: (response: any) => {
+        const organization = response.result.response.find(
+          (org: any) => org.orgName === orgName
+        )
+        if (organization) {
+          this.heirarchyObject = organization
+        }
+      },
+    })
+  }
+
+  onSelectStateMinistry(org: any) {
+    this.getOrganization(org.orgName, this.controls['category'].value)
+
   }
 
 }
