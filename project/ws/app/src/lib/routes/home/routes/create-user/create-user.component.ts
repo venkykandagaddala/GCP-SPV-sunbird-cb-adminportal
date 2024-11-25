@@ -51,6 +51,7 @@ export class CreateUserComponent implements OnInit {
   mdoLeadersCount = 0
   orgName!: string
   isThisExistingLeader = false
+  disableRequired = false
   // hideRole: any = []
 
   constructor(
@@ -114,6 +115,7 @@ export class CreateUserComponent implements OnInit {
       const email = this.editUserInfo && this.editUserInfo.email || ''
       const name = this.editUserInfo && this.editUserInfo.fullName || ''
       const mobile = this.editUserInfo && this.editUserInfo.mobile || ''
+      this.disableRequired = name ? true : false
       this.createUserForm = new UntypedFormGroup({
         fname: new UntypedFormControl({ value: name, disabled: name ? true : false }, [Validators.required]),
         // lname: new FormControl('', [Validators.required]),

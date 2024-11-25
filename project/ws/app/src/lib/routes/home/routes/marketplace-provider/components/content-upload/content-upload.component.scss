@@ -1,12 +1,25 @@
-.content-upload {
-  padding: 20px;
-
-  .header {
+.header {
     /* stylelint-enable */
     font: 700 20px / 30px Lato;
     /* stylelint-disable */
     color: #212529;
   }
+
+.save-properties {
+  background-color: #1B4CA1 !important;
+  width: fit-content;
+  padding: '0px 15px';
+  height: 40px;
+  border-radius: 8px;
+
+  /* stylelint-enable */
+  font: 700 14px Lato;
+  /* stylelint-disable */
+  color: #FFFFFF !important;
+}
+
+.content-upload {
+  padding: 20px;
 
   .info-icon {
     width: 14px;
@@ -44,17 +57,20 @@
     /* stylelint-disable */
   }
 
-  .instructions-box {
-    border: 1px solid #00000029;
-    height: 227px;
-    padding: 24px;
-
     .instruction-text {
       color: #000000DE;
       /* stylelint-enable */
       font: 400 14px Lato;
       /* stylelint-disable */
     }
+
+  .file-upload-box {
+    border: 1px solid hsla(0, 0%, 0%, 0.161);
+    min-height: 227px;
+    height: 100%;
+    padding: 24px;
+    cursor: pointer;
+    border-style: dashed;
 
     // .download-btn {
     //   border: 1px solid #1B4CA1;
@@ -119,15 +135,22 @@
     }
   }
 
-  .upload-box {
-    cursor: pointer;
-    border-style: dashed;
+  .transformation-box {
+    border: 1px solid hsla(0, 0%, 0%, 0.161);
+    min-height: 227px;
+    height: fit-content;
+    padding: 24px;
+  }
+
+  .transformation-required {
+    border: 1.7px solid #ff0000 !important;
+    border-radius: 5px;
   }
 }
 
 .samplePdf {
   width: 186px;
-  height: 247px;
+  height: 227px;
 }
 
 .pdfDetails {
@@ -184,4 +207,8 @@
     /* stylelint-disable */
     color: #525252;
   }
+}
+
+.additional-properties {
+  padding: 5px;
 }

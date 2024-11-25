@@ -1,4 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core'
+import { environment } from '../../../../../../../../../../../src/environments/environment'
+import * as _ from 'lodash'
+import { DemoVideoPopupComponent } from '../../../../components/demo-video-popup/demo-video-popup.component'
+import { MatDialog } from '@angular/material/dialog'
 
 @Component({
   selector: 'ws-app-help-center-guide',
@@ -12,17 +16,32 @@ export class HelpCenterGuideComponent implements OnInit {
   showTopSection = false
   playVideo = false
 
-  constructor() { }
+  constructor(
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit() {
   }
 
-  openVideoPopup() { }
+  openVideoPopup() {
+    const url = `${environment.karmYogiPath}${_.get(this.helpCenterGuide, 'helpVideoLink')}`
+    this.dialog.open(DemoVideoPopupComponent, {
+      data: {
+        videoLink: url,
+      },
+      disableClose: true,
+      width: '50%',
+      height: '60%',
+      panelClass: 'overflow-visable',
+    })
+  }
 
   callResizeEvent(_event: any) {
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'))
-    },         100)
+    if (document.querySelector('.flex')) {
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'))
+      },         100)
+    }
   }
 
 }

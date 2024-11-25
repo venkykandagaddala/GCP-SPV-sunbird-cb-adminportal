@@ -206,11 +206,13 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
           })
           const email = this.profileUtilSvc.emailTransform(_.get(user, 'profileDetails.personalDetails.primaryEmail'))
+          const mobileNumber = _.get(user, 'profileDetails.personalDetails.mobile')
           if (!user.isDeleted && roles.includes(roldata)) {
             usersData.push({
               fullName: user ? `${user.firstName}` : null,
               // fullName: user ? `${user.firstName} ${user.lastName}` : null,
               email: email || 'NA',
+              mobile: mobileNumber,
               position: roles,
               userId: user.userId,
             })

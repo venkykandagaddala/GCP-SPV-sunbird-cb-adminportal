@@ -1,13 +1,13 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core'
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core'
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { ActivatedRoute, Router } from '@angular/router'
+import { Router } from '@angular/router'
 import * as _ from 'lodash'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { HttpErrorResponse } from '@angular/common/http'
 import { DatePipe } from '@angular/common'
 import { forkJoin, of } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
-import { JsonEditorOptions } from 'ang-jsoneditor'
+// import { JsonEditorOptions } from 'ang-jsoneditor'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { LoaderService } from '../../../../services/loader.service'
 import { environment } from '../../../../../../../../../../../src/environments/environment'
@@ -24,13 +24,15 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
 
   @Input() providerDetails?: any
 
+  @Output() loadProviderDetails = new EventEmitter<Boolean>()
+
   helpCenterGuide = {
     header: 'Provider Details: Video Guides and Tips',
     guideNotes: [
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit orci in ultricies aliquam. Maecenas tempus fermentum mi, at laoreet elit ultricies eget.',
+      'Ensure all mandatory fields in the onboarding form regarding the content provider are filled. Once completed, proceed to uploading course catalog for the content provider.',
+      'Partner code is a unique code that helps to differentiate the content provider.',
     ],
-    helpVideoLink: 'url',
+    helpVideoLink: `/assets/public/content/guide-videos/CIOS_Updated_demo.mp4`,
   }
   providerFormGroup!: FormGroup
   providerDetalsBeforUpdate: any
@@ -47,12 +49,12 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   fileUploadedDate: string | null = ''
   thumbnailResourceId = ''
   pdfResourceId = ''
-  providerConfiguration: any
-  partnerCode = ''
-  transforamtionForm!: FormGroup
-  public contentEeditorOptions: JsonEditorOptions | undefined
-  public progressEditorOptions: JsonEditorOptions | undefined
-  public certificateEditorOptions: JsonEditorOptions | undefined
+  // providerConfiguration: any
+  // partnerCode = ''
+  // transforamtionForm!: FormGroup
+  // public contentEeditorOptions: JsonEditorOptions | undefined
+  // public progressEditorOptions: JsonEditorOptions | undefined
+  // public certificateEditorOptions: JsonEditorOptions | undefined
 
   constructor(
     private formBuilder: FormBuilder,
@@ -60,87 +62,73 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     private marketPlaceSvc: MarketplaceService,
     private snackBar: MatSnackBar,
     private datePipe: DatePipe,
-    private activateRoute: ActivatedRoute,
+    // private activateRoute: ActivatedRoute,
     private loaderService: LoaderService,
   ) {
     this.initialization()
-    this.setJsonEditorOptions()
+    // this.setJsonEditorOptions()
   }
 
-  setJsonEditorOptions() {
-    this.contentEeditorOptions = this.getEditorOptions
-    this.progressEditorOptions = this.getEditorOptions
-    this.certificateEditorOptions = this.getEditorOptions
-  }
+  // setJsonEditorOptions() {
+  //   this.contentEeditorOptions = this.getEditorOptions
+  //   this.progressEditorOptions = this.getEditorOptions
+  //   this.certificateEditorOptions = this.getEditorOptions
+  // }
 
-  get getEditorOptions(): JsonEditorOptions {
-    const editorOptions = new JsonEditorOptions()
-    editorOptions.mode = 'text'
-    editorOptions.mainMenuBar = false // Hide the menu bar
-    editorOptions.navigationBar = false // Hide the navigation bar
-    editorOptions.statusBar = false // Hide the status bar at the bottom
-    editorOptions.enableSort = false // Disable sorting
-    editorOptions.enableTransform = false // Disable transformation
-    return editorOptions
-  }
+  // get getEditorOptions(): JsonEditorOptions {
+  //   const editorOptions = new JsonEditorOptions()
+  //   editorOptions.mode = 'text'
+  //   editorOptions.mainMenuBar = false // Hide the menu bar
+  //   editorOptions.navigationBar = false // Hide the navigation bar
+  //   editorOptions.statusBar = false // Hide the status bar at the bottom
+  //   editorOptions.enableSort = false // Disable sorting
+  //   editorOptions.enableTransform = false // Disable transformation
+  //   return editorOptions
+  // }
 
   initialization() {
     this.providerFormGroup = this.formBuilder.group({
       contentPartnerName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
+      partnerCode: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/), Validators.maxLength(6)]),
       websiteUrl: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(70)]),
-      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/), Validators.maxLength(500)]),
+      description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9,.\-_$/:\[\] ' !]*$/), Validators.maxLength(500)]),
       providerTips: this.formBuilder.array([]),
     })
-    this.transforamtionForm = this.formBuilder.group({
-      trasformContentJson: new FormControl(''),
-      transformProgressJson: new FormControl(''),
-      trasformCertificateJson: new FormControl(''),
-    })
+    // this.transforamtionForm = this.formBuilder.group({
+    //   trasformContentJson: new FormControl(''),
+    //   transformProgressJson: new FormControl(''),
+    //   trasformCertificateJson: new FormControl(''),
+    // })
   }
 
   ngOnInit() {
-    this.getRoutesData()
+    // this.getRoutesData()
   }
 
-  getRoutesData() {
-    this.activateRoute.data.subscribe(data => {
-      if (data.pageData.data) {
-        this.providerConfiguration = data.pageData.data
-      }
-    })
-  }
+  // getRoutesData() {
+  //   this.activateRoute.data.subscribe(data => {
+  //     if (data.pageData.data) {
+  //       this.providerConfiguration = data.pageData.data
+  //     }
+  //   })
+  // }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.providerDetails && changes.providerDetails.currentValue) {
-      this.getProviderDetails()
-    }
-  }
-
-  getProviderDetails() {
-    if (this.providerDetails && this.providerDetails.id) {
-      this.loaderService.changeLoad.next(true)
-      this.marketPlaceSvc.getProviderDetails(this.providerDetails.id).subscribe({
-        next: (responce: any) => {
-          this.loaderService.changeLoad.next(false)
-          this.patchProviderDetails(responce.result)
-          this.providerDetalsBeforUpdate = responce.result
-        },
-        error: (error: HttpErrorResponse) => {
-          this.loaderService.changeLoad.next(false)
-          const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
-          this.showSnackBar(errmsg)
-        },
-      })
+      this.providerDetalsBeforUpdate = JSON.parse(JSON.stringify(changes.providerDetails.currentValue))
+      this.patchProviderDetails(changes.providerDetails.currentValue)
     }
   }
 
   patchProviderDetails(providerDetails: any) {
-    this.providerFormGroup.setValue({
+    this.providerFormGroup.patchValue({
       contentPartnerName: _.get(providerDetails, 'data.contentPartnerName', ''),
+      partnerCode: _.get(providerDetails, 'data.partnerCode', ''),
       websiteUrl: _.get(providerDetails, 'data.websiteUrl', ''),
       description: _.get(providerDetails, 'data.description', ''),
-      providerTips: [],
     })
+    this.providerFormGroup.get('partnerCode')?.disable()
+    this.getTipsList.clear()
     this.imageUrl = _.get(providerDetails, 'data.link')
     this.thumbNailUrl = this.imageUrl
     if (_.get(providerDetails, 'data.documentUrl')) {
@@ -152,7 +140,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     _.get(providerDetails, 'data.providerTips', []).forEach((tip: string) => {
       this.addTips(tip)
     })
-    this.setTransformationDetails(providerDetails)
+    // this.setTransformationDetails(providerDetails)
   }
 
   get getFileName() {
@@ -166,22 +154,22 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     return fileName
   }
 
-  setTransformationDetails(providerDetails: any) {
-    const providerName = _.get(providerDetails, 'data.contentPartnerName', '').toLowerCase()
-    if (providerName) {
-      const configuration = this.providerConfiguration[providerName]
-      this.partnerCode = _.get(providerDetails, 'partnerCode', _.get(configuration, 'partnerCode'))
-      this.transforamtionForm.setValue({
-        trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : _.get(configuration, 'trasformContentJson'),
-        transformProgressJson: providerDetails.transformProgressJson ? providerDetails.transformProgressJson : _.get(configuration, 'transformProgressJson'),
-        trasformCertificateJson: providerDetails.trasformCertificateJson ? providerDetails.trasformCertificateJson : _.get(configuration, 'trasformCertificateJson'),
-      })
-    }
-  }
+  // setTransformationDetails(providerDetails: any) {
+  //   const providerName = _.get(providerDetails, 'data.contentPartnerName', '').toLowerCase()
+  //   if (providerName) {
+  //     const configuration = this.providerConfiguration[providerName]
+  //     // this.partnerCode = _.get(providerDetails, 'data.partnerCode', _.get(configuration, 'partnerCode', ''))
+  //     this.transforamtionForm.setValue({
+  //       trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : _.get(configuration, 'trasformContentJson', ''),
+  //       transformProgressJson: providerDetails.transformProgressJson ? providerDetails.transformProgressJson : _.get(configuration, 'transformProgressJson', ''),
+  //       trasformCertificateJson: providerDetails.trasformCertificateJson ? providerDetails.trasformCertificateJson : _.get(configuration, 'trasformCertificateJson', ''),
+  //     })
+  //   }
+  // }
 
   getControlValidation(controlName: string, validator: string): Boolean {
     const control = this.providerFormGroup.get(controlName)
-    if (control && control.touched && control.errors && control.errors[validator]) {
+    if (control && control.errors && control.errors[validator]) {
       return true
     }
     return false
@@ -211,15 +199,23 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     const fileName = event.name.replace(/[^A-Za-z0-9_.]/g, '')
     if (this.thumbnailFile) {
       if (fileName.toLowerCase().endsWith('.svg') || fileName.toLowerCase().endsWith('.png')) {
-        const reader = new FileReader()
-        reader.onload = (e: any) => {
-          const img = new Image()
-          img.onload = () => {
-            this.cropImage(img)
+        const fileSizeInKB = this.thumbnailFile.size / 1000
+        const minSizeKB = 300
+        const maxSizeMB = 2
+        const maxSizeKB = maxSizeMB * 1000
+        if (fileSizeInKB >= minSizeKB && fileSizeInKB <= maxSizeKB) {
+          const reader = new FileReader()
+          reader.onload = (e: any) => {
+            const img = new Image()
+            img.onload = () => {
+              this.cropImage(img)
+            }
+            img.src = e.target.result
           }
-          img.src = e.target.result
+          reader.readAsDataURL(this.thumbnailFile)
+        } else {
+          this.showSnackBar('Please upload image sized between 300 KB and 2 MB')
         }
-        reader.readAsDataURL(this.thumbnailFile)
       } else {
         this.showSnackBar('Please upload svg or png image')
       }
@@ -255,7 +251,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           lastModified: Date.now(),
         })
       }
-    }, 'image/png')
+    },            'image/png')
 
     this.imageUrl = canvas.toDataURL('image/png')
   }
@@ -376,20 +372,34 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         link: this.thumbNailUrl,
         documentUrl: this.uploadedPdfUrl,
         documentUploadedDate: this.fileUploadedDate,
+        partnerCode: formDetails.partnerCode.toUpperCase(),
       }
 
-      if (this.providerDetails) {
-        if (this.providerDetails.id) {
-          formBody['id'] = this.providerDetails.id
-        }
-        if (this.partnerCode) {
-          formBody['partnerCode'] = this.partnerCode
-          const tranforamtions = this.transforamtionForm.value
-          formBody['trasformContentJson'] = tranforamtions.trasformContentJson
-          formBody['transformProgressJson'] = tranforamtions.transformProgressJson
-          formBody['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
-        }
-      }
+      // if (this.providerDetails) {
+      //   if (this.providerDetails.id) {
+      //     formBody['id'] = this.providerDetails.id
+      //   }
+      //   if (this.partnerCode) {
+      //     formBody['partnerCode'] = this.partnerCode
+      //     const tranforamtions = this.transforamtionForm.value
+      //     formBody['trasformContentJson'] = tranforamtions.trasformContentJson
+      //     formBody['transformProgressJson'] = tranforamtions.transformProgressJson
+      //     formBody['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
+      //   }
+      // } else {
+      //   const providerDetails = {
+      //     data: {
+      //       contentPartnerName: formDetails.contentPartnerName,
+      //     },
+      //   }
+      //   this.setTransformationDetails(providerDetails)
+      //   const tranforamtions = this.transforamtionForm.value
+      //   if (tranforamtions.trasformContentJson !== '') {
+      //     formBody['trasformContentJson'] = tranforamtions.trasformContentJson
+      //     formBody['transformProgressJson'] = tranforamtions.transformProgressJson
+      //     formBody['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
+      //   }
+      // }
 
       this.marketPlaceSvc.createProvider(formBody).subscribe({
         next: (responce: any) => {
@@ -398,8 +408,9 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
             setTimeout(() => {
               const successMsg = 'Successfully Onboarded'
               this.showSnackBar(successMsg)
-              this.navigateToProvidersDashboard()
-            }, 1000)
+              const providerId = _.get(responce, 'result.id')
+              this.router.navigate([`/app/home/marketplace-providers/onboard-partner/${providerId}`])
+            },         1000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -408,6 +419,8 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           this.showSnackBar(errmsg)
         },
       })
+    } else {
+      this.showSnackBar('Please fill all the mandator fields with proper data')
     }
   }
 
@@ -422,10 +435,10 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       this.providerDetalsBeforUpdate['data']['link'] = this.thumbNailUrl
       this.providerDetalsBeforUpdate['data']['documentUrl'] = this.uploadedPdfUrl
       this.providerDetalsBeforUpdate['data']['documentUploadedDate'] = this.fileUploadedDate
-      const tranforamtions = this.transforamtionForm.value
-      this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
-      this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson
-      this.providerDetalsBeforUpdate['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
+      // const tranforamtions = this.transforamtionForm.value
+      // this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
+      // this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson
+      // this.providerDetalsBeforUpdate['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
 
       this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
         next: (responce: any) => {
@@ -434,8 +447,8 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
             setTimeout(() => {
               const successMsg = 'Provider details updated successfully.'
               this.showSnackBar(successMsg)
-              this.navigateToProvidersDashboard()
-            }, 1000)
+              this.sendDetailsUpdateEvent()
+            },         1000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -444,7 +457,13 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
           this.showSnackBar(errmsg)
         },
       })
+    } else {
+      this.showSnackBar('Please fill all the mandator fields with proper data')
     }
+  }
+
+  sendDetailsUpdateEvent() {
+    this.loadProviderDetails.emit(true)
   }
 
   navigateToProvidersDashboard() {

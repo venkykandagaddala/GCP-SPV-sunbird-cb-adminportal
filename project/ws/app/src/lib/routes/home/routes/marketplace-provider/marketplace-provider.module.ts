@@ -30,12 +30,29 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatPaginatorModule } from '@angular/material/paginator'
 import { MatTableModule } from '@angular/material/table'
 import { LoaderService } from '../../services/loader.service'
+import { TransformationsComponent } from './components/transformations/transformations.component'
+import { ProviderResolveService } from './services/provider-resolve.service'
 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
     component: MarketPlaceDashboardComponent,
+  },
+  {
+    path: 'onboard-partner/:id',
+    pathMatch: 'full',
+    component: ConfigureMarketplaceProvidersComponent,
+    data: {
+      pageId: 'app/home/marketplace-providers/onboard-partner',
+      module: 'marketplace-providers',
+      pageType: 'feature',
+      pageKey: 'marcket_place',
+    },
+    resolve: {
+      pageData: PageResolve,
+      providerDetails: ProviderResolveService,
+    },
   },
   {
     path: 'onboard-partner',
@@ -70,6 +87,7 @@ const routes: Routes = [
     CoursesTableComponent,
     CoursesPreviewComponent,
     DragDropDirective,
+    TransformationsComponent,
   ],
   imports: [
     CommonModule,

@@ -14,7 +14,7 @@ import { ConfigurationsService, EventService } from '@sunbird-cb/utils'
 import * as moment from 'moment'
 import { MomentDateAdapter } from '@angular/material-moment-adapter'
 /* tslint:disable */
-import _ from 'lodash'
+import * as _ from 'lodash'
 import { TelemetryEvents } from '../../events/model/telemetry.event.model'
 import { ProfileV2UtillService } from '../services/home-utill.service'
 import { preventHtmlAndJs } from '../../../validators/prevent-html-and-js.validator'
