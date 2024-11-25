@@ -67,6 +67,14 @@
 
   .provider-input-form {
     height: 50px;
+
+    .partnerCode {
+      text-transform: uppercase
+    }
+
+    .partnerCode::placeholder {
+      text-transform: none;
+    }
   }
 
   .input-note{
@@ -354,4 +362,9 @@
     position: unset !important;
     margin: 0px !important;
   }
+}
+
+.disableControl {
+  opacity: 0.6;
+  pointer-events: none;
 }

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { ConfigurationsService, EventService } from '@sunbird-cb/utils'
 import * as moment from 'moment'
 /* tslint:disable */
-import _ from 'lodash'
+import * as _ from 'lodash'
 import { EventsService } from '../services/events.service'
 import { DialogConfirmComponent } from '../../../../../../../../../../src/app/component/dialog-confirm/dialog-confirm.component'
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';

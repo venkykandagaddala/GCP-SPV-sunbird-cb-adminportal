@@ -38,31 +38,31 @@
             </mat-error>
             <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
               *ngIf="getControlValidation('contentPartnerName', 'pattern')">
-              Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported
+              Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported
             </mat-error>
             <mat-hint class="w-full flex justify-between items-center">
-              <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
+              <span class="input-note">Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported</span>
               <span class="input-note">{{getTextLength('contentPartnerName')}}/70</span>
             </mat-hint>
           </mat-form-field>
         </div>
-        <div class="flex flex-column gap-1 w-full">
+        <div class="flex flex-column gap-1 w-full" [ngClass]="{'disableControl': providerDetalsBeforUpdate}">
           <div class="flex items-center gap-1 required">
-            <span class="lable">Website URL</span>
+            <span class="lable">Partner Code</span>
           </div>
           <mat-form-field class="w-full provider-input-form">
-            <input formControlName="websiteUrl" matInput placeholder="Type here" maxlength="70">
+            <input class="partnerCode" formControlName="partnerCode" matInput placeholder="Type here" maxlength="6">
             <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
-              *ngIf="getControlValidation('websiteUrl', 'required')">
-              Website URL is mandatory
+              *ngIf="getControlValidation('partnerCode', 'required')">
+              Partner Code is mandatory
             </mat-error>
             <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
-              *ngIf="getControlValidation('websiteUrl', 'pattern')">
-              Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported
+              *ngIf="getControlValidation('partnerCode', 'pattern')">
+              Only ( a-z/A-Z/0-9) characters are supported
             </mat-error>
             <mat-hint class="w-full flex justify-between items-center">
-              <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
-              <span class="input-note">{{getTextLength('websiteUrl')}}/70</span>
+              <span class="input-note">Only ( a-z/A-Z/0-9) characters are supported</span>
+              <span class="input-note">{{getTextLength('partnerCode')}}/6</span>
             </mat-hint>
           </mat-form-field>
         </div>
@@ -70,9 +70,30 @@
 
       <div class="flex flex-column gap-1 w-full mb-6">
         <div class="flex items-center gap-1 required">
+          <span class="lable">Website URL</span>
+        </div>
+        <mat-form-field class="w-full provider-input-form">
+          <input formControlName="websiteUrl" matInput placeholder="Type here" maxlength="70">
+          <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+            *ngIf="getControlValidation('websiteUrl', 'required')">
+            Website URL is mandatory
+          </mat-error>
+          <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+            *ngIf="getControlValidation('websiteUrl', 'pattern')">
+            Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported
+          </mat-error>
+          <mat-hint class="w-full flex justify-between items-center">
+            <span class="input-note">Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported</span>
+            <span class="input-note">{{getTextLength('websiteUrl')}}/70</span>
+          </mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-column gap-1 w-full mb-6">
+        <div class="flex items-center gap-1 required">
           <span class="lable">Description</span>
           <mat-icon class="info-icon"
-            matTooltip="We recomment you to give desciption in 300-500 characters">info_outline</mat-icon>
+            matTooltip="We recomment you to give description in 300-500 characters">info_outline</mat-icon>
         </div>
         <mat-form-field class="w-full description">
           <textarea matInput rows="6" formControlName="description" maxlength="500"
@@ -83,10 +104,10 @@
           </mat-error>
           <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
             *ngIf="getControlValidation('description', 'pattern')">
-            Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported
+            Only ( a-z/A-Z/0-9 . - _ $ / : [ ] ' , !) characters are supported
           </mat-error>
           <mat-hint class="w-full flex justify-between items-center">
-            <span class="input-note">Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</span>
+            <span class="input-note">Only ( a-z/A-Z/0-9 . - _ $ / : [ ] ' , !) characters are supported</span>
             <span class="input-note">{{getTextLength('description')}}/500</span>
           </mat-hint>
         </mat-form-field>
@@ -158,7 +179,7 @@
         </ng-template>
       </div>
 
-      <ng-container *ngIf="providerDetails">
+      <!-- <ng-container *ngIf="providerDetalsBeforUpdate">
         <form [formGroup]="transforamtionForm">
           <div class=" mb-2"><span class="lable">Additional Properties</span></div>
           <mat-accordion class="flex flex-column gap-2">
@@ -193,11 +214,11 @@
             </mat-expansion-panel>
           </mat-accordion>
         </form>
-      </ng-container>
+      </ng-container> -->
 
       <div class="flex items-center gap-4">
         <button mat-button type="button" class="cancelBtn" (click)="navigateToProvidersDashboard()">Cancel</button>
-        <button mat-button type="submit" class="saveBtn">{{providerDetails ? 'Update' : 'Save'}}</button>
+        <button mat-button type="submit" class="saveBtn">{{providerDetalsBeforUpdate ? 'Update' : 'Save'}}</button>
       </div>
     </form>
   </mat-card-content>

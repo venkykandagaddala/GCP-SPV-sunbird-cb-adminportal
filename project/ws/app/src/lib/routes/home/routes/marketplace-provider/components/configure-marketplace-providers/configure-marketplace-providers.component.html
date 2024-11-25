@@ -10,25 +10,22 @@
     <mat-tab-group class="" [(selectedIndex)]="selectedIndex">
       <mat-tab data-id="provider" label="Provider Details">
         <div class="w-full mt-4">
-          <ws-app-provider-details [providerDetails]="providerDetails"></ws-app-provider-details>
+          <ws-app-provider-details [providerDetails]="providerDetails"
+            (loadProviderDetails)="getProviderDetails($event)"></ws-app-provider-details>
         </div>
       </mat-tab>
-      <mat-tab data-id="contentUpload" label=" Upload Course Catalog">
+      <mat-tab data-id="contentUpload" label=" Upload Course Catalog" [disabled]="disableCourseCatalog">
+        <ng-container *ngIf="!disableCourseCatalog">
+          <div class="w-full mt-4">
+            <ws-app-content-upload [providerDetails]="providerDetails" [selectedTabIndex]="selectedIndex"
+              (loadProviderDetails)="getProviderDetails($event)"></ws-app-content-upload>
+          </div>
+        </ng-container>
+      </mat-tab>
+      <!-- <mat-tab data-id="transformations" label="Transformations">
         <div class="w-full mt-4">
           <ws-app-content-upload [providerDetails]="providerDetails"></ws-app-content-upload>
         </div>
-      </mat-tab>
-      <!-- <mat-tab label="Authentication">
-        <p>Authentication</p>
-      </mat-tab>
-      <mat-tab label="Enrollment">
-        <p>Enrollment</p>
-      </mat-tab>
-      <mat-tab label="Progress">
-        <p>Progress</p>
-      </mat-tab>
-      <mat-tab label="Certificate">
-        <p>Certificate</p>
       </mat-tab> -->
     </mat-tab-group>
   </div>

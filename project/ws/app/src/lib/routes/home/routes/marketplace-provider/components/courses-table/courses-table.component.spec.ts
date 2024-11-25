@@ -1,25 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
-
 import { CoursesTableComponent } from './courses-table.component'
 
 describe('CoursesTableComponent', () => {
-  let component: CoursesTableComponent
-  let fixture: ComponentFixture<CoursesTableComponent>
+    let component: CoursesTableComponent
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [CoursesTableComponent],
+    beforeAll(() => {
+        component = new CoursesTableComponent(
+
+        )
     })
-    .compileComponents()
-  }))
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(CoursesTableComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    beforeEach(() => {
+        jest.clearAllMocks()
+        jest.resetAllMocks()
+    })
 
-  it('should create', () => {
-    expect(component).toBeTruthy()
-  })
+    it('should create a instance of component', () => {
+        expect(component).toBeTruthy()
+    })
 })

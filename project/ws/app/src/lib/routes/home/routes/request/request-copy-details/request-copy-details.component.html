@@ -130,10 +130,12 @@
                   </button>
                 </div>
                 <div>
-                  <span class="display-inline-block complabels mat-caption cursor-pointer"
-                    [ngClass]="{active: (seletedCompetencyTheme && option.identifier === seletedCompetencyTheme.identifier)}"
+                  <span class="display-inline-block complabels mat-caption cursor-pointer" [ngClass]="{active: (seletedCompetencyTheme &&
+                    (option?.identifier && option?.identifier === seletedCompetencyTheme?.identifier ||
+                     option?.name && option?.name === seletedCompetencyTheme?.name))}"
                     (click)="compThemeSelected(option)"
-                    *ngFor="let option of filteredallCompetencyTheme">{{option?.additionalProperties?.displayName}}</span>
+                    *ngFor="let option of filteredallCompetencyTheme">{{option?.additionalProperties?.displayName ||
+                    option?.name}}</span>
                 </div>
               </div>
 
@@ -152,10 +154,12 @@
                   </button>
                 </div>
                 <div>
-                  <span class="display-inline-block complabels mat-caption cursor-pointer"
-                    [ngClass]="{active: (seletedCompetencySubTheme && option.identifier === seletedCompetencySubTheme.identifier)}"
+                  <span class="display-inline-block complabels mat-caption cursor-pointer" [ngClass]="{active: (seletedCompetencySubTheme &&
+                    (option?.identifier && option?.identifier === seletedCompetencySubTheme?.identifier ||
+                     option?.name && option?.name === seletedCompetencySubTheme?.name))}"
                     (click)="compSubThemeSelected(option)"
-                    *ngFor="let option of filteredallCompetencySubtheme">{{option?.additionalProperties?.displayName}}</span>
+                    *ngFor="let option of filteredallCompetencySubtheme">{{option?.additionalProperties?.displayName ||
+                    option?.name}}</span>
                 </div>
               </div>
 

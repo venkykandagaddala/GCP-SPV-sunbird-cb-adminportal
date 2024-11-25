@@ -148,6 +148,23 @@
   color: #D13924;
 }
 
+.statusPending {
+  height: 33px;
+  border-radius: 4px;
+  background-color: #fad8b4;
+  padding: 0px 16px;
+  /* stylelint-enable */
+  font: 700 14px Lato;
+  /* stylelint-disable */
+  color: #fb8400;
+}
+
+.refreshIcon {
+  color: #1B4CA1;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
 .horizontalMenu {
   color: #00000099;
   cursor: pointer;

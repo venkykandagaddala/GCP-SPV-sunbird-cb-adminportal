@@ -4,8 +4,8 @@ module.exports = {
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
   },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  transformIgnorePatterns: ['/node_modules/'],
+  // moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  // transformIgnorePatterns: ['/node_modules/'],
   // moduleNameMapper: {
   //   '^src/(.*)$': '/home/sujithsojan/Desktop/igot-jest/sunbird-cb-adminportal/src/$1',
   // },
@@ -13,5 +13,5 @@ module.exports = {
   coverageDirectory: './coverage',
   coverageReporters: ["clover", "json", "lcov", "text", "text-summary"],
   collectCoverage: true,
-  testResultsProcessor: "jest-sonar-reporter",
+  testResultsProcessor: "jest-sonar-reporter"
 }

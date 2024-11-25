@@ -29,7 +29,7 @@
                     <mat-button-toggle-group class="category-card" #group="matButtonToggleGroup"
                         (change)="onValChange(group.value)" *ngFor="let image of imageList;let i =index"
                         [value]="toggle">
-                        <mat-button-toggle [(value)]="image[i]">
+                        <mat-button-toggle [(value)]="imageList[i]">
                             <img mat-card-image [src]="image.artifactUrl | publicGcpUrl" alt="code.image"
                                 class="custom-img" (error)="changeToDefaultImg">
                             <mat-icon mat-card-avatar *ngIf="isChecked && thumbanilSelectval == image.identifier"
