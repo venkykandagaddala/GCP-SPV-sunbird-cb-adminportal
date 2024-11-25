@@ -305,6 +305,7 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
     this.openCreateNavBar = true
     this.openMode = 'editMode'
     this.rowData = data
+    this.toggleOverlay(true)
   }
 
   linkGeneratedEmit(event: any): void {

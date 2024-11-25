@@ -10,12 +10,20 @@
         <div class="px-5 pt-6">
           <ng-container *ngIf="openMode !== 'createNew'">
             <div class="flex items-end gap-6 mb-10">
-              <ng-container *ngIf="rowData?.logo">
-                <div class="flex justify-center items-center log-frame">
-                  <img class="log" [src]="rowData?.logo" alt="log">
+              <div class="flex justify-center items-center log-frame relative rounded">
+                <input type="file" name="edit-orgLogo" id="edit-orgLogo" class="hidden" (change)="uploadLogo($event)"
+                  accept=".png, .jpeg, .jpg">
+                <ng-container *ngIf="rowData?.logo">
+                  <img class="log" [src]="selectedLogo" alt="log">
+                  <ng-container *ngIf="!rowData?.logo">
+                    <div class="">Logo</div>
+                  </ng-container>
+                </ng-container>
+                <div class="edit-logo" onclick="document.getElementById('edit-orgLogo').click()">
+                  <mat-icon>edit</mat-icon>
                 </div>
+              </div>
 
-              </ng-container>
               <div>
                 <div class="organisationLable">
                   Organisation
@@ -39,20 +47,22 @@
                 </mat-form-field>
               </div>
 
-              <mat-radio-group aria-labelledby="example-radio-group-label" class="flex gap-12 organisation-form"
-                formControlName="category">
+              <ng-container *ngIf="this.openMode !== 'editMode'">
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="flex gap-12 organisation-form"
+                  formControlName="category">
 
-                <div [ngClass]="{'active-radio-button': getCategory === 'state'}">
-                  <mat-radio-button color="primary" value="state">
-                    State
-                  </mat-radio-button>
-                </div>
-                <div [ngClass]="{'active-radio-button': getCategory === 'center'}">
-                  <mat-radio-button color="primary" value="center">
-                    Center
-                  </mat-radio-button>
-                </div>
-              </mat-radio-group>
+                  <div [ngClass]="{'active-radio-button': getCategory === 'state'}">
+                    <mat-radio-button color="primary" value="state">
+                      State
+                    </mat-radio-button>
+                  </div>
+                  <div [ngClass]="{'active-radio-button': getCategory === 'ministry'}">
+                    <mat-radio-button color="primary" value="ministry">
+                      Center
+                    </mat-radio-button>
+                  </div>
+                </mat-radio-group>
+              </ng-container>
 
               <ng-container *ngIf="getCategory === 'state'">
                 <div class="grayBox p-4 mt-5 flex flex-column gap-1 organisation-form mat-field-rounded">
@@ -63,7 +73,8 @@
                   <mat-form-field class="w-full">
                     <input type="text" placeholder="Type to search" aria-label="Type to search" matInput
                       (input)="filterStates($event.target.value)" formControlName="state" [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                      (optionSelected)="onSelectStateMinistry($event.option.value)">
                       <ng-container *ngFor="let option of filteredStates">
                         <mat-option [value]="option">{{ option.orgName }}</mat-option>
                       </ng-container>
@@ -72,7 +83,7 @@
                   </mat-form-field>
                 </div>
               </ng-container>
-              <ng-container *ngIf="getCategory === 'center'">
+              <ng-container *ngIf="getCategory === 'ministry'">
                 <div class="grayBox p-4 mt-5 flex flex-column gap-1 organisation-form mat-field-rounded">
                   <div class="flex items-center gap-1 required">
                     <span class="lable">Ministry</span>
@@ -81,7 +92,8 @@
                   <mat-form-field class="w-full">
                     <input type="text" placeholder="Type to search" aria-label="Type to search" matInput
                       (input)="filterMinistry($event.target.value)" formControlName="ministry" [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                      (optionSelected)="onSelectStateMinistry($event.option.value)">
                       <ng-container *ngFor="let option of filteredMinistry">
                         <mat-option [value]="option">{{ option.orgName }}</mat-option>
                       </ng-container>
@@ -129,10 +141,10 @@
               </ng-container>
               <ng-container *ngIf="openMode === 'editMode'">
                 <div class="flex gap-8 mt-4">
-                  <div class="w-full flex flex-col gap-2">
+                  <!-- <div class="w-full flex flex-col gap-2">
                     <div class="viewModeLable">Created By</div>
                     <div class="viewModeValue">{{rowData?.createdBy}}</div>
-                  </div>
+                  </div> -->
                   <div class="w-full flex flex-col gap-2">
                     <div class="viewModeLable">Created Date and Time</div>
                     <div class="viewModeValue">{{rowData?.createdOn}}</div>
@@ -140,7 +152,7 @@
                 </div>
               </ng-container>
               <ng-container *ngIf="getCategory">
-                <div class="flex flex-column gap-1 w-full mt-4">
+                <div class="flex flex-column gap-1 w-full mt-8">
                   <div class="flex items-center gap-1 required">
                     <span class="lable">Description</span>
                   </div>
@@ -202,7 +214,7 @@
         <div class="right-sidenav-footer flex items-center justify-end gap-4 items-center px-5 pt-3 pb-5 bg-white">
           <ng-container *ngIf="openMode !== 'viewMode'">
             <button mat-button class="cancelButton" (click)="closeNaveBar()">Cancel</button>
-            <button mat-flat-button class="mat-btn-flat" [disabled]="isLoading || this.organisationForm.valid"
+            <button mat-flat-button class="mat-btn-flat" [disabled]="isLoading || this.organisationForm.invalid"
               (click)="onSubmitCreateOrganization()">{{openMode
               === 'editMode' ? 'Update' : 'Add'}}</button>
           </ng-container>

@@ -14,7 +14,8 @@ const API_END_POINTS = {
   GET_ORGS_OF_DEPT: '/apis/public/v8/org/v1/list',
   CREATE_STATE_OR_MINISTRY: '/apis/proxies/v8/org/ext/v1/create',
   UPDATE_STATE_OR_MINISTRY: '/apis/proxies/v8/org/ext/v1/update',
-
+  SEARCH_ORG: '/api/org/ext/v2/signup/search',
+  UPDATE_ORGANIZATION: '/apis/proxies/v8/org/ext/v1/update',
 }
 
 @Injectable({
@@ -104,5 +105,22 @@ export class CreateMDOService {
 
   createOrganization(request: any) {
     return this.http.post<any>(`${API_END_POINTS.CREATE_STATE_OR_MINISTRY}`, { request: request })
+  }
+
+  searchOrgs(orgName: any, type: any) {
+    const req = {
+      request: {
+        filters: {
+          orgName,
+          parentType: type,
+        },
+        limit: 500,
+      },
+    }
+    return this.http.post(API_END_POINTS.SEARCH_ORG, req)
+  }
+
+  updateOrganization(req: any): Observable<any> {
+    return this.http.patch<any>(`${API_END_POINTS.UPDATE_ORGANIZATION}`, req)
   }
 }

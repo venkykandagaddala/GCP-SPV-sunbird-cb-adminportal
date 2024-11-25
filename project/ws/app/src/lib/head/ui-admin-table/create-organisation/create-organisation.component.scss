@@ -186,3 +186,18 @@
     margin-top: 2px !important;
   }
 }
+
+.edit-logo {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  cursor: pointer;
+
+  mat-icon {
+    font-size: 14px;
+    height: 14px;
+    width: 14px;
+    color: #1b4ca1;
+
+  }
+}
