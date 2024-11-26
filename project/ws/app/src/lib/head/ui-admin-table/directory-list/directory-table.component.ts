@@ -292,7 +292,9 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   }
 
   organizationCreatedEmit(_event: any) {
-    this.searchByEnterKey.emit('')
+    setTimeout(() => {
+      this.searchByEnterKey.emit('')
+    }, 1000)
 
   }
 
