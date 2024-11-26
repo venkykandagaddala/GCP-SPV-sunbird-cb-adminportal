@@ -29,6 +29,7 @@ import { MatPaginatorModule } from '@angular/material/paginator'
 import { MatTableModule } from '@angular/material/table'
 import { LoaderService } from '../../services/loader.service'
 import { ProviderResolveService } from './services/provider-resolve.service'
+import { MatSelectModule } from '@angular/material/select'
 
 const routes: Routes = [
   {
@@ -100,6 +101,7 @@ const routes: Routes = [
     MatProgressBarModule,
     MatTooltipModule,
     NgJsonEditorModule,
+    MatSelectModule
   ],
   providers: [DatePipe, LoaderService],
   entryComponents: [

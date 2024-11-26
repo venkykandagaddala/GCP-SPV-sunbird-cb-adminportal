@@ -135,11 +135,51 @@
     }
   }
 
+  .file-uploaded-box {
+    cursor: unset;
+    position: relative;
+
+    .removeFile {
+      position: absolute;
+      right: -5px;
+      top: -5px;
+      font-size: 16px;
+      font-weight: 500;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      color: #0000008c;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ffffff;
+      box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.2), 0 0px 6px 0 rgba(0, 0, 0, 0.19);
+      cursor: pointer;
+    }
+  }
+
   .transformation-box {
     border: 1px solid hsla(0, 0%, 0%, 0.161);
     min-height: 227px;
     height: fit-content;
     padding: 24px;
+
+    .lable {
+      /* stylelint-enable */
+      font: 700 14px Lato;
+      /* stylelint-disable */
+      color: #212529;
+      width:  100px;
+    }
+
+    .colun {
+      /* stylelint-enable */
+      font: 700 14px Lato;
+      /* stylelint-disable */
+      color: #212529;
+      width: 5px;
+    }
   }
 
   .transformation-required {
@@ -190,8 +230,10 @@
   height: 100px;
 
   .dataSpinner {
-    position: unset !important;
+    position: absolute !important;
     margin: 0px !important;
+    top: 30px;
+    left: 47%;
   }
 }
 
@@ -212,3 +254,16 @@
 .additional-properties {
   padding: 5px;
 }
+
+:host ::ng-deep .transformation-box{
+   .mat-form-field-flex {
+    height: 50px;
+    align-items: center;
+  }
+
+  .mat-form-field-wrapper {
+    padding: 0px !important;
+  }
+
+}
+

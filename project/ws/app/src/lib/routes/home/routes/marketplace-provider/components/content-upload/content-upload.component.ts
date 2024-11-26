@@ -8,8 +8,8 @@ import { HttpErrorResponse } from '@angular/common/http'
 import { ConformationPopupComponent } from '../../dialogs/conformation-popup/conformation-popup.component'
 import { MatDialog } from '@angular/material/dialog'
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms'
-import { JsonEditorOptions } from 'ang-jsoneditor'
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
+import * as XLSX from 'xlsx'
 
 @Component({
   selector: 'ws-app-content-upload',
@@ -37,17 +37,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     ],
     helpVideoLink: `/assets/public/content/guide-videos/CIOS_Updated_demo.mp4`,
   }
-
-  //#region (transformation variables)
-  transforamtionForm!: FormGroup
-  providerDetalsBeforUpdate: any
-  public contentEeditorOptions: JsonEditorOptions | undefined
-  public progressEditorOptions: JsonEditorOptions | undefined
-  public certificateEditorOptions: JsonEditorOptions | undefined
-  transformationsUpdated = false
-  providerConfiguration: any
-  executed = false
-  //#endregion
 
   contentTableData: any
   uploadedContentList = []
@@ -93,8 +82,26 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   delayTabLoad = true
+
+
+  //#region (transformation variables)
+  transforamtionForm!: FormGroup
+  providerDetalsBeforUpdate: any
+  transFormContentKeysAndControls: {
+    lable: string,
+    controlName: string,
+    path: string
+  }[] = []
+  transformationsUpdated = false
+  providerConfiguration: any
+  executed = false
+  uploadedFileHeadersList: string[] = []
+  availableHeadrsList: string[] = []
   //#endregion
 
+  //#endregion
+
+  //#region (constructor: contains Intialization of TransforamtionControls from routes data)
   constructor(
     private marketPlaceSvc: MarketplaceService,
     private formBuilder: FormBuilder,
@@ -103,40 +110,45 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     private dialog: MatDialog,
     private activateRoute: ActivatedRoute,
   ) {
-    this.initialization()
-    this.setJsonEditorOptions()
     this.getRoutesData()
   }
 
-  initialization() {
-    this.transforamtionForm = this.formBuilder.group({
-      trasformContentJson: new FormControl(''),
+  getRoutesData() {
+    this.activateRoute.data.subscribe(data => {
+      if (data.pageData.data) {
+        this.providerConfiguration = data.pageData.data
+        this.initializTransforamtionControls()
+      }
     })
   }
 
-  setJsonEditorOptions() {
-    this.contentEeditorOptions = this.getEditorOptions
-    this.progressEditorOptions = this.getEditorOptions
-    this.certificateEditorOptions = this.getEditorOptions
-  }
+  initializTransforamtionControls() {
+    this.transforamtionForm = this.formBuilder.group({})
+    const trasformContentJson = _.get(this.providerConfiguration, 'trasformContentJson[0].spec')
 
-  get getEditorOptions(): JsonEditorOptions {
-    const editorOptions = new JsonEditorOptions()
-    editorOptions.mode = 'text'
-    editorOptions.mainMenuBar = false // Hide the menu bar
-    editorOptions.navigationBar = false // Hide the navigation bar
-    editorOptions.statusBar = false // Hide the status bar at the bottom
-    editorOptions.enableSort = false // Disable sorting
-    editorOptions.enableTransform = false // Disable transformation
-    return editorOptions
+    if (trasformContentJson) {
+      Object.entries(trasformContentJson).forEach(([key, path]) => {
+        const transFormContentKeysAndControl: {
+          lable: string,
+          controlName: string,
+          path: string
+        } = {
+          lable: key,
+          controlName: key.replace(' ', ''),
+          path: path as string
+        }
+        this.transforamtionForm.addControl(key.replace(' ', ''), new FormControl('', Validators.required))
+        this.transFormContentKeysAndControls.push(transFormContentKeysAndControl)
+      })
+    }
   }
+  //#endregion
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes.providerDetails &&
       changes.providerDetails.currentValue) {
       this.providerDetalsBeforUpdate = JSON.parse(JSON.stringify(changes.providerDetails.currentValue))
-      this.setTransformationDetails(changes.providerDetails.currentValue)
       this.tableDataInitialzation()
     }
 
@@ -145,14 +157,70 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     }
   }
 
-  setTransformationDetails(providerDetails: any) {
-    const configuration = this.providerConfiguration['ecornel']
-    this.transforamtionForm.setValue({
-      trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : _.get(configuration, 'trasformContentJson', ''),
-    })
+  tableDataInitialzation() { // All tables data Initialzation
+    this.contentTableData = {
+      columns: [
+        { displayName: 'File Name', key: 'name', cellType: 'text' },
+        { displayName: 'File Status', key: 'status', cellType: 'status' },
+        { displayName: 'Initiated On', key: 'intiatedOn', cellType: 'text' },
+        { displayName: 'Completed On', key: 'completedOn', cellType: 'text' },
+      ],
+      needCheckBox: false,
+      showDeleteAll: false,
+      showSearchBox: false,
+      showPagination: false,
+    }
+    this.contenetMenuItems = [
+      {
+        icon: '',
+        btnText: 'Download Log',
+        action: 'downloadLog',
+      },
+    ]
+
+    this.unPublishedCoursesTableData = {
+      columns: [
+        { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg', cellClass: 'text-overflow-elipse' },
+        { displayName: 'Source', key: 'source', cellType: 'text' },
+        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' },
+
+      ],
+      needCheckBox: true,
+      showDeleteAll: true,
+    }
+    this.unpublishedCoursesMenuItems = [
+      {
+        icon: '',
+        btnText: 'Delete',
+        action: 'delete',
+      },
+    ]
+    this.setPagination('notPublished', this.defaultPagination)
+
+    this.publishedCoursesTableData = {
+      columns: [
+        { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg', cellClass: 'text-overflow-elipse' },
+        { displayName: 'Source', key: 'source', cellType: 'text' },
+        { displayName: 'Publised On', key: 'publishedOn', cellType: 'text' },
+        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' },
+
+      ],
+      needCheckBox: false,
+      showDeleteAll: false,
+    }
+    this.setPagination('published', this.defaultPagination)
   }
 
-  //#region (content files)
+  //#region (ng Onint: contains Initialing api calls to get all 3 tables data)
+  ngOnInit() {
+    if (this.providerDetails.trasformContentJson) {
+      this.getContentList()
+      this.getPublishedCoursesList()
+      this.getUnPublishedCoursesList()
+    }
+  }
+
+  //#region (get data for tables)
   getContentList() {
     if (this.providerDetails && this.providerDetails.id) {
       this.showUploadedStatusLoader = true
@@ -196,9 +264,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     }
     return formatedList
   }
-  //#endregion
 
-  //#region (courses)
   getPublishedCoursesList() {
     if (_.get(this.providerDetails, 'data.partnerCode')) {
       this.showPublishedCoursesLoader = true
@@ -301,99 +367,8 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     })
     return formatedList
   }
-
-  searchCourses(publishedCourses: boolean, searchKey: string) {
-    if (publishedCourses) {
-      this.publishedCoursesSerachKey = searchKey
-      this.setPagination('published', this.defaultPagination)
-      this.getPublishedCoursesList()
-    } else {
-      this.unPublishedCoursesSearchKey = searchKey
-      this.setPagination('notPublished', this.defaultPagination)
-      this.getUnPublishedCoursesList()
-    }
-  }
-
-  pageChange(event: any, courseType: string) {
-    if (courseType === 'published') {
-      this.publishedCoursesTablePaginationDetails = event
-      this.getPublishedCoursesList()
-    } else if (courseType === 'notPublished') {
-      this.unPublishedCoursesTablePaginationDetails = event
-      this.getUnPublishedCoursesList()
-    }
-  }
   //#endregion
-
-  ngOnInit() {
-    if (this.providerDetails.trasformContentJson) {
-      this.getContentList()
-      this.getPublishedCoursesList()
-      this.getUnPublishedCoursesList()
-    }
-  }
-
-  getRoutesData() {
-    this.activateRoute.data.subscribe(data => {
-      if (data.pageData.data) {
-        this.providerConfiguration = data.pageData.data
-      }
-    })
-  }
-
-  tableDataInitialzation() {
-    this.contentTableData = {
-      columns: [
-        { displayName: 'File Name', key: 'name', cellType: 'text' },
-        { displayName: 'File Status', key: 'status', cellType: 'status' },
-        { displayName: 'Initiated On', key: 'intiatedOn', cellType: 'text' },
-        { displayName: 'Completed On', key: 'completedOn', cellType: 'text' },
-      ],
-      needCheckBox: false,
-      showDeleteAll: false,
-      showSearchBox: false,
-      showPagination: false,
-    }
-    this.contenetMenuItems = [
-      {
-        icon: '',
-        btnText: 'Download Log',
-        action: 'downloadLog',
-      },
-    ]
-
-    this.unPublishedCoursesTableData = {
-      columns: [
-        { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg', cellClass: 'text-overflow-elipse' },
-        { displayName: 'Source', key: 'source', cellType: 'text' },
-        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' },
-
-      ],
-      needCheckBox: true,
-      showDeleteAll: true,
-    }
-    this.unpublishedCoursesMenuItems = [
-      {
-        icon: '',
-        btnText: 'Delete',
-        action: 'delete',
-      },
-    ]
-    this.setPagination('notPublished', this.defaultPagination)
-
-    this.publishedCoursesTableData = {
-      columns: [
-        { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg', cellClass: 'text-overflow-elipse' },
-        { displayName: 'Source', key: 'source', cellType: 'text' },
-        { displayName: 'Publised On', key: 'publishedOn', cellType: 'text' },
-        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' },
-
-      ],
-      needCheckBox: false,
-      showDeleteAll: false,
-    }
-    this.setPagination('published', this.defaultPagination)
-  }
+  //#endregion
 
   setPagination(tableType: string, pagination: any) {
     switch (tableType) {
@@ -406,52 +381,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     }
   }
 
-  contentEvents(event: any) {
-    switch (event.action) {
-      case 'delete':
-        this.deletedSelectedCourses(event)
-        break
-      case 'downloadLog':
-        if (event.rows.gcpfileName) {
-          this.downloadLog(event.rows.gcpfileName, event.rows.name)
-        }
-        break
-      case 'refresh':
-        this.getContentList()
-        this.getUnPublishedCoursesList()
-        this.getPublishedCoursesList()
-        break
-    }
-  }
-
-  upDateTransforamtionDetails() {
-    this.providerDetalsBeforUpdate['data']['isActive'] = true
-    const hasTransformationAlready = this.providerDetalsBeforUpdate['trasformContentJson'] ? true : false
-    const tranforamtions = this.transforamtionForm.value
-    this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
-
-    this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
-      next: (responce: any) => {
-        if (responce) {
-          setTimeout(() => {
-            const successMsg = hasTransformationAlready ? 'Transform Content updated successfully.' : 'Transform Content saved successfully.'
-            this.showSnackBar(successMsg)
-            this.sendDetailsUpdateEvent()
-          },         1000)
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
-        this.showSnackBar(errmsg)
-      },
-    })
-  }
-
-  sendDetailsUpdateEvent() {
-    this.transformationsUpdated = true
-    this.loadProviderDetails.emit(true)
-  }
-
+  //#region (contain browsing file and related events to get drop down list)
   onDrop(file: File) {
     this.fileName = file.name.replace(/[^A-Za-z0-9_.]/g, '')
     if (!(this.fileName.toLowerCase().endsWith('.csv') || this.fileName.toLowerCase().endsWith('.xlsx'))) {
@@ -462,7 +392,102 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.contentFile = file
       this.contentFileUploaded = true
       this.fileUploadedDate = this.datePipe.transform(new Date(), 'dd/MM/yyyy')
+      this.fileName.toLowerCase().endsWith('.csv') ? this.getCsvHeaders(file) : this.getXLSXHeaders(file)
     }
+  }
+
+  getXLSXHeaders(file: File) { // get headers to show in drop downs
+    const reader = new FileReader()
+    reader.onload = (e: any) => {
+      const data = e.target.result
+      const workbook = XLSX.read(data, { type: 'binary' })
+
+      const firstSheetName = workbook.SheetNames[0]
+      const sheet = workbook.Sheets[firstSheetName]
+
+      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 }) // `header: 1` returns array of rows
+
+      if (jsonData && jsonData.length > 0) {
+        this.uploadedFileHeadersList = jsonData[0] as string[] // The first row is the header
+        this.availableHeadrsList = JSON.parse(JSON.stringify(this.uploadedFileHeadersList))
+      }
+    }
+    reader.readAsBinaryString(file)
+  }
+
+  getCsvHeaders(file: any) {
+    let reader = new FileReader()
+    reader.readAsText(file)
+    reader.onload = () => {
+      let csvData = reader.result
+      let csvRecordsArray = (<string>csvData).split(/\r\n|\n/)
+      this.availableHeadrsList = this.getHeaderArray(csvRecordsArray)
+    }
+    const that = this
+    reader.onerror = function () {
+      that.showSnackBar('Please upload proper csv file')
+    }
+  }
+
+  getHeaderArray(csvRecordsArr: any) {
+    let headers = (<string>csvRecordsArr[0]).split(',')
+    let headerArray = []
+    for (let j = 0; j < headers.length; j++) {
+      headerArray.push(headers[j])
+    }
+    return headerArray
+  }
+  //#endregion
+
+  onSelectChange() { // To remove selected header from headers list so that user can't slect again
+    const selectedValues = Object.values(this.transforamtionForm.value)
+    this.availableHeadrsList = this.uploadedFileHeadersList.filter(value => !selectedValues.includes(value))
+  }
+
+  upDateTransforamtionDetails() {
+    this.providerDetalsBeforUpdate['data']['isActive'] = true
+    const hasTransformationAlready = this.providerDetalsBeforUpdate['trasformContentJson'] ? true : false
+    const trasformContentSpec: any = {} // contains maped transform spec for db
+    const specValues = this.transforamtionForm.value
+    this.transFormContentKeysAndControls.forEach((transFormContent: any) => {
+      trasformContentSpec[specValues[transFormContent.controlName]] = transFormContent.path
+    })
+
+    if (hasTransformationAlready) {
+      this.providerDetalsBeforUpdate['trasformContentJson'][0]['spec'] = trasformContentSpec
+    } else {
+      const trasformContentJson = this.providerConfiguration.trasformContentJson
+      trasformContentJson[0]['spec'] = trasformContentSpec
+      this.providerDetalsBeforUpdate['trasformContentJson'] = trasformContentJson
+    }
+
+    this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
+      next: (responce: any) => {
+        if (responce) {
+          setTimeout(() => {
+            const successMsg = hasTransformationAlready ? 'Transform Content updated successfully.' : 'Transform Content saved successfully.'
+            this.showSnackBar(successMsg)
+            this.sendDetailsUpdateEvent()
+          }, 1000)
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
+        this.showSnackBar(errmsg)
+      },
+    })
+  }
+
+  sendDetailsUpdateEvent() { // send event to parrent to get updated data so that chailds get updated detail
+    this.transformationsUpdated = true
+    this.loadProviderDetails.emit(true)
+  }
+
+  removeFile() {
+    this.contentFileUploaded = false
+    this.contentFile = undefined
+    this.availableHeadrsList = []
+    this.transforamtionForm.reset()
   }
 
   uploadFile() {
@@ -489,7 +514,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
                 this.getContentList()
                 this.getUnPublishedCoursesList()
                 this.getPublishedCoursesList()
-              },         1000)
+              }, 1000)
             }
           },
           error: (error: HttpErrorResponse) => {
@@ -538,6 +563,47 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     })
   }
 
+  //#region (table event: All table click events and search events)
+  searchCourses(publishedCourses: boolean, searchKey: string) {
+    if (publishedCourses) {
+      this.publishedCoursesSerachKey = searchKey
+      this.setPagination('published', this.defaultPagination)
+      this.getPublishedCoursesList()
+    } else {
+      this.unPublishedCoursesSearchKey = searchKey
+      this.setPagination('notPublished', this.defaultPagination)
+      this.getUnPublishedCoursesList()
+    }
+  }
+
+  pageChange(event: any, courseType: string) {
+    if (courseType === 'published') {
+      this.publishedCoursesTablePaginationDetails = event
+      this.getPublishedCoursesList()
+    } else if (courseType === 'notPublished') {
+      this.unPublishedCoursesTablePaginationDetails = event
+      this.getUnPublishedCoursesList()
+    }
+  }
+
+  contentEvents(event: any) {
+    switch (event.action) {
+      case 'delete':
+        this.deletedSelectedCourses(event)
+        break
+      case 'downloadLog':
+        if (event.rows.gcpfileName) {
+          this.downloadLog(event.rows.gcpfileName, event.rows.name)
+        }
+        break
+      case 'refresh':
+        this.getContentList()
+        this.getUnPublishedCoursesList()
+        this.getPublishedCoursesList()
+        break
+    }
+  }
+
   deletedSelectedCourses(event: any) {
     if (event && event.rows && event.rows.length !== 0) {
       const formBody = {
@@ -552,7 +618,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             this.showSnackBar(msg)
             setTimeout(() => {
               this.getUnPublishedCoursesList()
-            },         2000)
+            }, 2000)
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -593,6 +659,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     const message = 'Logs Downloaded Successfully.'
     this.showSnackBar(message)
   }
+  //#endregion
 
   showSnackBar(message: string) {
     this.snackBar.open(message)
