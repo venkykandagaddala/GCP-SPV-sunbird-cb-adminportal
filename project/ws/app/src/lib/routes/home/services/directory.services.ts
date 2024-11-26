@@ -40,10 +40,10 @@ export class DirectoryService {
             status: 1,
           },
           sortBy: {
-            orgName: 'asc',
+            createdDate: 'desc',
           },
           query: queryText,
-          limit: 500,
+          limit: 1000,
         },
       }
       return this.http.post<any>(`${API_END_POINTS.GET_ALL_DEPARTMENT_KONG}`, req1)
@@ -53,9 +53,9 @@ export class DirectoryService {
       request: {
         filters,
         sortBy: {
-          orgName: 'asc',
+          createdDate: 'desc',
         },
-        limit: 500,
+        limit: 1000,
       },
     }
     return this.http.post<any>(`${API_END_POINTS.GET_ALL_DEPARTMENT_KONG}`, req)

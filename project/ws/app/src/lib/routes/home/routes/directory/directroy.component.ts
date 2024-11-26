@@ -60,7 +60,7 @@ export class DirectoryViewComponent implements OnInit {
       this.currentFilter = params['tab']
       this.currentTab = params['tab']
       if (this.currentFilter === null || this.currentFilter === undefined) {
-        this.currentFilter = 'mdo'
+        this.currentFilter = 'organisation'
       }
     })
     this.getAllDepartmentsHeaderAPI()
@@ -93,7 +93,7 @@ export class DirectoryViewComponent implements OnInit {
         columns: [
           { displayName: 'Organisation', key: 'organisation' },
           { displayName: 'Type', key: 'type' },
-          { displayName: 'Created By', key: 'createdBy' },
+          // { displayName: 'Created By', key: 'createdBy' },
           { displayName: 'Created On', key: 'createdOn' },
         ],
         actions: [{ name: '', label: '', icon: 'remove_red_eye', type: 'menu' }],
@@ -332,6 +332,7 @@ export class DirectoryViewComponent implements OnInit {
 
         }
       })
+      this.data = [...this.data]
       this.tabledata.loader = false
       // this.data.sort((a: any, b: any) => {
       //   const textA = a.mdo.trimStart().toUpperCase()

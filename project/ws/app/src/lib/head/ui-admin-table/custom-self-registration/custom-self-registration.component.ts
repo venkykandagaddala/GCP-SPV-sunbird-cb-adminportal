@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { FormBuilder, FormGroup } from '@angular/forms'
 import { CreateMDOService } from '../create-mdo.services'
 import { CustomRegistrationQRCodeResponse } from '../interface/interfaces'
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -43,8 +43,8 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
 
   initializeForm(): void {
     this.selfRegistrationForm = this.formBuilder.group({
-      startDate: ['', [Validators.required]],
-      endDate: ['', [Validators.required]]
+      startDate: ['',],
+      endDate: ['',]
     })
 
     if (this.initialData.qrRegistrationLink && this.initialData.startDateRegistration && this.initialData.endDateRegistration) {
@@ -85,8 +85,8 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
 
     this.isLoading = true
     const payload = {
-      registrationStartDate: (Math.floor(this.selfRegistrationForm.controls['startDate'].value.getTime())),
-      registrationEndDate: (Math.floor(this.selfRegistrationForm.controls['endDate'].value.getTime())),
+      // registrationStartDate: (Math.floor(this.selfRegistrationForm.controls['startDate'].value.getTime())),
+      // registrationEndDate: (Math.floor(this.selfRegistrationForm.controls['endDate'].value.getTime())),
       orgId: this.initialData.orgId
     }
     this.createMdoService.generateSelfRegistrationQRCode(payload).subscribe({

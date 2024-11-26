@@ -75,12 +75,12 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
         render: true,
         enabled: true,
       },
-      {
-        name: 'Grade/Group setting',
-        key: 'grade_setting',
-        render: true,
-        enabled: true,
-      },
+      // {
+      //   name: 'Grade/Group setting',
+      //   key: 'grade_setting',
+      //   render: true,
+      //   enabled: true,
+      // },
     ]
 
     const url = this.router.url.split('/')

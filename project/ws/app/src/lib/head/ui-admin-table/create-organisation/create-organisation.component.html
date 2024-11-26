@@ -214,7 +214,8 @@
         <div class="right-sidenav-footer flex items-center justify-end gap-4 items-center px-5 pt-3 pb-5 bg-white">
           <ng-container *ngIf="openMode !== 'viewMode'">
             <button mat-button class="cancelButton" (click)="closeNaveBar()">Cancel</button>
-            <button mat-flat-button class="mat-btn-flat" [disabled]="isLoading || this.organisationForm.invalid"
+            <button mat-flat-button class="mat-btn-flat"
+              [disabled]="isLoading || this.organisationForm.invalid || !selectedLogo"
               (click)="onSubmitCreateOrganization()">{{openMode
               === 'editMode' ? 'Update' : 'Add'}}</button>
           </ng-container>
