@@ -148,7 +148,8 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
       orgName: this.controls['organisationName'].value,
       channel: this.controls['organisationName'].value,
       organisationType: this.heirarchyObject?.sbOrgType || "",
-      organisationSubType: this.heirarchyObject?.sbOrgSubType || "",
+      // organisationSubType: this.heirarchyObject?.sbOrgSubType || "",
+      organisationSubType: "board",
       isTenant: true,
       requestedBy: this.loggedInUserId,
 
@@ -190,7 +191,8 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
     const payload = {
       orgName: request.orgName,
       channel: request.channel,
-      organisationSubType: this.heirarchyObject.sbOrgSubType,
+      // organisationSubType: this.heirarchyObject.sbOrgSubType,
+      organisationSubType: "board",
       orgId: this.rowData.id,
       logo: request.logo,
       description: request.description

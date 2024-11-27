@@ -36,9 +36,13 @@
               </div> -->
 
               <ng-container *ngIf="!initialData.QRGenerated">
-                <div class="flex justify-center items-center">
-                  <button mat-flat-button class="mat-btn-flat" [disabled]="selfRegistrationForm.invalid || isLoading"
-                    (click)="generateQRCodeLink()">Generate</button>
+                <div class="flex justify-center items-center flex-column gap-6">
+                  <!-- <button mat-flat-button class="mat-btn-flat" [disabled]="selfRegistrationForm.invalid || isLoading"
+                    (click)="generateQRCodeLink()">Generate</button> -->
+
+                  <div class="mx-auto">
+                    <mat-spinner [diameter]="30" [strokeWidth]="3"></mat-spinner>
+                  </div>
                 </div>
               </ng-container>
 
@@ -123,7 +127,6 @@
                 </div>
               </ng-container>
 
-
             </form>
           </ng-container>
 
@@ -135,14 +138,13 @@
         </div>
 
         <div class="right-sidenav-footer flex items-center justify-end gap-4 items-center px-5 pt-3 pb-5 bg-white">
-          <ng-container *ngIf="!initialData.QRGenerated">
+          <!-- <ng-container *ngIf="!initialData.QRGenerated">
             <button mat-flat-button class="mat-btn-outline" (click)="closeNaveBar()">Cancel</button>
             <button mat-flat-button class="mat-btn-flat" [disabled]="!initialData?.QRGenerated">{{initialData?.openMode
               === 'edit' ? 'Update' : 'Add'}}</button>
-          </ng-container>
+          </ng-container> -->
           <ng-container *ngIf="initialData.QRGenerated">
             <button mat-flat-button class="mat-btn-flat" (click)="closeNaveBar()">Close</button>
-
           </ng-container>
 
         </div>

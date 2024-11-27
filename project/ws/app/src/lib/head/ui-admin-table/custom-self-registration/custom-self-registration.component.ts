@@ -47,15 +47,17 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
       endDate: ['',]
     })
 
-    if (this.initialData.qrRegistrationLink && this.initialData.startDateRegistration && this.initialData.endDateRegistration) {
-      this.selfRegistrationForm.get('startDate')?.setValue(new Date(this.initialData.startDateRegistration))
-      this.selfRegistrationForm.get('endDate')?.setValue(new Date(this.initialData.endDateRegistration))
+    if (this.initialData.qrRegistrationLink) {
+      // this.selfRegistrationForm.get('startDate')?.setValue(new Date(this.initialData.startDateRegistration))
+      // this.selfRegistrationForm.get('endDate')?.setValue(new Date(this.initialData.endDateRegistration))
       const links = {
         registrationLink: this.initialData.registrationLink,
         qrRegistrationLink: this.initialData.qrRegistrationLink
       }
       this.customRegistrationLinks = links
       this.initialData.QRGenerated = true
+    } else {
+      this.generateQRCodeLink()
     }
   }
 
