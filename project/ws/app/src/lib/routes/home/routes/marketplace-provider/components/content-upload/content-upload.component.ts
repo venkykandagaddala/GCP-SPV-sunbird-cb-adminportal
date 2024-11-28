@@ -1,15 +1,11 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { map } from 'rxjs/operators'
 import * as _ from 'lodash'
 import { DatePipe } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
-import { ConformationPopupComponent } from '../../dialogs/conformation-popup/conformation-popup.component'
-import { MatDialog } from '@angular/material/dialog'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import * as XLSX from 'xlsx'
 
 @Component({
   selector: 'ws-app-content-upload',
@@ -21,7 +17,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   //#region (global variables)
   //#region (view chaild, input and output)
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>
-  @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>
 
   @Input() providerDetails?: any
   @Input() selectedTabIndex = 0
@@ -67,12 +62,10 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   unPublishedCoursesSearchKey = ''
   unPublishedCoursesTablePaginationDetails: any
 
-  FILE_UPLOAD_MAX_SIZE: number = 100 * 1024 * 1024
-  contentFile: any
-  contentFileUploaded = false
-  fileName = ''
-  fileUploadedDate: string | null = ''
-  dialogRef: any
+  uploadMode = 'viaCsv'
+  viaApiFormGroup!: FormGroup
+  apiTypesList: any[] = []
+
   defaultPagination = {
     startIndex: 0,
     lastIndes: 20,
@@ -82,23 +75,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   delayTabLoad = true
-
-
-  //#region (transformation variables)
-  transforamtionForm!: FormGroup
-  providerDetalsBeforUpdate: any
-  transFormContentKeysAndControls: {
-    lable: string,
-    controlName: string,
-    path: string
-  }[] = []
-  transformationsUpdated = false
-  providerConfiguration: any
-  executed = false
-  uploadedFileHeadersList: string[] = []
-  availableHeadrsList: string[] = []
-  //#endregion
-
   //#endregion
 
   //#region (constructor: contains Intialization of TransforamtionControls from routes data)
@@ -106,49 +82,16 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     private marketPlaceSvc: MarketplaceService,
     private formBuilder: FormBuilder,
     private datePipe: DatePipe,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    private activateRoute: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
-    this.getRoutesData()
   }
 
-  getRoutesData() {
-    this.activateRoute.data.subscribe(data => {
-      if (data.pageData.data) {
-        this.providerConfiguration = data.pageData.data
-        this.initializTransforamtionControls()
-      }
-    })
-  }
-
-  initializTransforamtionControls() {
-    this.transforamtionForm = this.formBuilder.group({})
-    const trasformContentJson = _.get(this.providerConfiguration, 'trasformContentJson[0].spec')
-
-    if (trasformContentJson) {
-      Object.entries(trasformContentJson).forEach(([key, path]) => {
-        const transFormContentKeysAndControl: {
-          lable: string,
-          controlName: string,
-          path: string
-        } = {
-          lable: key,
-          controlName: key.replace(' ', ''),
-          path: path as string
-        }
-        this.transforamtionForm.addControl(key.replace(' ', ''), new FormControl('', Validators.required))
-        this.transFormContentKeysAndControls.push(transFormContentKeysAndControl)
-      })
-    }
-  }
   //#endregion
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes.providerDetails &&
       changes.providerDetails.currentValue) {
-      this.providerDetalsBeforUpdate = JSON.parse(JSON.stringify(changes.providerDetails.currentValue))
       this.tableDataInitialzation()
     }
 
@@ -213,14 +156,37 @@ export class ContentUploadComponent implements OnInit, OnChanges {
 
   //#region (ng Onint: contains Initialing api calls to get all 3 tables data)
   ngOnInit() {
+    this.initializeViaApi()
     if (this.providerDetails.trasformContentJson) {
-      this.getContentList()
-      this.getPublishedCoursesList()
-      this.getUnPublishedCoursesList()
+      this.getTablesData()
     }
   }
 
+  initializeViaApi() {
+    this.viaApiFormGroup = this.formBuilder.group({
+      apiType: new FormControl('', [Validators.required]),
+      apiUrl: new FormControl('', Validators.required)
+    })
+
+    this.apiTypesList = [
+      {
+        type: 'Get',
+        value: 'get'
+      },
+      {
+        type: 'Post',
+        value: 'post'
+      },
+    ]
+  }
+
   //#region (get data for tables)
+  getTablesData() {
+    this.getContentList()
+    this.getPublishedCoursesList()
+    this.getUnPublishedCoursesList()
+  }
+
   getContentList() {
     if (this.providerDetails && this.providerDetails.id) {
       this.showUploadedStatusLoader = true
@@ -380,187 +346,10 @@ export class ContentUploadComponent implements OnInit, OnChanges {
         break
     }
   }
-
-  //#region (contain browsing file and related events to get drop down list)
-  onDrop(file: File) {
-    this.fileName = file.name.replace(/[^A-Za-z0-9_.]/g, '')
-    if (!(this.fileName.toLowerCase().endsWith('.csv') || this.fileName.toLowerCase().endsWith('.xlsx'))) {
-      this.showSnackBar('Unsupported File Format. Please upload a CSV or XLSX file.')
-    } else if (file.size > this.FILE_UPLOAD_MAX_SIZE) {
-      this.showSnackBar('Please upload a file less than 100 MB')
-    } else {
-      this.contentFile = file
-      this.contentFileUploaded = true
-      this.fileUploadedDate = this.datePipe.transform(new Date(), 'dd/MM/yyyy')
-      this.fileName.toLowerCase().endsWith('.csv') ? this.getCsvHeaders(file) : this.getXLSXHeaders(file)
-    }
-  }
-
-  getXLSXHeaders(file: File) { // get headers to show in drop downs
-    const reader = new FileReader()
-    reader.onload = (e: any) => {
-      const data = e.target.result
-      const workbook = XLSX.read(data, { type: 'binary' })
-
-      const firstSheetName = workbook.SheetNames[0]
-      const sheet = workbook.Sheets[firstSheetName]
-
-      const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 }) // `header: 1` returns array of rows
-
-      if (jsonData && jsonData.length > 0) {
-        this.uploadedFileHeadersList = jsonData[0] as string[] // The first row is the header
-        this.availableHeadrsList = JSON.parse(JSON.stringify(this.uploadedFileHeadersList))
-      }
-    }
-    reader.readAsBinaryString(file)
-  }
-
-  getCsvHeaders(file: any) {
-    let reader = new FileReader()
-    reader.readAsText(file)
-    reader.onload = () => {
-      let csvData = reader.result
-      let csvRecordsArray = (<string>csvData).split(/\r\n|\n/)
-      this.availableHeadrsList = this.getHeaderArray(csvRecordsArray)
-    }
-    const that = this
-    reader.onerror = function () {
-      that.showSnackBar('Please upload proper csv file')
-    }
-  }
-
-  getHeaderArray(csvRecordsArr: any) {
-    let headers = (<string>csvRecordsArr[0]).split(',')
-    let headerArray = []
-    for (let j = 0; j < headers.length; j++) {
-      headerArray.push(headers[j])
-    }
-    return headerArray
-  }
   //#endregion
 
-  onSelectChange() { // To remove selected header from headers list so that user can't slect again
-    const selectedValues = Object.values(this.transforamtionForm.value)
-    this.availableHeadrsList = this.uploadedFileHeadersList.filter(value => !selectedValues.includes(value))
-  }
-
-  upDateTransforamtionDetails() {
-    this.providerDetalsBeforUpdate['data']['isActive'] = true
-    const hasTransformationAlready = this.providerDetalsBeforUpdate['trasformContentJson'] ? true : false
-    const trasformContentSpec: any = {} // contains maped transform spec for db
-    const specValues = this.transforamtionForm.value
-    this.transFormContentKeysAndControls.forEach((transFormContent: any) => {
-      trasformContentSpec[specValues[transFormContent.controlName]] = transFormContent.path
-    })
-
-    if (hasTransformationAlready) {
-      this.providerDetalsBeforUpdate['trasformContentJson'][0]['spec'] = trasformContentSpec
-    } else {
-      const trasformContentJson = this.providerConfiguration.trasformContentJson
-      trasformContentJson[0]['spec'] = trasformContentSpec
-      this.providerDetalsBeforUpdate['trasformContentJson'] = trasformContentJson
-    }
-
-    this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
-      next: (responce: any) => {
-        if (responce) {
-          setTimeout(() => {
-            const successMsg = hasTransformationAlready ? 'Transform Content updated successfully.' : 'Transform Content saved successfully.'
-            this.showSnackBar(successMsg)
-            this.sendDetailsUpdateEvent()
-          }, 1000)
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
-        this.showSnackBar(errmsg)
-      },
-    })
-  }
-
   sendDetailsUpdateEvent() { // send event to parrent to get updated data so that chailds get updated detail
-    this.transformationsUpdated = true
     this.loadProviderDetails.emit(true)
-  }
-
-  removeFile() {
-    this.contentFileUploaded = false
-    this.contentFile = undefined
-    this.availableHeadrsList = []
-    this.transforamtionForm.reset()
-  }
-
-  uploadFile() {
-    this.executed = true
-    if (this.contentFile && this.transformationsUpdated) {
-      this.openFileUploadPopup()
-      const formData = new FormData()
-      formData.append(
-        'content',
-        this.contentFile as Blob,
-        (this.contentFile as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
-      )
-      const partnerCode = _.get(this.providerDetails, 'data.partnerCode')
-      this.marketPlaceSvc.uploadContent(formData, partnerCode, this.providerDetails.id)
-        .subscribe({
-          next: (res: any) => {
-            this.executed = false
-            if (res) {
-              setTimeout(() => {
-                this.showSnackBar('File imported successfully')
-                this.transformationsUpdated = false
-                this.contentFileUploaded = false
-                this.dialogRef.close()
-                this.getContentList()
-                this.getUnPublishedCoursesList()
-                this.getPublishedCoursesList()
-              }, 1000)
-            }
-          },
-          error: (error: HttpErrorResponse) => {
-            this.executed = false
-            this.transformationsUpdated = false
-            this.contentFileUploaded = false
-            const errmsg = _.get(error, 'error.params.errmsg', 'Some thing went wrong while uploading. Please try again')
-            // if (error && error.error && error.error.includes('unsupported file type')) {
-            //   errmsg = 'Uploaded file format is not supported. Please try again with a supported file format.'
-            // }
-            this.dialogRef.close()
-            this.showSnackBar(errmsg)
-          },
-        })
-    } else if (!this.contentFile) {
-      this.showSnackBar('Please upload a file to import')
-    } else {
-      const message = this.providerDetalsBeforUpdate.trasformContentJson ?
-        'Please update transform content' : 'Please add transform content'
-      this.showSnackBar(message)
-    }
-  }
-
-  openFileUploadPopup() {
-    const dialogData = {
-      dialogType: 'csvLoader',
-      descriptions: [
-        {
-          messages: [
-            {
-              msgClass: '',
-              msg: `File processing`,
-            },
-          ],
-        },
-      ],
-    }
-    this.dialogRef = this.dialog.open(ConformationPopupComponent, {
-      data: dialogData,
-      autoFocus: false,
-      width: '956px',
-      maxWidth: '80vw',
-      maxHeight: '90vh',
-      height: '427px',
-      disableClose: true,
-    })
   }
 
   //#region (table event: All table click events and search events)
@@ -597,9 +386,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
         }
         break
       case 'refresh':
-        this.getContentList()
-        this.getUnPublishedCoursesList()
-        this.getPublishedCoursesList()
+        this.getTablesData()
         break
     }
   }

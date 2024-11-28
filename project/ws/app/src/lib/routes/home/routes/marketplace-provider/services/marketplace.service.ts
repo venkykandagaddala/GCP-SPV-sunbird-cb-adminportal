@@ -11,6 +11,7 @@ const API_END_POINTS = {
   DELETE_PROVIDER: `/apis/proxies/v8/contentpartner/v1/delete/`,
   GET_PROVIDER_DETAILS: (id: string) => `/apis/proxies/v8/contentpartner/v1/read/${id}`,
   UPLOAD_CONTENT: `/apis/proxies/v8/ciosIntegration/v1/loadContentFromExcel/`,
+  UPLOAD_PROGRES: `/apis/proxies/v8/ciosIntegration/v1/loadContentProgressFromExcel/`,
   GET_FILES_LIST: `/apis/proxies/v8/ciosIntegration/v1/file/info/`,
   // GET_CONTENT_LIST: `/apis/proxies/v8/ciosIntegration/v1/readAllContentFromDb`,
   GET_CONTENT_LIST: `apis/proxies/v8/ciosIntegration/v1/search/content`,
@@ -89,6 +90,20 @@ export class MarketplaceService {
     const newFormData = new FormData()
     newFormData.append('file', file, fileName)
     const url = `${API_END_POINTS.UPLOAD_CONTENT}${partnerCode}/${partnerId}`
+    return this.http.post<any>(
+      url,
+      newFormData
+    )
+  }
+
+  uploadProgress(
+    data: any,
+    partnerCode: string
+  ): Observable<any> {
+    const file = data.get('content') as File
+    const newFormData = new FormData()
+    newFormData.append('file', file)
+    const url = `${API_END_POINTS.UPLOAD_PROGRES}${partnerCode}`
     return this.http.post<any>(
       url,
       newFormData
