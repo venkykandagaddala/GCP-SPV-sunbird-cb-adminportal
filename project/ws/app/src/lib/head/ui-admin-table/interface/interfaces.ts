@@ -30,3 +30,9 @@ export interface CustomRegistrationQRCodeResponse {
   registrationLink: string,
   qrRegistrationLink: string
 }
+
+export interface IUploadedLogoresponse {
+  name: string
+  url: string
+  qrcodepath: string
+}

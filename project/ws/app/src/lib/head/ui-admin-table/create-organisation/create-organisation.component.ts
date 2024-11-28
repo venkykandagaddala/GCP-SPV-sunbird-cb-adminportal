@@ -5,6 +5,7 @@ import * as _ from 'lodash'
 import { CreateMDOService } from '../../../routes/home/services/create-mdo.services'
 import { ActivatedRoute } from '@angular/router'
 import { LoaderService } from '../../../routes/home/services/loader.service'
+import { IUploadedLogoresponse } from '../interface/interfaces'
 @Component({
   selector: 'ws-app-create-organisation',
   templateUrl: './create-organisation.component.html',
@@ -12,9 +13,6 @@ import { LoaderService } from '../../../routes/home/services/loader.service'
 })
 export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
-  //#region (global variables)
-
-  //#region (input and output)
   @Input() rowData: any
   @Input() dropdownList: {
     statesList: any[],
@@ -26,7 +24,6 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   @Input() openMode: string = ''
   @Output() buttonClick = new EventEmitter()
   @Output() organizationCreated = new EventEmitter<any>()
-  //#endregion
 
   organisationForm!: FormGroup
   statesList: any = []
@@ -40,6 +37,8 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   filteredStates: any[] = []
   filteredMinistry: any[] = []
   heirarchyObject: any
+  selectedLogoFile: any
+  uploadedLogoResponse!: IUploadedLogoresponse
   constructor(
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
@@ -51,7 +50,6 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
     this.addOverflowHidden()
   }
 
-  //#region (ng onint)
   ngOnInit(): void {
     this.loggedInUserId = _.get(this.activatedRoute, 'snapshot.parent.data.configService.userProfile.userId')
     this.initialization()
@@ -128,9 +126,6 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
       })
     }
   }
-  //#endregion
-
-  //#region (UI interaction lick click)
 
   get getCategory() {
     return this.organisationForm.controls.category.value
@@ -153,7 +148,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
       isTenant: true,
       requestedBy: this.loggedInUserId,
 
-      logo: this.selectedLogo,
+      logo: this.uploadedLogoResponse?.qrcodepath || "",
       description: this.controls['description'].value,
       parentMapId: this.heirarchyObject?.parentMapId || "",
       sbRootOrgId: this.heirarchyObject?.sbRootOrgId || "",
@@ -173,7 +168,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
       next: (response: any) => {
         if (response.result) {
           this.organizationCreated.emit(payload)
-          this.snackBar.open('Organization successfully created.', 'Close', { panelClass: ['success'] })
+          this.snackBar.open('Organization successfully created.', 'X', { panelClass: ['success'] })
           this.closeNaveBar()
           this.loaderService.changeLoad.next(false)
           this.isLoading = false
@@ -194,7 +189,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
       // organisationSubType: this.heirarchyObject.sbOrgSubType,
       organisationSubType: "board",
       orgId: this.rowData.id,
-      logo: request.logo,
+      logo: this.uploadedLogoResponse?.qrcodepath || this.rowData.logo,
       description: request.description
     }
 
@@ -202,7 +197,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
       next: (response: any) => {
         if (response.result) {
           this.organizationCreated.emit(payload)
-          this.snackBar.open('Organization successfully updated.', 'Close', { panelClass: ['success'] })
+          this.snackBar.open('Organization successfully updated.', 'X', { panelClass: ['success'] })
           this.closeNaveBar()
           this.loaderService.changeLoad.next(false)
           this.isLoading = false
@@ -219,28 +214,22 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   uploadLogo(event: Event) {
     const input = event.target as HTMLInputElement
     if (input.files?.length) {
-      const selectedFile = input.files[0]
-      this.selectedLogoName = selectedFile.name
+      this.selectedLogoFile = input.files[0]
+      this.selectedLogoName = this.selectedLogoFile.name
       const maxFileSize = this.maxFileSize * 1024
 
-      if (!this.validFileTypes.includes(selectedFile.type)) {
-        this.snackBar.open('Invalid file type', 'Close', { panelClass: ['error'] })
+      if (!this.validFileTypes.includes(this.selectedLogoFile.type)) {
+        this.snackBar.open('Invalid file type', 'X', { panelClass: ['error'] })
         return
       }
 
-      if (selectedFile.size > maxFileSize) {
-        this.snackBar.open(`File size exceeds ${this.maxFileSize} KB. Please select a smaller file.`, 'Close', { panelClass: ['error'] })
+      if (this.selectedLogoFile.size > maxFileSize) {
+        this.snackBar.open(`File size exceeds ${this.maxFileSize} KB. Please select a smaller file.`, 'X', { panelClass: ['error'] })
         return
       }
-
-      const reader = new FileReader()
-      reader.onload = () => {
-        this.selectedLogo = reader.result
-      }
-      reader.readAsDataURL(selectedFile)
+      this.uploadOrganizationLogo()
     }
   }
-  //#endregion
 
   addOverflowHidden() {
     document.body.classList.add('overflow-hidden')
@@ -268,4 +257,19 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
   }
 
+  uploadOrganizationLogo() {
+    const formData = new FormData()
+    formData.append('file', this.selectedLogoFile)
+    this.createMDOService.uploadOrganizationLogo(formData).subscribe({
+      next: (response: any) => {
+        if (response.result) {
+          this.uploadedLogoResponse = response.result
+          this.selectedLogo = this.uploadedLogoResponse.qrcodepath
+        }
+      },
+      error: () => {
+        this.snackBar.open(`Couldn't upload the logo, Please try again`, 'X', { panelClass: ['error'] })
+      }
+    })
+  }
 }

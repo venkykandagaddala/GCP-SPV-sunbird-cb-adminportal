@@ -9,7 +9,7 @@
   </div>
   <div class="flex-display">
 
-    <ws-widget-ui-user-table [hidden]="currentTab==='rolesandaccess'
+    <!-- <ws-widget-ui-user-table [hidden]="currentTab==='rolesandaccess'
       || currentTab === 'mentormanage'
       || currentTab === 'grade_setting'
       || currentTab === 'designation_master'" [tableData]="tabledata" [data]="data" [otherInput]="createdDepartment"
@@ -27,9 +27,20 @@
       || currentTab === 'rolesandaccess'
       || currentTab === 'grade_setting'
       || currentTab === 'designation_master'">
-    </ws-app-mentor-manage>
+    </ws-app-mentor-manage> -->
+
+    <ws-widget-ui-user-table *ngIf="currentTab==='users'" [tableData]="tabledata" [data]="data"
+      [otherInput]="createdDepartment" [needAddAdmin]="true" [needCreateUser]="true" (actionsClick)="editUser($event)"
+      (searchByEnterKey)="onEnterkySearch($event)">
+    </ws-widget-ui-user-table>
+
+    <ws-app-roles-access *ngIf="currentTab==='rolesandaccess'" (clickedDepartment)="fClickedDepartment($event)">
+    </ws-app-roles-access>
+
+    <ws-app-mentor-manage *ngIf="currentTab==='mentormanage'"></ws-app-mentor-manage>
 
     <ws-app-grade-setting *ngIf="currentTab === 'grade_setting'"></ws-app-grade-setting>
+
     <ws-app-designations *ngIf="currentTab === 'designation_master'"
       [goToImportMaster]="goToImportMaster"></ws-app-designations>
 

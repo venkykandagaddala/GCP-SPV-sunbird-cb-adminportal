@@ -61,12 +61,13 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkRegistrationStatus(endDateRegistration: string): boolean {
-    if (!endDateRegistration) return true
+  checkRegistrationStatus(): boolean {
+    // if (!endDateRegistration) return true
 
-    const endDate = new Date(endDateRegistration)
-    const today = new Date()
-    return today <= endDate
+    // const endDate = new Date(endDateRegistration)
+    // const today = new Date()
+    // return today <= endDate
+    return true
   }
 
   closeNaveBar() {

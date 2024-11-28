@@ -93,5 +93,6 @@
 </ng-container>
 
 <ng-container *ngIf="isImportDesignation">
-  <ws-app-import-designation (closeComponent)="removeImportDesignationComp($event)"></ws-app-import-designation>
+  <ws-app-import-designation (closeComponent)="removeImportDesignationComp($event)"
+    [loader]="showLoader"></ws-app-import-designation>
 </ng-container>

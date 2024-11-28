@@ -71,10 +71,17 @@
             </div>
           </div>
         </ng-container>
-        <ng-container *ngIf="igotDesignationsList.length === 0">
+        <ng-container *ngIf="igotDesignationsList.length === 0 && !loader">
           <div class=" w-full flex justify-center items-center">
             <div class="my-8 mx-4">
               <p>No designations found</p>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="loader">
+          <div class=" w-full flex justify-center items-center">
+            <div class="my-8 mx-4">
+              <mat-spinner class="display-inline-block mb-5" [diameter]="50" [strokeWidth]="3"></mat-spinner>
             </div>
           </div>
         </ng-container>

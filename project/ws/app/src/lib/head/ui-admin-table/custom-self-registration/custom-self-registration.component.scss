@@ -97,6 +97,7 @@
     color: #1d8923;
     background: #1d892329;
   }
+
   &.in-active {
     color: #00000099;
     background: #00000029;
@@ -118,9 +119,11 @@
   white-space: normal;
 }
 
-// .mat-btn-outline.active-button {
-//   background: #1b4ca1 !important;
-//   span {
-//     color: #fff !important;
-//   }
-// }
+.center-position {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+
+}

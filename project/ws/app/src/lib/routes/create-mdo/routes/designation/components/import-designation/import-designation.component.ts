@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator'
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
@@ -21,6 +21,7 @@ import { ConformationPopupDesignationComponent } from '../../../../../home/compo
 })
 export class ImportDesignationComponent implements OnInit, OnDestroy {
   @Output() closeComponent: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Input() loader: boolean = false;
   environmentVal: any
   designationConfig: any
   frameworkConfig: any
@@ -56,10 +57,19 @@ export class ImportDesignationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.configSvc = this.activateRoute.snapshot.data['configService']
-    this.loadDesignations()
-    this.valueChangeSubscription()
-    this.getRoutesData()
+    // this.loadDesignations()
+    // this.valueChangeSubscription()
+    // this.getRoutesData()
 
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['loader'].currentValue === false) {
+      this.frameworkInfo = this.designationsService.frameWorkInfo
+      this.loadDesignations()
+      this.valueChangeSubscription()
+      this.getRoutesData()
+    }
   }
 
   getFrameWorkDetails() {
