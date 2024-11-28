@@ -16,6 +16,8 @@ const API_END_POINTS = {
   UPDATE_STATE_OR_MINISTRY: '/apis/proxies/v8/org/ext/v1/update',
   SEARCH_ORG: '/api/org/ext/v2/signup/search',
   UPDATE_ORGANIZATION: '/apis/proxies/v8/org/ext/v1/update',
+  UPLOAD_ORGANIZATION_LOGO: '/apis/proxies/v8/customselfregistration/upload/logo/gcpcontainer',
+
 }
 
 @Injectable({
@@ -122,5 +124,9 @@ export class CreateMDOService {
 
   updateOrganization(req: any): Observable<any> {
     return this.http.patch<any>(`${API_END_POINTS.UPDATE_ORGANIZATION}`, req)
+  }
+
+  uploadOrganizationLogo(payload: any) {
+    return this.http.post<any>(`${API_END_POINTS.UPLOAD_ORGANIZATION_LOGO}`, payload)
   }
 }

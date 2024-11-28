@@ -31,7 +31,7 @@ export class DesignationsComponent implements OnInit {
   designationsList: any = []
   filteredDesignationsList: any = []
   tableData!: ITableData
-  showLoader = false
+  showLoader = true
   actionMenuItem: {
     name: string,
     icon: string,
@@ -114,6 +114,9 @@ export class DesignationsComponent implements OnInit {
       } else {
         this.createFreamwork()
       }
+      if (this.goToImportMaster) {
+        this.isImportDesignation = true
+      }
 
     })
     // this.getFrameworkInfo('0140788510336040962_odcs')
@@ -152,9 +155,9 @@ export class DesignationsComponent implements OnInit {
           this.showCreateLoader = false
           this.frameworkDetails = _.get(res, 'result.framework')
           this.designationsService.setFrameWorkInfo(this.frameworkDetails)
-          if (this.goToImportMaster) {
-            this.isImportDesignation = true
-          }
+          // if (this.goToImportMaster) {
+          //   this.isImportDesignation = true
+          // }
           this.getOrganisations()
         },
         error: () => {

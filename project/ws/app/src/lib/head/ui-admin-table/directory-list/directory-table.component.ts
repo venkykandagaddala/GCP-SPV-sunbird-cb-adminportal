@@ -271,7 +271,7 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
     this.dialogRef.afterClosed().subscribe((result: any) => {
       if (result && result.hasOwnProperty('reviewImporting') && !result.reviewImporting) {
         this.customSelfRegistration = true
-        this.selfRegistrationData.title = 'Custom Self Registration_DAE'
+        this.selfRegistrationData.title = 'Custom Self Registration'
         this.selfRegistrationData.QRGenerated = false
         this.selfRegistrationData.openMode = 'edit'
         this.selfRegistrationData.orgId = row.id

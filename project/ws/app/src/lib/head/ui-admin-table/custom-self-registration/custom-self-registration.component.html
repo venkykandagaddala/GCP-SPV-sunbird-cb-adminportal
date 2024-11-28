@@ -7,7 +7,7 @@
           <mat-icon class="closeIcon" (click)="closeNaveBar()">close</mat-icon>
         </div>
 
-        <div class="px-5 pt-6 mb-24">
+        <div class="px-5 pt-6 mb-24 relative">
           <ng-container>
             <form [formGroup]="selfRegistrationForm">
               <!-- <div class="flex items-center justify-between ">
@@ -36,7 +36,7 @@
               </div> -->
 
               <ng-container *ngIf="!initialData.QRGenerated">
-                <div class="flex justify-center items-center flex-column gap-6">
+                <div class="flex justify-center items-center flex-column gap-6 center-position">
                   <!-- <button mat-flat-button class="mat-btn-flat" [disabled]="selfRegistrationForm.invalid || isLoading"
                     (click)="generateQRCodeLink()">Generate</button> -->
 
@@ -47,15 +47,15 @@
               </ng-container>
 
               <ng-container *ngIf="initialData.QRGenerated">
-                <div class="flex justify-center items-center mb-4">
+                <!-- <div class="flex justify-center items-center mb-4">
                   <button mat-stroked-button class="mat-btn-outline"
                     [disabled]="selfRegistrationForm.invalid || isLoading" (click)="generateQRCodeLink()">Publish New
                     Link </button>
-                </div>
-
+                </div> -->
+                <!--
                 <p class="text-xs note-text">Note: Publishing a new URL will automatically expire the old one. Please
                   use the new URL for custom
-                  user registrations.</p>
+                  user registrations.</p> -->
 
                 <div class="wrapper-card p-4 rounded-lg">
                   <div class="flex justify-between">
@@ -65,9 +65,8 @@
                         [href]="customRegistrationLinks.registrationLink"
                         target="_blank">{{customRegistrationLinks.registrationLink}}</a>
                     </div>
-                    <div class="badge"
-                      [ngClass]="checkRegistrationStatus(this.initialData.endDateRegistration) ? 'active':'in-active'">
-                      {{checkRegistrationStatus(this.initialData.endDateRegistration) ?
+                    <div class="badge " [ngClass]="checkRegistrationStatus() ? 'active':'in-active'">
+                      {{checkRegistrationStatus() ?
                       'Active': 'None'}}</div>
                   </div>
 
@@ -137,17 +136,11 @@
           </ng-container>
         </div>
 
-        <div class="right-sidenav-footer flex items-center justify-end gap-4 items-center px-5 pt-3 pb-5 bg-white">
-          <!-- <ng-container *ngIf="!initialData.QRGenerated">
-            <button mat-flat-button class="mat-btn-outline" (click)="closeNaveBar()">Cancel</button>
-            <button mat-flat-button class="mat-btn-flat" [disabled]="!initialData?.QRGenerated">{{initialData?.openMode
-              === 'edit' ? 'Update' : 'Add'}}</button>
-          </ng-container> -->
-          <ng-container *ngIf="initialData.QRGenerated">
+        <ng-container *ngIf="initialData.QRGenerated">
+          <div class="right-sidenav-footer flex items-center justify-end gap-4 items-center px-5 pt-3 pb-5 bg-white">
             <button mat-flat-button class="mat-btn-flat" (click)="closeNaveBar()">Close</button>
-          </ng-container>
-
-        </div>
+          </div>
+        </ng-container>
       </div>
     </div>
   </mat-sidenav-content>
