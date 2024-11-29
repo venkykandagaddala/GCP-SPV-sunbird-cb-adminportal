@@ -49,6 +49,7 @@ export class CreateEventComponent implements OnInit {
   participantsArr: any = []
   // presentersArr: any = []
   displayedColumns: string[] = ['fullname', 'email', 'type']
+  allowedCurrentDates: any = ['Karmayogi Talks', 'Karmayogi Saptah']
   @Input() tableData!: ITableData | undefined
   @Input() data?: []
   @Input() isUpload?: boolean
@@ -139,7 +140,7 @@ export class CreateEventComponent implements OnInit {
     private router: Router, private configSvc: ConfigurationsService, private changeDetectorRefs: ChangeDetectorRef,
     // tslint:disable-next-line:align
     private activeRoute: ActivatedRoute, private events: EventService, private profileUtilSvc: ProfileV2UtillService,
-              private pipePublic: PipePublicURL
+    private pipePublic: PipePublicURL
   ) {
 
     if (this.configSvc.userProfile) {
@@ -602,7 +603,7 @@ export class CreateEventComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(() => {
       setTimeout(() => {
         this.router.navigate([`/app/home/events`])
-      },         700)
+      }, 700)
     })
   }
 
