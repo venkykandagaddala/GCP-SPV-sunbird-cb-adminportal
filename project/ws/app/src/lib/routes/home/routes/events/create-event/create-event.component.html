@@ -232,7 +232,7 @@
                                         Date
                                     </label>
                                     <ng-container
-                                        *ngIf="createEventForm.get('eventType')?.value === 'Karmayogi Saptah'">
+                                        *ngIf="allowedCurrentDates?.includes(createEventForm.get('eventType')?.value)">
                                         <mat-form-field color="accent" appearance="outline">
                                             <input matInput [matDatepicker]="eventDate" formControlName="eventDate"
                                                 [min]="currentDate" [max]="maxDate" [(ngModel)]="todayDate"
@@ -255,7 +255,7 @@
                                         </mat-form-field>
                                     </ng-container>
                                     <ng-container
-                                        *ngIf="!(createEventForm.get('eventType')?.value === 'Karmayogi Saptah')">
+                                        *ngIf="!allowedCurrentDates?.includes(createEventForm.get('eventType')?.value)">
                                         <mat-form-field color="accent" appearance="outline">
                                             <input matInput [matDatepicker]="eventDate" formControlName="eventDate"
                                                 [max]="maxDate" [(ngModel)]="todayDate"
@@ -447,6 +447,11 @@
                 </form>
             </div>
         </div>
+    </div>
+    <div class="page_title_flex ">
+        <span class="required"></span>
+        <span class="flex font-bold mr-2    ">Note:</span>
+        <span class="flex bold">Event will be visible after 30 minutes in the learner portal.</span>
     </div>
 
     <div class="page_title_flex">
