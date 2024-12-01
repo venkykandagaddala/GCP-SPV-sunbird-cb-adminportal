@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core'
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import * as _ from 'lodash'
 import { CreateMDOService } from '../../../routes/home/services/create-mdo.services'
 import { ActivatedRoute } from '@angular/router'
 import { LoaderService } from '../../../routes/home/services/loader.service'
 import { IUploadedLogoresponse } from '../interface/interfaces'
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators'
+import { Subject } from 'rxjs'
 @Component({
   selector: 'ws-app-create-organisation',
   templateUrl: './create-organisation.component.html',
@@ -14,6 +16,7 @@ import { IUploadedLogoresponse } from '../interface/interfaces'
 export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
   @Input() rowData: any
+  @Input() orgList: any[] = []
   @Input() dropdownList: {
     statesList: any[],
     ministriesList: any[]
@@ -31,7 +34,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   selectedLogo: any
   selectedLogoName = ''
   validFileTypes = ['image/png', 'image/jpeg', 'image/jpg']
-  maxFileSize = 500  // In KB
+  maxFileSize = 5  // In MB
   loggedInUserId = ""
   isLoading = false
   filteredStates: any[] = []
@@ -39,6 +42,9 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   heirarchyObject: any
   selectedLogoFile: any
   uploadedLogoResponse!: IUploadedLogoresponse
+  organizationNameList: string[] = []
+
+  untilDestroyed$ = new Subject<void>();
   constructor(
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
@@ -56,14 +62,18 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
     if (this.openMode === 'editMode') {
       this.getOrganization(this.rowData.organisation, this.rowData.type.toLowerCase())
     }
+
+    this.organizationNameList = this.orgList.map(org => org.organisation.trim().toLowerCase())
   }
 
   ngOnDestroy(): void {
     this.removeOverflowHidden()
+
+    this.untilDestroyed$.next()
+    this.untilDestroyed$.complete()
   }
 
   initialization() {
-    console.log(this.rowData)
 
     if (this.dropdownList) {
       this.statesList = _.get(this.dropdownList, 'statesList', [])
@@ -83,6 +93,16 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
     this.selectedLogo = this.rowData?.logo
     this.valueChangeEvents()
+  }
+
+  createDuplicateOrgNameValidator(organizationNameList: string[]) {
+    return (control: AbstractControl) => {
+      if (!organizationNameList || !control.value) {
+        return null
+      }
+      const isDuplicate = organizationNameList.includes(control.value.trim().toLowerCase())
+      return isDuplicate ? { duplicateOrgName: true } : null
+    }
   }
 
   get controls() {
@@ -109,22 +129,37 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
   valueChangeEvents() {
     if (this.organisationForm && this.organisationForm.controls.category) {
-      this.organisationForm.controls.category.valueChanges.subscribe(val => {
-        if (val === 'state') {
-          this.organisationForm.controls.state.setValidators([Validators.required])
-          this.organisationForm.controls.state.updateValueAndValidity()
-          this.organisationForm.controls.ministry.setValue('')
-          this.organisationForm.controls.ministry.clearValidators()
-          this.organisationForm.controls.ministry.updateValueAndValidity()
-        } else if (val === 'ministry') {
-          this.organisationForm.controls.ministry.setValidators([Validators.required])
-          this.organisationForm.controls.ministry.updateValueAndValidity()
-          this.organisationForm.controls.state.setValue('')
-          this.organisationForm.controls.state.clearValidators()
-          this.organisationForm.controls.state.updateValueAndValidity()
+      this.organisationForm.controls.category.valueChanges
+        .pipe(takeUntil(this.untilDestroyed$)).subscribe(val => {
+          if (val === 'state') {
+            this.organisationForm.controls.state.setValidators([Validators.required])
+            this.organisationForm.controls.state.updateValueAndValidity()
+            this.organisationForm.controls.ministry.setValue('')
+            this.organisationForm.controls.ministry.clearValidators()
+            this.organisationForm.controls.ministry.updateValueAndValidity()
+          } else if (val === 'ministry') {
+            this.organisationForm.controls.ministry.setValidators([Validators.required])
+            this.organisationForm.controls.ministry.updateValueAndValidity()
+            this.organisationForm.controls.state.setValue('')
+            this.organisationForm.controls.state.clearValidators()
+            this.organisationForm.controls.state.updateValueAndValidity()
+          }
+        })
+    }
+
+
+    this.organisationForm.controls.organisationName.valueChanges
+      .pipe(takeUntil(this.untilDestroyed$), debounceTime(500), distinctUntilChanged())
+      .subscribe((value) => {
+        console.log('Organisation Name Changed:', value)
+        const control = this.organisationForm.controls.organisationName
+        const error = this.createDuplicateOrgNameValidator(this.organizationNameList)(control)
+        if (error) {
+          control.setErrors(error)
+        } else {
+          control.setErrors(null)
         }
       })
-    }
   }
 
   get getCategory() {
@@ -216,7 +251,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
     if (input.files?.length) {
       this.selectedLogoFile = input.files[0]
       this.selectedLogoName = this.selectedLogoFile.name
-      const maxFileSize = this.maxFileSize * 1024
+      const maxFileSize = this.maxFileSize * 1024 * 1024
 
       if (!this.validFileTypes.includes(this.selectedLogoFile.type)) {
         this.snackBar.open('Invalid file type', 'X', { panelClass: ['error'] })
@@ -224,7 +259,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
       }
 
       if (this.selectedLogoFile.size > maxFileSize) {
-        this.snackBar.open(`File size exceeds ${this.maxFileSize} KB. Please select a smaller file.`, 'X', { panelClass: ['error'] })
+        this.snackBar.open(`File size exceeds ${this.maxFileSize} MB. Please select a smaller file.`, 'X', { panelClass: ['error'] })
         return
       }
       this.uploadOrganizationLogo()

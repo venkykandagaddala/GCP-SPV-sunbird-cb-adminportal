@@ -2,7 +2,8 @@
     <div class="left-overlay" *ngIf="openCreateNavBar || customSelfRegistration"></div>
     <ng-container *ngIf="openCreateNavBar">
         <ws-app-create-organisation [openMode]="openMode" [dropdownList]="dropdownList" [rowData]="rowData"
-            (buttonClick)="buttonClickAction($event)" (organizationCreated)="organizationCreatedEmit($event)">
+            [orgList]="this.dataSource.data" (buttonClick)="buttonClickAction($event)"
+            (organizationCreated)="organizationCreatedEmit($event)">
         </ws-app-create-organisation>
     </ng-container>
     <ng-container *ngIf="customSelfRegistration">

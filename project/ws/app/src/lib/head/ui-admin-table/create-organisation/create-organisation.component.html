@@ -36,16 +36,21 @@
           </ng-container>
           <ng-container *ngIf="openMode !== 'viewMode'; else viewMode">
             <form [formGroup]="organisationForm" class="mb-20">
-              <div class="flex flex-column gap-1 organisation-form mat-field-rounded">
-                <div class="flex items-center gap-1 required">
-                  <span class="lable">Organisation Name</span>
+              <ng-container *ngIf="this.openMode !== 'editMode'">
+                <div class="flex flex-column gap-1 organisation-form mat-field-rounded">
+                  <div class="flex items-center gap-1 required">
+                    <span class="lable">Organisation Name</span>
+                  </div>
+                  <mat-form-field class="w-full">
+                    <input formControlName="organisationName" matInput placeholder="Add organisation name here">
+                    <mat-error *ngIf="controls['organisationName'].errors?.['required']">Organization name is
+                      required.</mat-error>
+                    <mat-error *ngIf="controls['organisationName'].errors?.['duplicateOrgName']">This organization name
+                      is already in use.</mat-error>
+                  </mat-form-field>
                 </div>
-                <mat-form-field class="w-full">
-                  <input formControlName="organisationName" matInput placeholder="Add organisation name here">
-                  <mat-error *ngIf="controls['organisationName'].errors?.['required']">Organization name is
-                    required.</mat-error>
-                </mat-form-field>
-              </div>
+
+              </ng-container>
 
               <ng-container *ngIf="this.openMode !== 'editMode'">
                 <mat-radio-group aria-labelledby="example-radio-group-label" class="flex gap-12 organisation-form"
