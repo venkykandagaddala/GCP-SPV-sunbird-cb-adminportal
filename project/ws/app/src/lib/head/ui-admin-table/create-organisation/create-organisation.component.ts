@@ -150,8 +150,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
     this.organisationForm.controls.organisationName.valueChanges
       .pipe(takeUntil(this.untilDestroyed$), debounceTime(500), distinctUntilChanged())
-      .subscribe((value) => {
-        console.log('Organisation Name Changed:', value)
+      .subscribe((_value) => {
         const control = this.organisationForm.controls.organisationName
         const error = this.createDuplicateOrgNameValidator(this.organizationNameList)(control)
         if (error) {
