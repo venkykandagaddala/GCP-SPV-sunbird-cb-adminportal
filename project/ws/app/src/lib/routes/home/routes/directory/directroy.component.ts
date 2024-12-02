@@ -141,7 +141,8 @@ export class DirectoryViewComponent implements OnInit {
         roleId: role.data.id,
         depatName: role.data.channel,
         orgName: role.data.mdo || role.data.organisation,
-        tab: role.type
+        tab: role.type,
+        subOrgType: role.data.type
       }
     })
   }
