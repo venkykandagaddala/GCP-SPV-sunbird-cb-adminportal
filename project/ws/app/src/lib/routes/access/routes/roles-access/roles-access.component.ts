@@ -31,11 +31,14 @@ export class RolesAccessComponent implements OnInit, AfterViewInit {
     this.activatedRoute.queryParams.subscribe(params => {
       this.deparmentId = params['roleId']
       this.deparmentName = params['depatName']
-      this.currentDept = params['currentDept']
+      // this.currentDept = params['currentDept']
+      this.currentDept = params['subOrgType']
     })
     if (this.currentDept === 'CBP Providers' || this.currentDept === 'cbp-providers') {
       this.currentDept = 'CBP'
     }
+    else if (this.currentDept.toLowerCase() === 'ministry') this.currentDept = 'mdo'
+    else if (this.currentDept.toLowerCase() === 'state') this.currentDept = 'state'
 
   }
 
@@ -139,8 +142,8 @@ export class RolesAccessComponent implements OnInit, AfterViewInit {
     this.usersService.getAllKongUsers(this.deparmentId).subscribe(data => {
       if (data.result.response.content.length > 0) {
         this.userWholeData = data.result.response.content || []
-        this.fetchRoles()
       }
+      this.fetchRoles()
     })
   }
 

@@ -76,7 +76,8 @@ export class CreateUserComponent implements OnInit {
       this.queryParam = params['id']
       this.deptId = params['id']
       this.orgName = params['orgName']
-      this.currentDept = params['currentDept']
+      // this.currentDept = params['currentDept']
+      this.currentDept = params['subOrgType']
       this.redirectionPath = params['redirectionPath']
       if (this.currentDept === 'CBP Providers' || this.currentDept === 'cbp-providers') {
         this.currentDept = 'CBP'
@@ -330,11 +331,11 @@ export class CreateUserComponent implements OnInit {
           this.disableCreateButton = false
           if (err.error.params.errmsg) {
             // this.openSnackbar(`${err.error.params.errmsg}`)
-            if (err.error.params.errmsg === 'phone already exists') {
-              this.openSnackbar('Phone number already exists')
-            } else if (err.error.params.errmsg === 'email already exists') {
+            if (err.error.params.errmsg.toLowerCase() === 'this phone is already registered with an existing user') {
+              this.openSnackbar('This Phone is already registered with an existing User')
+            } else if (err.error.params.errmsg.toLowerCase() === 'email already exists') {
               this.openSnackbar('Email Id already exists')
-            } else if (err.error.params.errmsg === 'Invalid format for given phone.') {
+            } else if (err.error.params.errmsg.toLowerCase() === 'Invalid format for given phone.') {
               this.openSnackbar('Please enter valid phone number')
             } else {
               this.openSnackbar('User creation error')
@@ -365,7 +366,15 @@ export class CreateUserComponent implements OnInit {
 
   navigateTo() {
     if (this.createdDepartment) {
-      this.router.navigate([`/app/roles/${this.deptId}/users`], { queryParams: { currentDept: this.currentDept, roleId: this.deptId, depatName: this.createdDepartment.depName } })
+      this.router.navigate([`/app/roles/${this.deptId}/users`],
+        {
+          queryParams:
+          {
+            currentDept: this.currentDept === 'mdo' || 'state' ? 'organisation' : this.currentDept,
+            roleId: this.deptId,
+            depatName: this.createdDepartment.depName
+          }
+        })
 
     } else {
       this.router.navigate([`/app/home/users`])

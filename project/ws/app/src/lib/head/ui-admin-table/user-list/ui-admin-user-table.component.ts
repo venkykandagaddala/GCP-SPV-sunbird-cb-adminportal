@@ -61,6 +61,7 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
   isReports = false
   reportsPath: any
   orgName!: string
+  subOrgType: string = ''
   constructor(
     private router: Router, public dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
@@ -93,6 +94,8 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
       this.orgName = params['orgName']
       this.departmentId = params['roleId']
       this.reportsPath = params['path']
+      this.subOrgType = params['subOrgType']
+
       if (this.needCreateUser !== false && (this.departmentRole && this.departmentRole !== 'ministry') && this.departmentId) {
         this.needAddAdmin = true
         this.needCreateUser = true
@@ -258,6 +261,8 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
           createDept: JSON.stringify(this.otherInput),
           orgName: this.orgName,
           redirectionPath: window.location.href,
+          subOrgType: this.subOrgType && this.subOrgType.toLowerCase() === 'ministry' ? 'mdo' : 'state'
+
         },
       })
   }

@@ -33,6 +33,7 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   private defaultSideNavBarOpenedSubscription: any
   @ViewChild('stickyMenu', { static: true }) menuElement!: ElementRef
   goToImportMaster = false
+  subOrgType: any
   @HostListener('window:scroll', ['$event'])
   handleScroll() {
     const windowScroll = window.pageYOffset
@@ -90,7 +91,8 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
       this.id = params['roleId']
       this.currentDept = params['currentDept']
       this.deptName = params['depatName']
-      this.currentTab = params['tab']
+      this.currentTab = params['tab'] || 'users'
+      this.subOrgType = params['subOrgType']
 
       if (this.currentTab.split('/').length > 1 && this.currentTab.split('/')[1] === 'import-designation') {
         this.currentTab = 'designation_master'
@@ -274,6 +276,7 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
         createDept: JSON.stringify({ depName: this.deptName }),
         orgName: this.deptName,
         redirectionPath: window.location.href,
+        subOrgType: this.subOrgType && this.subOrgType.toLowerCase() === 'ministry' ? 'mdo' : 'state'
       }, state: { userData: event.row, updateButton: true },
     })
   }
