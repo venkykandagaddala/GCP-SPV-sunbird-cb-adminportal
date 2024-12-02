@@ -45,7 +45,7 @@
       </div>
       <ng-container>
         <ws-widget-directory-table [selectedDepartment]='currentDepartment' [tableData]='tabledata' [data]='data'
-          [needCreate]="currentFilter == 'mdo'? false : true" (eOnRowClick)="onRoleClick($event)"
+          [needCreate]="currentFilter === 'mdo'? false : true" (eOnRowClick)="onRoleClick($event)"
           (actionsClick)="actionClick($event)" (searchByEnterKey)="onEnterkySearch($event)">
         </ws-widget-directory-table>
       </ng-container>
