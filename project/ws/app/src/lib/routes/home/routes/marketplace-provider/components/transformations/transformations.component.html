@@ -30,11 +30,15 @@
     <ng-template #fileUploaded>
       <div class="flex flex-col file-upload-box justify-center gap-4 file-uploaded-box"
         [ngClass]="{'margin-r10': transformationType === 'trasformCertificateUrl'}">
-        <mat-icon class="removeFile" matTooltip="Remove File" (click)="removeFile()">close</mat-icon>
+        <mat-icon
+          *ngIf="!(transformationType === 'trasformCertificateUrl' && providerDetalsBeforUpdate['trasformCertificateUrl'])"
+          class="removeFile" matTooltip="Remove File" (click)="removeFile()">close</mat-icon>
         <div class="flex items-center justify-center">
           <img src="/assets/icons/samplePdf.svg" alt="file" class="samplePdf">
           <div class="flex flex-column gap-4 pdfDetails">
-            <span class="pdfName">{{fileName}}</span>
+            <ng-container *ngIf="fileName">
+              <span class="pdfName">{{fileName}}</span>
+            </ng-container>
             <span class="documentAttached flex items-center">
               <mat-icon class="greenTick">check_circle</mat-icon>
               File attached
@@ -58,7 +62,8 @@
               <div class="flex gap-4 items-center">
                 <span class="lable">{{transFormControl.lable}}</span>
                 <span class="colun">:</span>
-                <mat-form-field appearance="outline" class="w-full">
+                <mat-form-field appearance="outline" class="w-full"
+                  [matTooltip]="availableHeadrsList.length ? null : 'Please upload file'">
                   <mat-select formControlName="{{transFormControl.controlName}}" (selectionChange)="onSelectChange()"
                     [placeholder]=transFormControl.lable>
                     <ng-container *ngFor="let header of availableHeadrsList">
@@ -75,19 +80,20 @@
                 </mat-form-field>
               </div>
             </ng-container>
-
-            <div class="flex w-full justify-end mt-4">
-              <button mat-button class="save-properties" (click)="upDateTransforamtionDetails()">
-                {{getUpdateBtnText}}</button>
-            </div>
           </div>
         </form>
+        <div class="flex w-full justify-end mt-4">
+          <button mat-button class="save-properties" (click)="upDateTransforamtionDetails()">
+            {{getUpdateBtnText}}</button>
+        </div>
       </div>
     </div>
   </ng-container>
 </div>
-
-<div class="flex w-full justify-center mt-8">
-  <button mat-button class="save-properties" (click)="uploadFile()">
-    Execute</button>
-</div>
+<ng-container
+  *ngIf="!(transformationType === 'trasformCertificateUrl' && providerDetalsBeforUpdate['trasformCertificateUrl'])">
+  <div class="flex w-full justify-center mt-8">
+    <button mat-button class="save-properties" (click)="uploadFile()">
+      Execute</button>
+  </div>
+</ng-container>

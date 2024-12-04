@@ -74,6 +74,10 @@ describe('MentorManageComponent', () => {
     jest.clearAllMocks()
   })
 
+  it('should create a instance of component', () => {
+    expect(component).toBeTruthy()
+  })
+
   describe('ngOnInit', () => {
     it('should set currentFilter based on route params', () => {
       // act

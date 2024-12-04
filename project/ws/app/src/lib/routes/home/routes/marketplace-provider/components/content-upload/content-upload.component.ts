@@ -5,7 +5,6 @@ import * as _ from 'lodash'
 import { DatePipe } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 
 @Component({
   selector: 'ws-app-content-upload',
@@ -63,8 +62,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   unPublishedCoursesTablePaginationDetails: any
 
   uploadMode = 'viaCsv'
-  viaApiFormGroup!: FormGroup
-  apiTypesList: any[] = []
 
   defaultPagination = {
     startIndex: 0,
@@ -80,7 +77,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   //#region (constructor: contains Intialization of TransforamtionControls from routes data)
   constructor(
     private marketPlaceSvc: MarketplaceService,
-    private formBuilder: FormBuilder,
     private datePipe: DatePipe,
     private snackBar: MatSnackBar
   ) {
@@ -156,28 +152,9 @@ export class ContentUploadComponent implements OnInit, OnChanges {
 
   //#region (ng Onint: contains Initialing api calls to get all 3 tables data)
   ngOnInit() {
-    this.initializeViaApi()
     if (this.providerDetails.trasformContentJson) {
       this.getTablesData()
     }
-  }
-
-  initializeViaApi() {
-    this.viaApiFormGroup = this.formBuilder.group({
-      apiType: new FormControl('', [Validators.required]),
-      apiUrl: new FormControl('', Validators.required)
-    })
-
-    this.apiTypesList = [
-      {
-        type: 'Get',
-        value: 'get'
-      },
-      {
-        type: 'Post',
-        value: 'post'
-      },
-    ]
   }
 
   //#region (get data for tables)

@@ -21,14 +21,6 @@
 .content-upload {
   padding: 20px;
 
-  .info-icon {
-    width: 14px;
-    height: 14px;
-    font-size: 14px;
-    color: #a1a7ab;
-    margin-top: 5px;
-  }
-
   .sub-header {
     color: #000000DE;
     /* stylelint-enable */
@@ -78,79 +70,9 @@
 }
 
 .viaApi {
-
-  .linkLable {
-    /* stylelint-disable */
-    font: 700 14px 'Lato';
-    /* stylelint-enable */
-    color: #212529;
-  }
-
-  .info-icon {
-    font-size: 14px;
-    color: #00000099;
-    width: 14px;
-    height: 14px;
-    margin: 0px 3px;
-  }
-
-  .fetchData {
-    width: 130px;
-    height: 48px;
-    background-color: #1B4CA1;
-    border-radius: 25px;
-    color: #FFFFFF;
-    /* stylelint-disable */
-    font: 700 14px 'Lato';
-    /* stylelint-enable */
-  }
-
-  .apiTypeSelect {
-    width: 100px;
-  }
-
-}
-
-:host ::ng-deep .viaApi {
-   .mat-form-field-flex {
-    height: 50px;
-    align-items: center;
-  }
-
-  .mat-form-field-wrapper {
-    padding: 0px !important;
-  }
-
-  .mat-form-field-infix {
-      border-top: 9px solid transparent !important;
-      padding-left: 5px !important;
-    }
-
-  .apiTypeSelect {
-    .mat-form-field-appearance-outline .mat-form-field-outline-end {
-      border-radius: 25px 0px 0px 25px !important;
-      border-left-style: solid;
-    }
-
-    .mat-form-field-appearance-outline .mat-form-field-outline-start {
-      display: none;
-    }
-
-    .mat-form-field-infix {
-      border-top: 9px solid transparent !important;
-      padding-left: 5px !important;
-    }
-  }
-
-  .apiUrl{
-    .mat-form-field-appearance-outline .mat-form-field-outline-start {
-      border-radius: 0px;
-    }
-
-    .mat-form-field-appearance-outline .mat-form-field-outline-end {
-      border-radius: 0 25px 25px 0;
-    }
-  }
-
+  border: 1px solid #0000001f;
+  padding: 20px 20px 40px;
+  border-radius: 5px;
+  margin-bottom: 10px;
 }
 

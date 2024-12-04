@@ -1,1 +1,41 @@
-<p>via-api works!</p>
+<div class="viaApi">
+  <div>
+    <div class="linkLable required flex items-center">
+      Link
+      <mat-icon class="info-icon">info_outline</mat-icon>
+    </div>
+
+    <div class="flex gap-4">
+      <form [formGroup]="viaApiFormGroup" class="flex w-full gap-0 viaApi">
+        <div class="apiTypeSelect">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-select class="event-select" formControlName="apiType" placeholder="Select">
+              <ng-container *ngFor="let type of apiTypesList">
+                <mat-option [value]="type.value">{{type.type}}</mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="apiUrl w-full">
+          <mat-form-field appearance="outline" class="w-full">
+            <input type="text" matInput formControlName="apiUrl" placeholder="API Url">
+          </mat-form-field>
+        </div>
+      </form>
+      <button mat-button class="fetchData" (click)="fetchData()">Fetch Data</button>
+    </div>
+    <div class="vai-api-tabs mt-1">
+      <mat-tab-group>
+        <mat-tab label="Authorization">
+          <ws-app-via-api-params-table [tableListFormGroup]="authorizationFormGroup"></ws-app-via-api-params-table>
+        </mat-tab>
+        <mat-tab label="Headers">
+          <ws-app-via-api-params-table [tableListFormGroup]="headersFormGroup"></ws-app-via-api-params-table>
+        </mat-tab>
+        <mat-tab label="Body">
+          <ws-app-via-api-params-table [tableListFormGroup]="bodyFormGroup"></ws-app-via-api-params-table>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

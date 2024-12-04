@@ -20,10 +20,6 @@ export class ConfigureMarketplaceProvidersComponent implements OnInit {
     ],
   }
   routerParams: any
-  tabIdsList = [
-    'provider',
-    'contentUpload',
-  ]
   selectedIndex = 0
   providerDetails: any
   disableCourseCatalog = true
@@ -46,13 +42,6 @@ export class ConfigureMarketplaceProvidersComponent implements OnInit {
         this.providerDetails = data.providerDetails.data.result
       }
     })
-  }
-
-  setCurrentTab(tab: any) {
-    const tabIndex = this.tabIdsList.findIndex(tabId => tabId === tab)
-    if (tabIndex >= 0) {
-      this.selectedIndex = tabIndex
-    }
   }
 
   getProviderDetails(event: any) {
