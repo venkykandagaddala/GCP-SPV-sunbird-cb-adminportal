@@ -6,7 +6,7 @@ import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-pag
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { MatSort } from '@angular/material/sort'
 import { ITableData } from '../interfaces/interfaces'
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
+import { MatDialog } from '@angular/material/dialog'
 import { ParticipantsComponent } from '../participants/participants.component'
 import { SuccessComponent } from '../success/success.component'
 import { Router, ActivatedRoute } from '@angular/router'
@@ -139,7 +139,7 @@ export class CreateEventComponent implements OnInit {
     private router: Router, private configSvc: ConfigurationsService, private changeDetectorRefs: ChangeDetectorRef,
     // tslint:disable-next-line:align
     private activeRoute: ActivatedRoute, private events: EventService, private profileUtilSvc: ProfileV2UtillService,
-              private pipePublic: PipePublicURL
+    private pipePublic: PipePublicURL
   ) {
 
     if (this.configSvc.userProfile) {
@@ -602,7 +602,7 @@ export class CreateEventComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(() => {
       setTimeout(() => {
         this.router.navigate([`/app/home/events`])
-      },         700)
+      }, 700)
     })
   }
 
