@@ -10,7 +10,7 @@
         <div class="px-5 pt-6 mb-24 relative">
           <ng-container>
             <form [formGroup]="selfRegistrationForm">
-              <!-- <div class="flex items-center justify-between ">
+              <div class="flex items-center justify-between ">
                 <div class="flex flex-column gap-1 w-full formfield-rounded-full max-w-240">
                   <div class="flex items-center gap-1 required">
                     <span class="lable">Start Date</span>
@@ -33,27 +33,27 @@
                     <mat-datepicker #endDate></mat-datepicker>
                   </mat-form-field>
                 </div>
-              </div> -->
+              </div>
 
               <ng-container *ngIf="!initialData.QRGenerated">
-                <div class="flex justify-center items-center flex-column gap-6 center-position">
-                  <!-- <button mat-flat-button class="mat-btn-flat" [disabled]="selfRegistrationForm.invalid || isLoading"
-                    (click)="generateQRCodeLink()">Generate</button> -->
+                <div class="flex justify-center items-center flex-column gap-6 mb-3">
+                  <button mat-flat-button class="mat-btn-flat" [disabled]="selfRegistrationForm.invalid"
+                    (click)="generateQRCodeLink()">Generate</button>
 
-                  <div class="mx-auto">
+                  <!-- <div class="mx-auto">
                     <mat-spinner [diameter]="30" [strokeWidth]="3"></mat-spinner>
-                  </div>
+                  </div> -->
                 </div>
               </ng-container>
 
               <ng-container *ngIf="initialData.QRGenerated">
-                <!-- <div class="flex justify-center items-center mb-4">
-                  <button mat-stroked-button class="mat-btn-outline"
-                    [disabled]="selfRegistrationForm.invalid || isLoading" (click)="generateQRCodeLink()">Publish New
+                <div class="flex justify-center items-center mb-4">
+                  <button mat-stroked-button class="mat-btn-outline" [disabled]="selfRegistrationForm.invalid"
+                    (click)="generateQRCodeLink()">Publish New
                     Link </button>
-                </div> -->
-                <!--
-                <p class="text-xs note-text">Note: Publishing a new URL will automatically expire the old one. Please
+                </div>
+
+                <!-- <p class="text-xs note-text">Note: Publishing a new URL will automatically expire the old one. Please
                   use the new URL for custom
                   user registrations.</p> -->
 
@@ -65,26 +65,24 @@
                         [href]="customRegistrationLinks.registrationLink"
                         target="_blank">{{customRegistrationLinks.registrationLink}}</a>
                     </div>
-                    <div class="badge " [ngClass]="checkRegistrationStatus() ? 'active':'in-active'">
-                      {{checkRegistrationStatus() ?
+                    <div class="badge "
+                      [ngClass]="latestRegisteredData.status && latestRegisteredData.status === 'active' ? 'active':'in-active'">
+                      {{latestRegisteredData.status && latestRegisteredData.status === 'active' ?
                       'Active': 'None'}}</div>
                   </div>
 
                   <div class="actions-buttons flex gap-4 items-center justify-center mt-4">
-                    <button mat-flat-button class="mat-btn-flat"
-                      [ngClass]="{'button-active': selectedButton === 'copyLink'}"
-                      (click)="copyLinkToClipboard(customRegistrationLinks.registrationLink);selectedButtonCode('copyLink')">Copy
+                    <button mat-flat-button class="mat-btn-outline"
+                      (click)="copyLinkToClipboard(customRegistrationLinks.registrationLink)">Copy
                       Link</button>
-                    <button mat-stroked-button class="mat-btn-outline"
-                      [ngClass]="{'button-active': selectedButton === 'shareViaMail'}"
-                      (click)="sendViaEmail(customRegistrationLinks.registrationLink);selectedButtonCode('shareViaMail')">
+                    <button mat-flat-button class="mat-btn-outline"
+                      (click)="sendViaEmail(customRegistrationLinks.registrationLink)">
                       <mat-icon class="mr-2"> email</mat-icon>
                       <span>Share on Mail</span>
                     </button>
 
-                    <button mat-stroked-button class="mat-btn-outline"
-                      [ngClass]="{'button-active': selectedButton === 'shareViaWhatsapp'}"
-                      (click)="sendViaWhatsApp(customRegistrationLinks.registrationLink);selectedButtonCode('shareViaWhatsapp')">
+                    <button mat-flat-button class="mat-btn-outline"
+                      (click)="sendViaWhatsApp(customRegistrationLinks.registrationLink)">
                       <img src="/assets/icons/whatsapp.svg" alt="icon" class="mr-2" width="24" height="24">
                       <span>Share on Whats app</span>
                     </button>
@@ -94,23 +92,21 @@
                 <div class="wrapper-card py-4 px-12 rounded-lg mt-4">
                   <div class="flex justify-between">
                     <div class="qr-scanner-cont">
-                      <img [src]="customRegistrationLinks.qrRegistrationLink" alt="qr-scanner" width="180" height="180">
+                      <img [src]="customRegistrationLinks?.qrRegistrationLink" alt="qr-scanner" width="180"
+                        height="180">
                     </div>
                     <div class="flex flex-column items-center justify-center gap-2">
-                      <button mat-flat-button class="mat-btn-flat"
-                        [ngClass]="{'button-active': selectedButton === 'downloadQR'}"
-                        (click)="downloadQRCode(customRegistrationLinks.qrRegistrationLink);selectedButtonCode('downloadQR')">Download
+                      <button mat-flat-button class="mat-btn-outline"
+                        (click)="downloadQRCode(customRegistrationLinks.qrRegistrationLink)">Download
                         QR</button>
-                      <button mat-stroked-button class="mat-btn-outline"
-                        (click)="sendViaEmail(customRegistrationLinks.qrRegistrationLink);selectedButtonCode('shareViaMailQR')"
-                        [ngClass]=" {'button-active': selectedButton==='shareViaMailQR' }">
+                      <button mat-flat-button class="mat-btn-outline"
+                        (click)="sendViaEmail(customRegistrationLinks.qrRegistrationLink)">
                         <mat-icon class="mr-2"> email</mat-icon>
                         <span>Share on Mail</span>
                       </button>
 
-                      <button mat-stroked-button class="mat-btn-outline"
-                        (click)="sendViaWhatsApp(customRegistrationLinks.qrRegistrationLink);selectedButtonCode('shareViaWhatsappQR')"
-                        [ngClass]=" {'button-active': selectedButton==='shareViaWhatsappQR' }">
+                      <button mat-flat-button class="mat-btn-outline"
+                        (click)="sendViaWhatsApp(customRegistrationLinks.qrRegistrationLink)">
                         <img src="/assets/icons/whatsapp.svg" alt="icon" class="mr-2" width="24" height="24">
                         <span>Share on Whats app</span>
                       </button>
@@ -119,9 +115,10 @@
                 </div>
 
                 <div class="wrapper-card p-4 rounded-lg mt-4">
-                  <div class="flex gap-4">
+                  <div class="flex gap-4 items-center">
                     <img src="/assets/icons/users.svg" alt="users" width="32" height="32">
-                    <span class="text-sm">Number of Users Onboarded: <strong class="ml-1">2,231</strong></span>
+                    <span class="text-sm">Number of Users Onboarded: <strong
+                        class="ml-1">{{numberOfUsersOnboarded}}</strong></span>
                   </div>
                 </div>
               </ng-container>

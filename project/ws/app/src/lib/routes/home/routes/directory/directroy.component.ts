@@ -93,7 +93,7 @@ export class DirectoryViewComponent implements OnInit {
         columns: [
           { displayName: 'Organisation', key: 'organisation' },
           { displayName: 'Type', key: 'type' },
-          // { displayName: 'Created By', key: 'createdBy' },
+          { displayName: 'State/Center', key: 'stateOrMinistry' },
           { displayName: 'Created On', key: 'createdOn' },
         ],
         actions: [{ name: '', label: '', icon: 'remove_red_eye', type: 'menu' }],
@@ -306,6 +306,7 @@ export class DirectoryViewComponent implements OnInit {
               registrationLink: element?.registrationLink || null,
               startDateRegistration: element?.startDateRegistration || null,
               endDateRegistration: element?.endDateRegistration || null,
+              stateOrMinistry: element?.ministryOrStateName
 
             }
             filteredData2.push(obj)
@@ -330,6 +331,7 @@ export class DirectoryViewComponent implements OnInit {
           registrationLink: dept.registrationLink,
           startDateRegistration: dept.startDateRegistration,
           endDateRegistration: dept.endDateRegistration,
+          stateOrMinistry: dept.stateOrMinistry,
 
         }
       })

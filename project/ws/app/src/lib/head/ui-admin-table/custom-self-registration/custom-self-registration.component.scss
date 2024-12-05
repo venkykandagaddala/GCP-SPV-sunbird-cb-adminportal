@@ -127,3 +127,17 @@
   bottom: 0;
 
 }
+
+:host ::ng-deep button.mat-focus-indicator.mat-btn-outline.mat-flat-button.mat-button-base:hover {
+  background-color: #1b4ca1 !important;
+  color: #fff !important;
+
+  mat-icon,
+  span {
+    color: #fff !important;
+  }
+
+  img {
+    filter: brightness(0) invert(1);
+  }
+}

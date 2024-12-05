@@ -26,7 +26,7 @@ export interface ITableData {
   actionColumnName?: string,
 }
 
-export interface CustomRegistrationQRCodeResponse {
+export interface ICustomRegistrationQRCodeResponse {
   registrationLink: string,
   qrRegistrationLink: string
 }
@@ -35,4 +35,17 @@ export interface IUploadedLogoresponse {
   name: string
   url: string
   qrcodepath: string
+}
+
+export interface IRegisteredLinksList {
+  orgId: string
+  id: string
+  status: string
+  url: string
+  startDate: string
+  endDate: string
+  createdBy: string
+  createdDateTime: string
+  numberOfUsersOnboarded: number
+  qrCodeImagePath: string
 }

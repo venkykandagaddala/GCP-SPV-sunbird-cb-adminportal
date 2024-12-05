@@ -184,8 +184,14 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
       logo: this.uploadedLogoResponse?.qrcodepath || "",
       description: this.controls['description'].value,
-      parentMapId: this.heirarchyObject?.parentMapId || "",
+      parentMapId: "",
       sbRootOrgId: this.heirarchyObject?.sbRootOrgId || "",
+    }
+    if (this.controls['category'].value === 'state') {
+      payload.parentMapId = this.controls['state'].value.mapId
+    } else {
+      payload.parentMapId = this.controls['ministry'].value.mapId
+
     }
 
     if (this.openMode === 'editMode') {
@@ -200,6 +206,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
     this.isLoading = true
     this.createMDOService.createOrganization(payload).subscribe({
       next: (response: any) => {
+        debugger
         if (response.result) {
           this.organizationCreated.emit(payload)
           this.snackBar.open('Organization successfully created.', 'X', { panelClass: ['success'] })
