@@ -184,8 +184,14 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
       logo: this.uploadedLogoResponse?.qrcodepath || "",
       description: this.controls['description'].value,
-      parentMapId: this.heirarchyObject?.parentMapId || "",
+      parentMapId: "",
       sbRootOrgId: this.heirarchyObject?.sbRootOrgId || "",
+    }
+    if (this.controls['category'].value === 'state') {
+      payload.parentMapId = this.controls['state'].value.mapId
+    } else {
+      payload.parentMapId = this.controls['ministry'].value.mapId
+
     }
 
     if (this.openMode === 'editMode') {
