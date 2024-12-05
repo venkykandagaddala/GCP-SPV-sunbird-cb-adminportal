@@ -176,8 +176,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
     const payload = {
       orgName: this.controls['organisationName'].value,
       channel: this.controls['organisationName'].value,
-      organisationType: this.heirarchyObject?.sbOrgType || "",
-      // organisationSubType: this.heirarchyObject?.sbOrgSubType || "",
+      organisationType: "mdo",
       organisationSubType: "board",
       isTenant: true,
       requestedBy: this.loggedInUserId,
