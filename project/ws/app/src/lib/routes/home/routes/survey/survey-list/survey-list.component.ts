@@ -11,7 +11,7 @@ import * as _ from 'lodash'
 import { ITableData, IColums, IAction } from './../interfaces/interfaces'
 // Router
 import { ActivatedRoute } from '@angular/router'
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog'
+import { MAT_DIALOG_DATA } from '@angular/material/dialog'
 // import { EventService } from '@sunbird-cb/utils'
 import { NsContent } from '@sunbird-cb/collection'
 // import * as moment from 'moment'
