@@ -160,9 +160,10 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
   downloadQRCode(QRLink: string) {
     // fileSaver.saveAs(QRLink, 'QRcode.jpg')
     fetch(QRLink, {
+      method: 'GET',
       headers: {
         "Content-Type": "image/jpeg",
-        "Content- Disposition": "attachment"
+        "Content-Disposition": "attachment"
       },
     })
       .then(response => {

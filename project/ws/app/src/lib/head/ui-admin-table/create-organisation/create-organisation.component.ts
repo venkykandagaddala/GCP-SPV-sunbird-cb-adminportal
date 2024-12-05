@@ -206,7 +206,6 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
     this.isLoading = true
     this.createMDOService.createOrganization(payload).subscribe({
       next: (response: any) => {
-        debugger
         if (response.result) {
           this.organizationCreated.emit(payload)
           this.snackBar.open('Organization successfully created.', 'X', { panelClass: ['success'] })
