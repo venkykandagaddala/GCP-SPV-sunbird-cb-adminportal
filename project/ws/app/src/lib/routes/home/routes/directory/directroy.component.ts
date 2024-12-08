@@ -292,7 +292,7 @@ export class DirectoryViewComponent implements OnInit {
             const obj = {
               id: element.id,
               currentDepartment: department,
-              type: element.isState ? 'State' : 'Ministry',
+              type: element.ministryOrStateType ? element.ministryOrStateType.charAt(0).toUpperCase() + element.ministryOrStateType.slice(1) : '',
               user: element.noOfMembers || 0,
               head: department,
               typeid: element.organisationSubType,
@@ -358,7 +358,11 @@ export class DirectoryViewComponent implements OnInit {
   }
 
   transformDate(dateString: string): string | null {
-    const isoDateString = dateString.replace(' ', 'T').replace(/:(\d{3})\+/, '.$1+').replace(/(\+\d{2})(\d{2})$/, '$1:$2')
-    return this.datePipe.transform(isoDateString, 'dd/MM/yyyy, HH:mm')
+    const isoDateString = dateString
+      .replace(' ', 'T')
+      .replace(/:(\d{3})\+/, '.$1+')
+      .replace(/(\+\d{2})(\d{2})$/, '$1:$2')
+
+    return this.datePipe.transform(isoDateString, 'dd/MM/yyyy, hh:mm a')
   }
 }
