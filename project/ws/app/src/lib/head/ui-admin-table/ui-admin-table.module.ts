@@ -41,6 +41,7 @@ import { MatLegacyProgressSpinnerModule as MatProgressBarModule } from '@angular
 import { ClipboardModule } from '@angular/cdk/clipboard'
 import { LoaderService } from '../../routes/home/services/loader.service'
 import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete'
+import { MAT_DATE_LOCALE } from '@angular/material/core'
 @NgModule({
   declarations: [
     UIAdminUserTableComponent,
@@ -91,6 +92,6 @@ import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/m
     UIDiscussionPostComponent,
     ReverseDateFormatPipe
   ],
-  providers: [LoaderService]
+  providers: [LoaderService, { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }]
 })
 export class UIAdminTableModule { }
