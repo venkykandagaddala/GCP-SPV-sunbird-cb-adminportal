@@ -31,6 +31,7 @@ export class ReportsComponent implements OnInit {
   departmentHeaderArray: any = []
   isStateAdmin = false
   key = 'ministry'
+  currentRoute: string = ''
   constructor(
     public dialog: MatDialog,
     private route: ActivatedRoute,
@@ -47,6 +48,8 @@ export class ReportsComponent implements OnInit {
         && data.profile.data.length > 0
         && data.profile.data[0]
     })
+
+    this.currentRoute = router.url
   }
 
   ngOnInit() {
