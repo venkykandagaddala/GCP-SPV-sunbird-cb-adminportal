@@ -71,6 +71,7 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
   getlistOfRegisterationLinks() {
     this.createMdoService.getListOfRegisteedLinks({ orgId: this.initialData.orgId }).subscribe({
       next: (response: any) => {
+        debugger
         if (response.result && response.result.qrCodeDataForOrg && response.result.qrCodeDataForOrg.length) {
           this.registeredLinksList = response.result.qrCodeDataForOrg
           this.latestRegisteredData = this.registeredLinksList[this.registeredLinksList.length - 1]
@@ -78,7 +79,8 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
           this.selfRegistrationForm.get('endDate')?.setValue(new Date(this.latestRegisteredData.endDate))
           this.customRegistrationLinks = {
             registrationLink: this.latestRegisteredData.url,
-            qrRegistrationLink: this.latestRegisteredData.qrCodeImagePath,
+            qrRegistrationLink: this.latestRegisteredData.qrCodeImagePath.replace('portal', 'spv'),
+
           }
           this.numberOfUsersOnboarded = this.latestRegisteredData.numberOfUsersOnboarded
           this.initialData.QRGenerated = true
