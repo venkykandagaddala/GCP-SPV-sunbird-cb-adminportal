@@ -116,7 +116,7 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
 
           this.customRegistrationLinks = {
             registrationLink: response.result.registrationLink,
-            qrRegistrationLink: response.result.qrRegistrationLink,
+            qrRegistrationLink: response.result.qrRegistrationLink.replace('portal', 'spv'),
           }
           this.latestRegisteredData.status = 'active'
 
