@@ -8,6 +8,10 @@
 
 
 .viaApi {
+  border: 1px solid #0000001f;
+  padding: 20px 20px 40px;
+  border-radius: 5px;
+  margin-bottom: 10px;
 
   .linkLable {
     /* stylelint-disable */
@@ -25,7 +29,6 @@
   }
 
   .fetchData {
-    width: 130px;
     height: 48px;
     background-color: #1B4CA1;
     border-radius: 25px;
@@ -41,7 +44,69 @@
 
 }
 
-:host ::ng-deep .viaApi {
+.lable {
+  /* stylelint-enable */
+  font: 700 14px Lato;
+  /* stylelint-disable */
+  color: #212529;
+}
+
+.services-input-form {
+  height: 50px;
+
+  .serviceCode {
+    text-transform: uppercase
+  }
+
+  .serviceCode::placeholder {
+    text-transform: none;
+  }
+}
+
+.input-note{
+  color: #00000099;
+  /* stylelint-enable */
+  font: 400 14px Lato;
+  /* stylelint-disable */
+}
+
+.disableControl {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+:host ::ng-deep .services-input-form{
+   .mat-form-field-flex {
+    height: 50px;
+    align-items: center;
+  }
+
+  .mat-form-field-hint-spacer {
+    flex: none;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    padding: 0px !important;
+  }
+}
+
+:host ::ng-deep .description {
+  .mat-form-field-wrapper {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+  }
+
+  .mat-form-field-hint-spacer {
+    flex: none;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    padding: 0px !important;
+    margin-top: 30px !important;
+  }
+}
+
+:host ::ng-deep .viaApiUrl {
   .mat-form-field-flex {
     height: 50px;
     align-items: center;

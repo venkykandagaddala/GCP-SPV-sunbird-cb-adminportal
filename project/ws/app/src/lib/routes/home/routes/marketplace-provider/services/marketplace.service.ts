@@ -17,6 +17,9 @@ const API_END_POINTS = {
   GET_CONTENT_LIST: `apis/proxies/v8/ciosIntegration/v1/search/content`,
   DELETE_NOT_PULISHED_COURSES: 'apis/proxies/v8/ciosIntegration/v1/deleteContent',
   DOWNLOAD_LOG: (gcpfileName: string) => `/apis/proxies/v8/storage/v1/downloadCiosLogs/${gcpfileName}`,
+  CREATE_CONFIGURATION: `apis/proxies/v8/serviceregistry/config/create`,
+  UPDATE_CONFIGURATION: `apis/proxies/v8/serviceregistry/config/update`,
+  GET_CONFIGURATION: (configurationId: string) => `apis/proxies/v8/serviceregistry/config/read/${configurationId}`
 }
 
 @Injectable({
@@ -125,4 +128,18 @@ export class MarketplaceService {
   downloadLogs(gcpfileName: string) {
     return this.http.get<any>(API_END_POINTS.DOWNLOAD_LOG(gcpfileName), { responseType: 'blob' as 'json' })
   }
+
+  //#region (via api)
+  createConfiguration(formBody: any) {
+    return this.http.post(`${API_END_POINTS.CREATE_CONFIGURATION}`, formBody)
+  }
+
+  updateConfiguration(formBody: any) {
+    return this.http.post(`${API_END_POINTS.UPDATE_CONFIGURATION}`, formBody)
+  }
+
+  getConfiguraionDetails(configurationId: string) {
+    return this.http.get(`${API_END_POINTS.GET_CONFIGURATION(configurationId)}`)
+  }
+  //#endregion
 }

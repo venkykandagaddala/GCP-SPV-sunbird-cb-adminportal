@@ -72,6 +72,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   delayTabLoad = true
+  viaApiTabIndex = 0
   //#endregion
 
   //#region (constructor: contains Intialization of TransforamtionControls from routes data)

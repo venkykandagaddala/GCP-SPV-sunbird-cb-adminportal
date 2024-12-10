@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core'
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms'
+import { JsonEditorOptions } from 'ang-jsoneditor'
 
 @Component({
   selector: 'ws-app-via-api-params-table',
@@ -10,8 +11,12 @@ export class ViaApiParamsTableComponent implements OnInit {
   //#region (global varialbles)
   //#region (view chaild, input and output)
   @Input() tableListFormGroup?: FormGroup
-  @Input() paramsHeader: string = 'Query Params'
+  @Input() paramsType: string = 'params'
   //#endregion
+
+  paramsHeader = 'Query Params'
+  showTable = true
+  editorOptions = new JsonEditorOptions()
   //#endregion
 
   constructor(
@@ -19,7 +24,29 @@ export class ViaApiParamsTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.initialization()
+  }
+
+  initialization() {
     this.addParams()
+    switch (this.paramsType) {
+      case 'params':
+        this.paramsHeader = 'Query Params'
+        break
+      case 'headers':
+        this.paramsHeader = 'Headers'
+        break
+      case 'body':
+        this.paramsHeader = 'Body'
+        this.editorOptions.mode = 'text'
+        this.editorOptions.mainMenuBar = false
+        this.editorOptions.navigationBar = false
+        this.editorOptions.statusBar = false
+        this.editorOptions.enableSort = false
+        this.editorOptions.enableTransform = false
+        break
+
+    }
   }
 
   get tableList(): FormArray {
@@ -29,10 +56,8 @@ export class ViaApiParamsTableComponent implements OnInit {
   addParams(): void {
     const nameGroup = this.formBuilder.group({
       key: [''],
-      value: [''],
-      description: ['']
+      value: ['']
     })
-
     this.tableList.push(nameGroup)
   }
 
@@ -40,6 +65,10 @@ export class ViaApiParamsTableComponent implements OnInit {
     if (index + 1 === this.tableList.controls.length) {
       this.addParams()
     }
+  }
+
+  onBodyTypeChange(event: any) {
+    this.showTable = event.value === 'urlencoded' ? true : false
   }
 
 }

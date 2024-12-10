@@ -52,3 +52,28 @@
     margin: -1px -1px 0px 0px;
   }
 }
+
+:host ::ng-deep .reqBodyType {
+  .mat-radio-outer-circle {
+    height: 13px;
+    width: 13px;
+  }
+
+  .mat-radio-container {
+    height: 13px;
+    width: 13px;
+  }
+
+  .mat-radio-inner-circle {
+    height: 13px;
+    width: 12.5px;
+  }
+
+  .mat-radio-button .mat-radio-container .mat-radio-inner-circle {
+    background-color: #1B4CA1 !important;
+  }
+
+  .mat-radio-button .mat-radio-ripple {
+    display: none !important;
+  }
+}

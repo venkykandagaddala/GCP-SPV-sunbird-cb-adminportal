@@ -1,12 +1,80 @@
 <div class="viaApi">
   <div>
-    <div class="linkLable required flex items-center">
+    <form [formGroup]="servicesFormGroup">
+      <div class="flex flex-column gap-7">
+        <div class="w-full flex gap-6 mb-6">
+          <div class="flex flex-column gap-1 w-full">
+            <div class="flex items-center gap-1 required">
+              <span class="lable">Service Name</span>
+            </div>
+            <mat-form-field class="w-full services-input-form">
+              <input formControlName="serviceName" matInput placeholder="Type here">
+              <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+                *ngIf="getControlValidation('serviceName', 'required')">
+                Service Name is mandatory
+              </mat-error>
+              <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+                *ngIf="getControlValidation('serviceName', 'pattern')">
+                Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported
+              </mat-error>
+              <mat-hint class="w-full flex justify-between items-center">
+                <span class="input-note">Only ( a-z/A-Z/0-9 . - _ $ / : [ ]' !) characters are supported</span>
+              </mat-hint>
+            </mat-form-field>
+          </div>
+          <div class="flex flex-column gap-1 w-full"
+            [ngClass]="{'disableControl': providerDetails?.serviceRegistryDetails?.contentApisId}">
+            <div class="flex items-center gap-1 required">
+              <span class="lable">Service Code</span>
+            </div>
+            <mat-form-field class="w-full services-input-form">
+              <input class="serviceCode" formControlName="serviceCode" matInput placeholder="Type here" maxlength="6">
+              <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+                *ngIf="getControlValidation('serviceCode', 'required')">
+                Service Code is mandatory
+              </mat-error>
+              <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+                *ngIf="getControlValidation('serviceCode', 'pattern')">
+                Only ( a-z/A-Z/0-9) characters are supported
+              </mat-error>
+              <mat-hint class="w-full flex justify-between items-center">
+                <span class="input-note">Only ( a-z/A-Z/0-9) characters are supported</span>
+              </mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="flex flex-column gap-1 w-full mb-6">
+          <div class="flex items-center gap-1 required">
+            <span class="lable">Service Description</span>
+            <mat-icon class="info-icon"
+              matTooltip="We recomment you to give description in 300-500 characters">info_outline</mat-icon>
+          </div>
+          <mat-form-field class="w-full description">
+            <textarea matInput rows="6" formControlName="serviceDescription" maxlength="500"
+              placeholder="Type the decription in fewer than 500 characters" i18n-placeholder></textarea>
+            <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+              *ngIf="getControlValidation('serviceDescription', 'required')">
+              Description is mandatory
+            </mat-error>
+            <mat-error [hidden]="false" aria-label="Event title Error|Explains event title is required "
+              *ngIf="getControlValidation('serviceDescription', 'pattern')">
+              Only ( a-z/A-Z/0-9 . - _ $ / : [ ] ' , !) characters are supported
+            </mat-error>
+            <mat-hint class="w-full flex justify-between items-center">
+              <span class="input-note">Only ( a-z/A-Z/0-9 . - _ $ / : [ ] ' , !) characters are supported</span>
+              <span class="input-note">{{getTextLength('serviceDescription')}}/500</span>
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+    <div class="linkLable required flex items-center mt-8">
       Link
       <mat-icon class="info-icon">info_outline</mat-icon>
     </div>
-
-    <div class="flex gap-4">
-      <form [formGroup]="viaApiFormGroup" class="flex w-full gap-0 viaApi">
+    <div class="flex gap-4 viaApiUrl">
+      <form [formGroup]="viaApiFormGroup" class="flex w-full gap-0">
         <div class="apiTypeSelect">
           <mat-form-field appearance="outline" class="w-full">
             <mat-select class="event-select" formControlName="apiType" placeholder="Select">
@@ -22,20 +90,30 @@
           </mat-form-field>
         </div>
       </form>
-      <button mat-button class="fetchData" (click)="fetchData()">Fetch Data</button>
     </div>
     <div class="vai-api-tabs mt-1">
-      <mat-tab-group>
-        <mat-tab label="Authorization">
+      <ng-container *ngIf="!delayTabLoad">
+        <mat-tab-group>
+          <!-- <mat-tab label="Authorization">
           <ws-app-via-api-params-table [tableListFormGroup]="authorizationFormGroup"></ws-app-via-api-params-table>
-        </mat-tab>
-        <mat-tab label="Headers">
-          <ws-app-via-api-params-table [tableListFormGroup]="headersFormGroup"></ws-app-via-api-params-table>
-        </mat-tab>
-        <mat-tab label="Body">
-          <ws-app-via-api-params-table [tableListFormGroup]="bodyFormGroup"></ws-app-via-api-params-table>
-        </mat-tab>
-      </mat-tab-group>
+        </mat-tab> -->
+          <mat-tab label="Params">
+            <ws-app-via-api-params-table [tableListFormGroup]="paramsFormGroup"
+              [paramsType]="'params'"></ws-app-via-api-params-table>
+          </mat-tab>
+          <mat-tab label="Headers">
+            <ws-app-via-api-params-table [tableListFormGroup]="headersFormGroup"
+              [paramsType]="'headers'"></ws-app-via-api-params-table>
+          </mat-tab>
+          <mat-tab label="Body">
+            <ws-app-via-api-params-table [tableListFormGroup]="bodyFormGroup"
+              [paramsType]="'body'"></ws-app-via-api-params-table>
+          </mat-tab>
+        </mat-tab-group>
+      </ng-container>
+    </div>
+    <div class="flex justify-end items-center mt-6">
+      <button mat-button class="fetchData" (click)="configure()">Configure</button>
     </div>
   </div>
 </div>

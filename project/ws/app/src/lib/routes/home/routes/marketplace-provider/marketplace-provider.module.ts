@@ -29,10 +29,11 @@ import { MatPaginatorModule } from '@angular/material/paginator'
 import { MatTableModule } from '@angular/material/table'
 import { LoaderService } from '../../services/loader.service'
 import { ProviderResolveService } from './services/provider-resolve.service'
-import { MatSelectModule } from '@angular/material/select';
-import { TransformationsComponent } from './components/transformations/transformations.component';
-import { ViaApiParamsTableComponent } from './components/via-api-params-table/via-api-params-table.component';
+import { MatSelectModule } from '@angular/material/select'
+import { TransformationsComponent } from './components/transformations/transformations.component'
+import { ViaApiParamsTableComponent } from './components/via-api-params-table/via-api-params-table.component'
 import { ViaApiComponent } from './components/via-api/via-api.component'
+import { MatRadioModule } from '@angular/material/radio'
 
 const routes: Routes = [
   {
@@ -108,6 +109,7 @@ const routes: Routes = [
     MatTooltipModule,
     NgJsonEditorModule,
     MatSelectModule,
+    MatRadioModule
   ],
   providers: [DatePipe, LoaderService],
   entryComponents: [

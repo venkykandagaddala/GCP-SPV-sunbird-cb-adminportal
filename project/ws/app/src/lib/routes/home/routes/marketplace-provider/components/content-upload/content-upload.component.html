@@ -23,88 +23,48 @@
         <button mat-button (click)="uploadMode = 'viaApi'"
           [ngClass]="uploadMode === 'viaApi' ? 'mode-selected' : 'mode-unselected'">Via API</button>
       </div>
-
-      <!-- <ng-container *ngIf="uploadMode === 'viaCsv'; else viaApi">
-        <ng-container *ngIf="!delayTabLoad">
-          <mat-tab-group class="">
-            <mat-tab label="Transform Content">
-              <div class="w-full mt-4">
-                <ws-app-transformations [providerDetails]="providerDetails" [transformationType]="'trasformContentJson'"
-                  (loadProviderDetails)="sendDetailsUpdateEvent()" (loadTablesData)="getTablesData()">
-                </ws-app-transformations>
-              </div>
-            </mat-tab>
-            <mat-tab label="Transform Progress">
-              <div class="w-full mt-4">
-                <ws-app-transformations [providerDetails]="providerDetails"
-                  [transformationType]="'transformProgressJson'" (loadProviderDetails)="sendDetailsUpdateEvent()"
-                  (loadTablesData)="getTablesData()">
-                </ws-app-transformations>
-              </div>
-            </mat-tab>
-            <mat-tab label="Transform Certificate">
-              <div class="w-full mt-4">
-                <ws-app-transformations [providerDetails]="providerDetails"
-                  [transformationType]="'trasformCertificateUrl'" (loadProviderDetails)="sendDetailsUpdateEvent()"
-                  (loadTablesData)="getTablesData()">
-                </ws-app-transformations>
-              </div>
-            </mat-tab>
-          </mat-tab-group>
-        </ng-container>
-      </ng-container>
-      <ng-template #viaApi>
-        <div class="viaApi">
-          <ws-app-via-api [providerDetails]="providerDetails"></ws-app-via-api>
-        </div>
-      </ng-template> -->
-
       <ng-container *ngIf="!delayTabLoad">
-        <mat-tab-group class="">
+        <mat-tab-group [(selectedIndex)]="viaApiTabIndex">
           <mat-tab label="Transform Content">
             <div class="w-full mt-4">
-              <ng-container *ngIf="uploadMode === 'viaCsv'; else viaApi">
+              <ng-container *ngIf="uploadMode === 'viaCsv'; else viaApiContent">
                 <ws-app-transformations [providerDetails]="providerDetails" [transformationType]="'trasformContentJson'"
                   (loadProviderDetails)="sendDetailsUpdateEvent()" (loadTablesData)="getTablesData()">
                 </ws-app-transformations>
               </ng-container>
-              <ng-template #viaApi>
-                <div class="viaApi">
-                  <ws-app-via-api [providerDetails]="providerDetails"></ws-app-via-api>
-                </div>
+              <ng-template #viaApiContent>
+                <ws-app-via-api [providerDetails]="providerDetails" [viaApiTabIndex]="viaApiTabIndex" [tabIndex]="0"
+                  (loadProviderDetails)="sendDetailsUpdateEvent()"></ws-app-via-api>
               </ng-template>
             </div>
           </mat-tab>
           <mat-tab label="Transform Progress">
             <div class="w-full mt-4">
-              <ng-container *ngIf="uploadMode === 'viaCsv'; else viaApi">
-                <ws-app-transformations [providerDetails]="providerDetails"
-                  [transformationType]="'transformProgressJson'" (loadProviderDetails)="sendDetailsUpdateEvent()"
-                  (loadTablesData)="getTablesData()">
-                </ws-app-transformations>
+              <!-- <ng-container *ngIf="uploadMode === 'viaCsv'; else viaApiProgress"> -->
+              <ws-app-transformations [providerDetails]="providerDetails" [transformationType]="'transformProgressJson'"
+                (loadProviderDetails)="sendDetailsUpdateEvent()" (loadTablesData)="getTablesData()">
+              </ws-app-transformations>
 
-              </ng-container>
-              <ng-template #viaApi>
-                <div class="viaApi">
-                  <ws-app-via-api [providerDetails]="providerDetails"></ws-app-via-api>
-                </div>
-              </ng-template>
+              <!-- </ng-container>
+              <ng-template #viaApiProgress>
+                <ws-app-via-api [providerDetails]="providerDetails" [viaApiTabIndex]="viaApiTabIndex" [tabIndex]="1"
+                  (loadProviderDetails)="sendDetailsUpdateEvent()"></ws-app-via-api>
+              </ng-template> -->
             </div>
           </mat-tab>
           <mat-tab label="Transform Certificate">
             <div class="w-full mt-4">
-              <ng-container *ngIf="uploadMode === 'viaCsv'; else viaApi">
-                <ws-app-transformations [providerDetails]="providerDetails"
-                  [transformationType]="'trasformCertificateUrl'" (loadProviderDetails)="sendDetailsUpdateEvent()"
-                  (loadTablesData)="getTablesData()">
-                </ws-app-transformations>
+              <!-- <ng-container *ngIf="uploadMode === 'viaCsv'; else viaApiCertificate"> -->
+              <ws-app-transformations [providerDetails]="providerDetails"
+                [transformationType]="'trasformCertificateUrl'" (loadProviderDetails)="sendDetailsUpdateEvent()"
+                (loadTablesData)="getTablesData()">
+              </ws-app-transformations>
 
-              </ng-container>
-              <ng-template #viaApi>
-                <div class="viaApi">
-                  <ws-app-via-api [providerDetails]="providerDetails"></ws-app-via-api>
-                </div>
-              </ng-template>
+              <!-- </ng-container>
+              <ng-template #viaApiCertificate>
+                <ws-app-via-api [providerDetails]="providerDetails" [viaApiTabIndex]="viaApiTabIndex" [tabIndex]="2"
+                  (loadProviderDetails)="sendDetailsUpdateEvent()"></ws-app-via-api>
+              </ng-template> -->
             </div>
           </mat-tab>
         </mat-tab-group>
@@ -114,7 +74,7 @@
 </mat-card>
 
 <ng-container *ngIf="!delayTabLoad">
-  <mat-tab-group class="">
+  <mat-tab-group [ngClass]="{'hideTabs': uploadMode === 'viaApi'}">
     <mat-tab label="Upload Status">
       <div class="w-full mt-3 flex flex-col">
         <ng-container *ngIf="!showUploadedStatusLoader; else showLoader">
