@@ -7,6 +7,8 @@ import { Clipboard } from '@angular/cdk/clipboard'
 import { MatDialog } from '@angular/material/dialog'
 import { InfoModalComponent } from '../../info-modal/info-modal.component'
 import * as fileSaver from 'file-saver'
+import { EventService } from '@sunbird-cb/utils'
+import { TelemetryEvents } from '../../../routes/home/routes/events/model/telemetry.event.model'
 
 @Component({
   selector: 'ws-app-custom-self-registration',
@@ -31,7 +33,9 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
     private createMdoService: CreateMDOService,
     private snackbar: MatSnackBar,
     private clipboard: Clipboard,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private eventsService: EventService,
+  ) {
 
     this.addOverflowHidden()
   }
@@ -159,42 +163,17 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
   }
 
   downloadQRCode(QRLink: string) {
-    // fileSaver.saveAs(QRLink, 'QRcode.jpg')
-    // fetch(QRLink, {
-    //   method: 'GET',
-    //   headers: {
-    //     "Content-Type": "image/jpeg",
-    //     "Content-Disposition": "attachment"
-    //   },
-    // })
-    //   .then(response => {
-    //     if (!response.ok) {
-    //       throw new Error('Network response was not ok')
-    //     }
-    //     return response.blob()
-    //   })
-    //   .then(blob => {
-    //     const url = window.URL.createObjectURL(blob)
-    //     const anchor = document.createElement('a')
-    //     anchor.href = url
-    //     anchor.download = 'QRCode.png'
-    //     anchor.click()
-    //     window.URL.revokeObjectURL(url)
-    //   })
-    //   .catch(() => {
-    //     window.open(QRLink, '_blank')
-    //   })
+    this.raiseInteractTelementry('download-qr')
     fetch(QRLink)
       .then(response => response.blob())
       .then(blob => {
         fileSaver.saveAs(blob, 'QRCode.png')
       })
-      .catch(error => {
-        console.error('Error downloading file:', error)
-      })
+      .catch(_error => { })
   }
 
   sendViaEmail(link: string): void {
+    this.raiseInteractTelementry('share-on-mail')
     if (!link) return
 
     const message = `Register for ${this.initialData.orgName} by clicking the link below:\n\n${link + ' '}`
@@ -206,6 +185,7 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
 
 
   sendViaWhatsApp(link: string): void {
+    this.raiseInteractTelementry('share-on-whatsapp')
     if (!link) return
     const message = `Register for ${this.initialData.orgName} by clicking the link below:\n\n${link + ' '}`
 
@@ -214,5 +194,15 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
     window.open(whatsappUrl, '_blank')
   }
 
-
+  raiseInteractTelementry(subType: string) {
+    this.eventsService.raiseInteractTelemetry(
+      {
+        type: 'click',
+        subType: subType,
+        id: 'share-custom-registration-link',
+        pageid: '/app/home/directory/organisation'
+      },
+      {},
+    )
+  }
 }
