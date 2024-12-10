@@ -150,7 +150,7 @@ const routes: Routes = [
         // redirectTo: 'directory/organisation',
         component: DirectoryViewComponent,
         data: {
-          module: 'Directory',
+          module: 'Onboarding',
           pageType: 'feature',
           pageKey: 'Directory',
         },
