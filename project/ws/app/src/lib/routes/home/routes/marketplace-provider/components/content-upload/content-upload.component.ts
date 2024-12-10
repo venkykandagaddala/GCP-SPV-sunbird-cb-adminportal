@@ -383,7 +383,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
             this.showSnackBar(msg)
             setTimeout(() => {
               this.getUnPublishedCoursesList()
-            }, 2000)
+            },         2000)
           }
         },
         error: (error: HttpErrorResponse) => {

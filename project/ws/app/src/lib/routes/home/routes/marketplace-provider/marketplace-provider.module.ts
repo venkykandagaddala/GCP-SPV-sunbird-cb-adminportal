@@ -109,7 +109,7 @@ const routes: Routes = [
     MatTooltipModule,
     NgJsonEditorModule,
     MatSelectModule,
-    MatRadioModule
+    MatRadioModule,
   ],
   providers: [DatePipe, LoaderService],
   entryComponents: [

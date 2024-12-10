@@ -8,7 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http'
 @Component({
   selector: 'ws-app-via-api',
   templateUrl: './via-api.component.html',
-  styleUrls: ['./via-api.component.scss']
+  styleUrls: ['./via-api.component.scss'],
 })
 export class ViaApiComponent implements OnInit, OnChanges {
   //#region (global varialbles)
@@ -63,12 +63,12 @@ export class ViaApiComponent implements OnInit, OnChanges {
     this.servicesFormGroup.setValue({
       serviceName: _.get(configurationDetails, 'serviceName'),
       serviceCode: _.get(configurationDetails, 'serviceCode'),
-      serviceDescription: _.get(configurationDetails, 'serviceDescription')
+      serviceDescription: _.get(configurationDetails, 'serviceDescription'),
     })
     this.servicesFormGroup.controls.serviceCode.disable()
     this.viaApiFormGroup.setValue({
       apiType: _.get(configurationDetails, 'requestMethod'),
-      apiUrl: urlSplit[0]
+      apiUrl: urlSplit[0],
     })
 
     if (headerMap) {
@@ -96,7 +96,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
       if (object.hasOwnProperty(key)) {
         const formGroup = this.formBuilder.group({
           key: new FormControl(key),
-          value: new FormControl(object[key])
+          value: new FormControl(object[key]),
         })
         formArray.insert(formArray.length - 1, formGroup)
       }
@@ -115,31 +115,31 @@ export class ViaApiComponent implements OnInit, OnChanges {
 
     this.viaApiFormGroup = this.formBuilder.group({
       apiType: new FormControl('', [Validators.required]),
-      apiUrl: new FormControl('', Validators.required)
+      apiUrl: new FormControl('', Validators.required),
     })
 
     this.paramsFormGroup = this.formBuilder.group({
-      tableListFormArray: this.formBuilder.array([])
+      tableListFormArray: this.formBuilder.array([]),
     })
 
     this.headersFormGroup = this.formBuilder.group({
-      tableListFormArray: this.formBuilder.array([])
+      tableListFormArray: this.formBuilder.array([]),
     })
 
     this.bodyFormGroup = this.formBuilder.group({
       tableListFormArray: this.formBuilder.array([]),
       bodyType: new FormControl('urlencoded'),
-      rawData: new FormControl('')
+      rawData: new FormControl(''),
     })
 
     this.apiTypesList = [
       {
         type: 'Get',
-        value: 'GET'
+        value: 'GET',
       },
       {
         type: 'Post',
-        value: 'POST'
+        value: 'POST',
       },
     ]
   }
@@ -162,7 +162,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
       if (_.get(this.providerDetails, 'serviceRegistryDetails.contentApisId', null)) {
         formBody['id'] = _.get(this.providerDetails, 'serviceRegistryDetails.contentApisId')
         this.marketPlaceSvc.updateConfiguration(formBody).subscribe({
-          next: (responce) => {
+          next: responce => {
             if (responce) {
               const message = 'Courses get api configuration updated successfully'
               this.showSnackBar(message)
@@ -171,7 +171,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
           error: (error: HttpErrorResponse) => {
             const errmsg = _.get(error, 'message', 'Some thing went wrong please try again')
             this.showSnackBar(errmsg)
-          }
+          },
         })
       } else {
         this.marketPlaceSvc.createConfiguration(formBody).subscribe({
@@ -181,7 +181,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
                 this.providerDetails['serviceRegistryDetails']['contentApisId'] = responce.id
               } else {
                 this.providerDetails['serviceRegistryDetails'] = {
-                  contentApisId: responce.id
+                  contentApisId: responce.id,
                 }
               }
               this.updateProviderDetails()
@@ -190,7 +190,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
           error: (error: HttpErrorResponse) => {
             const errmsg = _.get(error, 'message', 'Some thing went wrong please try again')
             this.showSnackBar(errmsg)
-          }
+          },
         })
       }
     } else {
@@ -201,41 +201,41 @@ export class ViaApiComponent implements OnInit, OnChanges {
 
   generatCoursesConfiguration() {
     const serviceDetails = this.servicesFormGroup.value
-    serviceDetails['serviceCode'] = this.servicesFormGroup.get('serviceCode')!.value.toUpperCase()
+    serviceDetails['serviceCode'] = this.servicesFormGroup.controls.serviceCode.value.toUpperCase()
     const params = this.getParamsAndUrl()
     const isFormData = this.bodyFormGroup.value.tableListFormArray[0].key ? true : false
-    let formBody = {
-      "requestMethod": this.viaApiFormGroup.get('apiType')!.value,
-      "url": params.url,
-      "serviceCode": serviceDetails.serviceCode,
-      "serviceName": serviceDetails.serviceName,
-      "serviceDescription": serviceDetails.serviceDescription,
-      "operationType": "PEER_TO_PEER",
-      "urlPlaceholder": params.urlPlaceholder,
-      "isActive": true,
-      "isSecureHeader": true,
-      "urlSegment": null,
-      "hostAddress": null,
-      "isFormData": isFormData,
-      "requestPayload": {
-        "requestMap": isFormData ? this.generateObjectFromForm(this.bodyFormGroup.value.tableListFormArray) : this.bodyFormGroup.value.rawData,
-        "headerMap": this.generateObjectFromForm(this.headersFormGroup.value.tableListFormArray),
-        "urlMap": this.generateObjectFromForm(this.paramsFormGroup.value.tableListFormArray),
-        "partnerCode": _.get(this.providerDetails, 'data.partnerCode'),
-        "serviceCode": serviceDetails.serviceCode,
-        "strictCache": false, // need to work on
-        "strictCacheTimeInMinutes": 0 // need to work on
-      }
+    const formBody = {
+      isFormData,
+      requestMethod: this.viaApiFormGroup.controls.apiType.value,
+      url: params.url,
+      serviceCode: serviceDetails.serviceCode,
+      serviceName: serviceDetails.serviceName,
+      serviceDescription: serviceDetails.serviceDescription,
+      operationType: 'PEER_TO_PEER',
+      urlPlaceholder: params.urlPlaceholder,
+      isActive: true,
+      isSecureHeader: true,
+      urlSegment: null,
+      hostAddress: null,
+      requestPayload: {
+        requestMap: isFormData ? this.generateObjectFromForm(this.bodyFormGroup.value.tableListFormArray) : this.bodyFormGroup.value.rawData,
+        headerMap: this.generateObjectFromForm(this.headersFormGroup.value.tableListFormArray),
+        urlMap: this.generateObjectFromForm(this.paramsFormGroup.value.tableListFormArray),
+        partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
+        serviceCode: serviceDetails.serviceCode,
+        strictCache: false, // need to work on
+        strictCacheTimeInMinutes: 0, // need to work on
+      },
     }
     return formBody
   }
 
   getParamsAndUrl() {
     const parmsAndUrl = {
-      url: `${this.viaApiFormGroup.get('apiUrl')!.value}?byProgramIds=F3F_2DjnR0Wxf9g45zdFsg`,
-      urlPlaceholder: ''
+      url: `${this.viaApiFormGroup.controls.apiUrl.value}?byProgramIds=F3F_2DjnR0Wxf9g45zdFsg`,
+      urlPlaceholder: '',
     }
-    let params = this.paramsFormGroup.value.tableListFormArray
+    const params = this.paramsFormGroup.value.tableListFormArray
     if (params && params[0].key) {
       params.forEach((element: any) => {
         if (element.key) {
@@ -265,10 +265,10 @@ export class ViaApiComponent implements OnInit, OnChanges {
       next: (responce: any) => {
         if (responce) {
           setTimeout(() => {
-            let successMsg = 'Courses get api configured successfully'
+            const successMsg = 'Courses get api configured successfully'
             this.showSnackBar(successMsg)
             this.loadProviderDetails.emit(true)
-          }, 1000)
+          },         1000)
         }
       },
       error: (error: HttpErrorResponse) => {

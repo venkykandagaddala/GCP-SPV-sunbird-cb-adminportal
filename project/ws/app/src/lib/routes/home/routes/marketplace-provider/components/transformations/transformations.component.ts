@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core'
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog'
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -13,16 +13,16 @@ import { environment } from '../../../../../../../../../../../src/environments/e
 @Component({
   selector: 'ws-app-transformations',
   templateUrl: './transformations.component.html',
-  styleUrls: ['./transformations.component.scss']
+  styleUrls: ['./transformations.component.scss'],
 })
-export class TransformationsComponent implements OnInit {
+export class TransformationsComponent implements OnInit, OnChanges {
 
   //#region (global varialbles)
   //#region (view chaild, input and output)
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>
 
   @Input() providerDetails?: any
-  @Input() transformationType: string = ''
+  @Input() transformationType = ''
 
   @Output() loadProviderDetails = new EventEmitter<Boolean>()
   @Output() loadTablesData = new EventEmitter<Boolean>()
@@ -162,16 +162,16 @@ export class TransformationsComponent implements OnInit {
       const csvRecordsArray = (<string>csvData).split(/\r\n|\n/)
       this.availableHeadrsList = this.getHeaderArray(csvRecordsArray)
     }
-    const that = this
+    const that = this.showSnackBar
     reader.onerror = function () {
-      that.showSnackBar('Please upload proper csv file')
+      that('Please upload proper csv file')
     }
   }
 
   getHeaderArray(csvRecordsArr: any) {
     const headers = (<string>csvRecordsArr[0]).split(',')
     const headerArray = []
-    for (let j = 0; j < headers.length; j++) {
+    for (let j = 0; j < headers.length; j = j + 1) {
       headerArray.push(headers[j])
     }
     return headerArray
@@ -414,13 +414,13 @@ export class TransformationsComponent implements OnInit {
         this.fileName = ''
         this.upDateTransforamtionDetails()
         this.dialogRef.close()
-      }
+      },
     })
   }
 
   openFileUploadPopup(dialogType: string, message: string) {
     const dialogData = {
-      dialogType: dialogType,
+      dialogType,
       descriptions: [
         {
           messages: [

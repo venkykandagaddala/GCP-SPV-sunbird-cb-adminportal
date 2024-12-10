@@ -5,13 +5,13 @@ import { JsonEditorOptions } from 'ang-jsoneditor'
 @Component({
   selector: 'ws-app-via-api-params-table',
   templateUrl: './via-api-params-table.component.html',
-  styleUrls: ['./via-api-params-table.component.scss']
+  styleUrls: ['./via-api-params-table.component.scss'],
 })
 export class ViaApiParamsTableComponent implements OnInit {
   //#region (global varialbles)
   //#region (view chaild, input and output)
   @Input() tableListFormGroup?: FormGroup
-  @Input() paramsType: string = 'params'
+  @Input() paramsType = 'params'
   //#endregion
 
   paramsHeader = 'Query Params'
@@ -50,13 +50,16 @@ export class ViaApiParamsTableComponent implements OnInit {
   }
 
   get tableList(): FormArray {
-    return this.tableListFormGroup!.get('tableListFormArray') as FormArray
+    if (this.tableListFormGroup) {
+      return this.tableListFormGroup.controls.tableListFormArray as FormArray
+    }
+    return this.formBuilder.array([])
   }
 
   addParams(): void {
     const nameGroup = this.formBuilder.group({
       key: [''],
-      value: ['']
+      value: [''],
     })
     this.tableList.push(nameGroup)
   }
