@@ -8,7 +8,6 @@ import { MatDialog } from '@angular/material/dialog'
 import { InfoModalComponent } from '../../info-modal/info-modal.component'
 import * as fileSaver from 'file-saver'
 import { EventService } from '@sunbird-cb/utils'
-import { TelemetryEvents } from '../../../routes/home/routes/events/model/telemetry.event.model'
 
 @Component({
   selector: 'ws-app-custom-self-registration',
