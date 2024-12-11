@@ -99,7 +99,7 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   ngAfterViewInit() { }
 
   applyFilter(filterValue: any) {
-    if (filterValue) {
+    if (filterValue && this.dataSource && this.dataSource.filter) {
       this.dataSource.filter = filterValue.trim().toLowerCase()
       this.tableData.loader = false
     } else {
