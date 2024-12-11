@@ -60,7 +60,8 @@ export class RolesAccessComponent implements OnInit, AfterViewInit {
           if (environment.cbpProviderRoles && environment.cbpProviderRoles.includes(this.currentDept.toLowerCase())) {
             this.currentDept = 'CBP'
           }
-          if (this.parseRoledata && this.parseRoledata.orgTypeList && this.parseRoledata.orgTypeList[i] && this.parseRoledata.orgTypeList[i].name === this.currentDept.toUpperCase()) {
+          if (this.parseRoledata && this.parseRoledata.orgTypeList &&
+            this.parseRoledata.orgTypeList[i] && this.parseRoledata.orgTypeList[i].name === this.currentDept.toUpperCase()) {
             if (this.rolesObject && this.rolesObject.length && this.rolesObject.length > 0) {
               const temp = this.rolesObject.filter((v: any) => v.name === this.parseRoledata.orgTypeList[i].name).length
               if (temp === 0) {
