@@ -87,12 +87,12 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   ngOnChanges(data: SimpleChanges) {
     this.tableData = null
     this.tableData = _.get(data, 'tableData.currentValue')
-    this.dataSource.filter = ''
+    if (this.dataSource && this.dataSource.filter) this.dataSource.filter = ''
     this.showNewNoContent = this.tableData.showNewNoContent ? true : false
     this.dataSource.data = _.get(data, 'data.currentValue', [])
     this.length = this.dataSource.data.length
     this.paginator.firstPage()
-    if (this.dataSource.data.length > 0) {
+    if (this.dataSource && this.dataSource.data && this.dataSource.data.length > 0) {
       this.tableData.loader = false
     }
   }
