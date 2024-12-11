@@ -87,16 +87,21 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   ngOnChanges(data: SimpleChanges) {
     this.tableData = null
     this.tableData = _.get(data, 'tableData.currentValue')
+    if (this.dataSource && this.dataSource.filter) this.dataSource.filter = ''
     this.showNewNoContent = this.tableData.showNewNoContent ? true : false
     this.dataSource.data = _.get(data, 'data.currentValue', [])
     this.length = this.dataSource.data.length
     this.paginator.firstPage()
+    if (this.dataSource && this.dataSource.data && this.dataSource.data.length > 0) {
+      this.tableData.loader = false
+    }
   }
   ngAfterViewInit() { }
 
   applyFilter(filterValue: any) {
-    if (filterValue) {
+    if (filterValue && this.dataSource && this.dataSource.filter) {
       this.dataSource.filter = filterValue.trim().toLowerCase()
+      this.tableData.loader = false
     } else {
       // this.dataSource.filter = ''
       this.searchByEnterKey.emit(filterValue)
