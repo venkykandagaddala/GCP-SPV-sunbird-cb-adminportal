@@ -7,7 +7,7 @@
       </ws-widget-scrollspy-left-menu>
     </div>
   </div>
-  <div class="flex-display">
+  <div class="flex-display" [ngClass]="{ 'override-text-css': isReportsPath}">
 
     <ws-widget-ui-user-table *ngIf="currentTab==='users'" [tableData]="tabledata" [data]="data"
       [otherInput]="createdDepartment" [needAddAdmin]="true" [needCreateUser]="true" (actionsClick)="editUser($event)"
