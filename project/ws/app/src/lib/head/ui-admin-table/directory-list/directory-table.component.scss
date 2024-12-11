@@ -717,3 +717,8 @@ $title-line-count: 2;
   margin-top: unset !important;
   margin-left: unset !important;
 }
+
+::ng-deep .mat-column-Actions {
+  width: 90px;
+  flex: none;
+}
