@@ -31,6 +31,7 @@ export class ReportsComponent implements OnInit {
   departmentHeaderArray: any = []
   isStateAdmin = false
   key = 'ministry'
+  currentRoute: string = ''
   constructor(
     public dialog: MatDialog,
     private route: ActivatedRoute,
@@ -47,6 +48,8 @@ export class ReportsComponent implements OnInit {
         && data.profile.data.length > 0
         && data.profile.data[0]
     })
+
+    this.currentRoute = router.url
   }
 
   ngOnInit() {
@@ -104,7 +107,7 @@ export class ReportsComponent implements OnInit {
     })
   }
   onRoleClick(role: any) {
-    this.router.navigate([`/app/roles/${role.data.id}/users`], { queryParams: { currentDept: this.currentFilter, roleId: role.data.id, depatName: role.data.mdo, deptType: role.data.type, path: 'reports' } })
+    this.router.navigate([`/app/roles/${role.data.id}/users`], { queryParams: { subOrgType: this.currentFilter, roleId: role.data.id, depatName: role.data.mdo, deptType: role.data.type, path: 'reports' } })
   }
 
   filter(value: string) {

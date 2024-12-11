@@ -31,9 +31,8 @@ export class RolesAccessComponent implements OnInit, AfterViewInit {
     this.activatedRoute.queryParams.subscribe(params => {
       this.deparmentId = params['roleId']
       this.deparmentName = params['depatName']
-      const dept = params['currentDept']
-      this.currentDept = dept ? dept : params['subOrgType']
-      //  this.currentDept = params['subOrgType']
+      // this.currentDept = params['currentDept']
+      this.currentDept = params['subOrgType']
     })
     if (this.currentDept === 'CBP Providers' || this.currentDept === 'cbp-providers') {
       this.currentDept = 'CBP'
