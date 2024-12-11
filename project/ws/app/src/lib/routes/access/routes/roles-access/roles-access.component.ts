@@ -58,11 +58,11 @@ export class RolesAccessComponent implements OnInit, AfterViewInit {
       this.parseRoledata = JSON.parse(data.result.response.value)
       for (let i = 0; i < this.parseRoledata.orgTypeList.length; i += 1) {
         if (this.currentDept) {
-          if (environment.cbpProviderRoles.includes(this.currentDept.toLowerCase())) {
+          if (environment.cbpProviderRoles && environment.cbpProviderRoles.includes(this.currentDept.toLowerCase())) {
             this.currentDept = 'CBP'
           }
-          if (this.parseRoledata.orgTypeList[i].name === this.currentDept.toUpperCase()) {
-            if (this.rolesObject.length > 0) {
+          if (this.parseRoledata && this.parseRoledata.orgTypeList && this.parseRoledata.orgTypeList[i].name === this.currentDept.toUpperCase()) {
+            if (this.rolesObject && this.rolesObject.length > 0) {
               const temp = this.rolesObject.filter((v: any) => v.name === this.parseRoledata.orgTypeList[i].name).length
               if (temp === 0) {
                 this.rolesObject.push({
