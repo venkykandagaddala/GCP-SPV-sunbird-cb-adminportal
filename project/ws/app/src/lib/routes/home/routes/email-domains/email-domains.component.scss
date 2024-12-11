@@ -304,3 +304,7 @@ a:not([href]):not([tabindex]) {
 ::ng-deep.mat-cell {
   font-size: 14px !important;
 }
+
+.override-text-css ::ng-deep .mat-row .textclass {
+  cursor: default !important;
+}
