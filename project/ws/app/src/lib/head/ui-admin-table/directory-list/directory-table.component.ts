@@ -16,6 +16,8 @@ import { MatDialog } from '@angular/material/dialog'
 import { InfoModalComponent } from '../../info-modal/info-modal.component'
 import { CreateMDOService } from '../../../routes/home/services/create-mdo.services'
 import { DesignationsService } from '../../../routes/create-mdo/routes/designation/services/designations.service'
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
+import { Subject } from 'rxjs'
 
 @Component({
   selector: 'ws-widget-directory-table',
@@ -59,6 +61,7 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   customSelfRegistration = false
   selfRegistrationData: any = {}
   dialogRef: any
+  private filterSubject: Subject<any> = new Subject<any>();
   constructor(
     private router: Router, private events: EventService, public dialog: MatDialog,
     private designationsService: DesignationsService,
@@ -67,6 +70,15 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
     this.dataSource = new MatTableDataSource<any>()
     this.actionsClick = new EventEmitter()
     this.clicked = new EventEmitter()
+
+    this.filterSubject
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((filterValue) => {
+        this.searchByEnterKey.emit(filterValue)
+      })
   }
 
   ngOnInit() {
@@ -99,13 +111,7 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   ngAfterViewInit() { }
 
   applyFilter(filterValue: any) {
-    if (filterValue) {
-      this.dataSource.filter = filterValue.trim().toLowerCase()
-      this.tableData.loader = false
-    } else {
-      // this.dataSource.filter = ''
-      this.searchByEnterKey.emit(filterValue)
-    }
+    this.filterSubject.next(filterValue)
   }
 
   initializeValuesAndAPIs() {

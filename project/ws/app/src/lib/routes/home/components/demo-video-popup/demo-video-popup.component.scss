@@ -1,12 +1,16 @@
 .video-content {
-  position: relative;
+  // position: relative;
   height: 100%;
 }
 
 .popup-close {
   position: absolute;
-  right: -55px;
-  top: -55px;
+  margin: 16px 0 0 auto;
+  transform: translate(-50%, -44%);
+  // right: -55px;
+  // top: -55px;
+  right: 0px;
+  top: 0px;
   color: #2f2e2e;
   height: 20px;
   width: 20px;
@@ -22,6 +26,10 @@
   }
 }
 
-::ng-deep.overflow-visable .mat-dialog-container {
-  overflow: visible !important;
+// ::ng-deep.overflow-visable .mat-dialog-container {
+//   overflow: visible !important;
+// }
+
+::ng-deep .mat-mdc-dialog-surface.mdc-dialog__surface {
+  overflow: hidden !important;
 }
