@@ -231,9 +231,8 @@ export class DesignationsComponent implements OnInit {
         videoLink: url,
       },
       disableClose: true,
-      width: '50%',
-      height: '60%',
-      panelClass: 'overflow-visable',
+      width: "675px",
+      height: "400px"
     })
   }
 

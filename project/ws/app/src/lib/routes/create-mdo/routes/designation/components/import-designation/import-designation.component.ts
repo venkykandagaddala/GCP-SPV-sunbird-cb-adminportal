@@ -380,12 +380,12 @@ export class ImportDesignationComponent implements OnInit, OnDestroy {
         this.navigateToMyDesignations()
       })
     } else {
-      const successMessage = _.get(this.designationConfig, 'successMsg')
-      this.openSnackbar(successMessage, 10000, 'success')
       setTimeout(() => {
+        const successMessage = _.get(this.designationConfig, 'successMsg')
+        this.openSnackbar(successMessage, 10000, 'success')
         this.dialog.closeAll()
         this.navigateToMyDesignations()
-      }, 10000)
+      }, 4000)
 
     }
   }
