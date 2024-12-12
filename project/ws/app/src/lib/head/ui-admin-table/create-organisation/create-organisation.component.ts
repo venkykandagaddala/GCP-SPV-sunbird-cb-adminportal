@@ -43,6 +43,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   selectedLogoFile: any
   uploadedLogoResponse!: IUploadedLogoresponse
   organizationNameList: string[] = []
+  ORG_NAME_PATTERN = /^[a-zA-Z0-9 ().,@\-\$\/\\:\[\]!\s]*$/
 
   untilDestroyed$ = new Subject<void>();
   constructor(
@@ -84,7 +85,12 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
     }
 
     this.organisationForm = this.formBuilder.group({
-      organisationName: new FormControl(_.get(this.rowData, 'organisation', ''), [Validators.required]),
+      organisationName: new FormControl(_.get(this.rowData, 'organisation', ''),
+        [
+          Validators.required,
+          Validators.maxLength(100),
+          Validators.pattern(this.ORG_NAME_PATTERN)
+        ]),
       category: new FormControl(_.get(this.rowData, 'type', ''), [Validators.required]),
       state: new FormControl(_.get(this.rowData, 'state', '')),
       ministry: new FormControl(_.get(this.rowData, 'ministry', '')),
@@ -152,11 +158,14 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.untilDestroyed$), debounceTime(500), distinctUntilChanged())
       .subscribe((_value) => {
         const control = this.organisationForm.controls.organisationName
-        const error = this.createDuplicateOrgNameValidator(this.organizationNameList)(control)
-        if (error) {
-          control.setErrors(error)
+        const existingErrors = control.errors || {}
+        const duplicateError = this.createDuplicateOrgNameValidator(this.organizationNameList)(control)
+
+        if (duplicateError) {
+          control.setErrors({ ...existingErrors, ...duplicateError })
         } else {
-          control.setErrors(null)
+          delete existingErrors.duplicateOrgName
+          control.setErrors(Object.keys(existingErrors).length ? existingErrors : null)
         }
       })
   }

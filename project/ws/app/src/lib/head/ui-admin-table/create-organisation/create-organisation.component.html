@@ -42,18 +42,31 @@
                     <span class="lable">Organisation Name</span>
                   </div>
                   <mat-form-field class="w-full">
-                    <input formControlName="organisationName" matInput placeholder="Add organisation name here">
-                    <mat-error *ngIf="controls['organisationName'].errors?.['required']">Organization name is
+                    <input formControlName="organisationName" matInput placeholder="Add organisation name here"
+                      maxlength="100">
+                    <mat-error
+                      *ngIf="controls['organisationName'].touched && controls['organisationName'].errors?.['required']">Organization
+                      name is
                       required.</mat-error>
-                    <mat-error *ngIf="controls['organisationName'].errors?.['duplicateOrgName']">This organization name
+                    <mat-error
+                      *ngIf="controls['organisationName'].touched && controls['organisationName'].errors?.['duplicateOrgName']">This
+                      organization name
                       is already in use.</mat-error>
+                    <mat-error
+                      *ngIf="controls['organisationName'].touched && controls['organisationName'].errors?.['pattern']">
+                      Only ( a-z/A-Z , 0-9 . - @ $ / : [ ]' ' !) characters are supported</mat-error>
+                    <mat-error
+                      *ngIf="controls['organisationName'].touched && controls['organisationName'].errors?.['maxlength']">Maximum
+                      character lenght
+                      exceeded.</mat-error>
+                    <!-- <mat-hint>Only ( a-z/A-Z , 0-9 . - _ $ / : [ ]' ' !) characters are supported</mat-hint> -->
                   </mat-form-field>
                 </div>
 
               </ng-container>
 
               <ng-container *ngIf="this.openMode !== 'editMode'">
-                <mat-radio-group aria-labelledby="example-radio-group-label" class="flex gap-12 organisation-form"
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="flex gap-12 organisation-form mt-3"
                   formControlName="category">
 
                   <div [ngClass]="{'active-radio-button': getCategory === 'state'}">
