@@ -28,6 +28,7 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   @ViewChild('searchInput') searchInput!: ElementRef
   @Input() tableData!: any
   @Input() data?: []
+  @Input() totalDataCount!: number
   @Input() selectedDepartment!: string
   @Input() departmentID!: string
   @Input() needCreate: Boolean = true
@@ -35,6 +36,7 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   @Output() actionsClick?: EventEmitter<any>
   @Output() eOnRowClick = new EventEmitter<any>()
   @Output() searchByEnterKey = new EventEmitter<any>()
+  @Output() pageChangeEvent = new EventEmitter<any>()
 
   bodyHeight = document.body.clientHeight - 125
   // displayedColumns: IColums[] | undefined
@@ -55,13 +57,14 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
       statesList: [],
       ministriesList: [],
     }
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator
+  @ViewChild(MatPaginator) private paginator!: MatPaginator
   @ViewChild(MatSort, { static: true }) sort?: MatSort
   selection = new SelectionModel<any>(true, [])
   customSelfRegistration = false
   selfRegistrationData: any = {}
   dialogRef: any
   private filterSubject: BehaviorSubject<any> = new BehaviorSubject<any>('');
+  pageIndex = 0
   constructor(
     private router: Router, private events: EventService, public dialog: MatDialog,
     private designationsService: DesignationsService,
@@ -78,6 +81,7 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
       )
       .subscribe((filterValue) => {
         this.searchByEnterKey.emit(filterValue)
+        this.pageIndex = 0
       })
   }
 
@@ -100,10 +104,11 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
     this.tableData = null
     this.tableData = _.get(data, 'tableData.currentValue')
     if (this.dataSource && this.dataSource.filter) this.dataSource.filter = ''
-    this.showNewNoContent = this.tableData.showNewNoContent ? true : false
+    this.showNewNoContent = this.tableData?.showNewNoContent ? true : false
     this.dataSource.data = _.get(data, 'data.currentValue', [])
-    this.length = this.dataSource.data.length
-    this.paginator.firstPage()
+    this.length = this.tableData.tableDataCount
+
+    // this.paginator.firstPage()
     if (this.dataSource && this.dataSource.data && this.dataSource.data.length > 0) {
       this.tableData.loader = false
     }
@@ -116,6 +121,11 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
 
   applyFilter(filterValue: any) {
     this.filterSubject.next(filterValue)
+  }
+
+  onOrgPageChange(event: any) {
+    this.pageIndex = event.pageIndex
+    this.pageChangeEvent.emit(event)
   }
 
   initializeValuesAndAPIs() {

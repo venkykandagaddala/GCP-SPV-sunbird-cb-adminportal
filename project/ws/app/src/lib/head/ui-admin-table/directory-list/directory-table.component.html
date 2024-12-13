@@ -136,7 +136,8 @@
                 </div>
             </ng-template>
         </ng-container>
-        <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions">
+        <mat-paginator #paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+            [pageIndex]="pageIndex" (page)="onOrgPageChange($event)">
         </mat-paginator>
     </div>
 
