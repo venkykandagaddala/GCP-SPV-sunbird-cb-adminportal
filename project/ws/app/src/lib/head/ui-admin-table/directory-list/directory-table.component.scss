@@ -718,7 +718,12 @@ $title-line-count: 2;
   margin-left: unset !important;
 }
 
-::ng-deep .mat-column-Actions {
+::ng-deep .mat-column-Actions, .mat-column-type {
   width: 90px;
+  flex: none;
+}
+
+::ng-deep .mat-column-organisation {
+  width: 300px;
   flex: none;
 }

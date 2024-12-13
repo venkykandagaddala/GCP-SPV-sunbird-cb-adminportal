@@ -17,7 +17,7 @@ import { InfoModalComponent } from '../../info-modal/info-modal.component'
 import { CreateMDOService } from '../../../routes/home/services/create-mdo.services'
 import { DesignationsService } from '../../../routes/create-mdo/routes/designation/services/designations.service'
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
-import { Subject } from 'rxjs'
+import { BehaviorSubject } from 'rxjs'
 
 @Component({
   selector: 'ws-widget-directory-table',
@@ -61,7 +61,7 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   customSelfRegistration = false
   selfRegistrationData: any = {}
   dialogRef: any
-  private filterSubject: Subject<any> = new Subject<any>();
+  private filterSubject: BehaviorSubject<any> = new BehaviorSubject<any>('');
   constructor(
     private router: Router, private events: EventService, public dialog: MatDialog,
     private designationsService: DesignationsService,
@@ -107,6 +107,10 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
     if (this.dataSource && this.dataSource.data && this.dataSource.data.length > 0) {
       this.tableData.loader = false
     }
+
+    else if (this.dataSource && this.dataSource.data && this.dataSource.data.length === 0 && this.getFilterValue) {
+      this.tableData.loader = false
+    }
   }
   ngAfterViewInit() { }
 
@@ -126,6 +130,10 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
         this.dropdownList.ministriesList = _.orderBy(res.result.response.content, ['orgName'], ['asc'])
       }
     })
+  }
+
+  get getFilterValue(): any {
+    return this.filterSubject.getValue()
   }
 
 
