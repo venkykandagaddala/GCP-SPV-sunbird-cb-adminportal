@@ -81,7 +81,7 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
           this.selfRegistrationForm.get('endDate')?.setValue(new Date(this.latestRegisteredData.endDate))
           this.customRegistrationLinks = {
             registrationLink: this.latestRegisteredData.url,
-            qrRegistrationLink: this.latestRegisteredData.qrCodeImagePath.replace('portal', 'spv'),
+            qrRegistrationLink: this.getQRCodePath(this.latestRegisteredData),
 
           }
           this.numberOfUsersOnboarded = this.latestRegisteredData.numberOfUsersOnboarded
@@ -119,7 +119,7 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
 
           this.customRegistrationLinks = {
             registrationLink: response.result.registrationLink,
-            qrRegistrationLink: response.result.qrRegistrationLink.replace('portal', 'spv'),
+            qrRegistrationLink: this.getQRCodePath(response.result),
           }
           this.latestRegisteredData.status = 'active'
 
@@ -145,6 +145,21 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
       }
     })
 
+  }
+
+  getQRCodePath(response: any) {
+    if (response && response.qrcodelogopath) {
+      return response.qrcodelogopath.replace('portal', 'spv')
+    }
+    else if (response && response.qrRegistrationLink) {
+      return response.qrRegistrationLink.replace('portal', 'spv')
+    }
+    else if (response && response.qrcodelogopath) {
+      return response.qrcodelogopath.replace('portal', 'spv')
+    }
+    else if (response && response.qrCodeImagePath) {
+      return response.qrCodeImagePath.replace('portal', 'spv')
+    }
   }
 
   addOverflowHidden() {
