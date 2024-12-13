@@ -310,13 +310,19 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
     formData.append('file', this.selectedLogoFile)
     this.createMDOService.uploadOrganizationLogo(formData).subscribe({
       next: (response: any) => {
-        if (response.result) {
+        if (response.result && Object.keys(response.result).length > 0 && response.result.qrcodepath) {
           this.uploadedLogoResponse = response.result
           this.selectedLogo = this.uploadedLogoResponse.qrcodepath
+        } else {
+          this.snackBar.open(`Couldn't upload the logo, Please try again`, 'X', { panelClass: ['error'] })
+          this.selectedLogoFile = null
+          this.selectedLogoName = ''
         }
       },
       error: () => {
         this.snackBar.open(`Couldn't upload the logo, Please try again`, 'X', { panelClass: ['error'] })
+        this.selectedLogoFile = null
+        this.selectedLogoName = ''
       }
     })
   }

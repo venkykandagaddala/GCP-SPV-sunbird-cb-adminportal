@@ -99,7 +99,7 @@ export class ReportsComponent implements OnInit {
   }
   getAllDepartments(queryText: any) {
     const query = queryText ? queryText : ''
-    this.directoryService.getAllDepartmentsKong(query).subscribe(res => {
+    this.directoryService.getAllDepartmentsKong(query, { limit: 20, offset: 0 }).subscribe(res => {
       this.wholeData2 = res.result.response.content
       if (this.departmentHearders && this.departmentHearders.length) {
         this.getDepartDataByKey(this.currentFilter)

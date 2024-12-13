@@ -35,7 +35,8 @@ export class DirectoryViewComponent implements OnInit {
   isStateAdmin = false
   key = 'mdo'
   currentTab: any
-
+  pagination = { limit: 20, offset: 0 }
+  totalCount = 0
   constructor(
     public dialog: MatDialog,
     private route: ActivatedRoute,
@@ -103,7 +104,8 @@ export class DirectoryViewComponent implements OnInit {
         sortColumn: '',
         sortState: 'asc',
         showNewNoContent: true,
-        loader: true
+        loader: true,
+        tableDataCount: this.totalCount
       }
     } else {
       this.tabledata = {
@@ -116,7 +118,8 @@ export class DirectoryViewComponent implements OnInit {
         needHash: false,
         sortColumn: '',
         sortState: 'asc',
-        loader: true
+        loader: true,
+        tableDataCount: this.totalCount
 
       }
     }
@@ -125,14 +128,24 @@ export class DirectoryViewComponent implements OnInit {
   getAllDepartments(queryText: any) {
     this.tabledata.loader = true
     const query = queryText ? queryText : ''
-    this.directoryService.getAllDepartmentsKong(query, this.currentTab).subscribe(res => {
+    this.directoryService.getAllDepartmentsKong(query, this.pagination, this.currentTab,).subscribe(res => {
       this.wholeData2 = res.result.response.content
-      this.wholeData2 = _.orderBy(this.wholeData2, ['createdDate'], ['desc'])
+      this.tabledata.tableDataCount = res.result.response.count
+      this.totalCount = res.result.response.count
+      // this.wholeData2 = _.orderBy(this.wholeData2, ['createdDate'], ['desc'])
       if (this.departmentHearders && this.departmentHearders.length) {
         this.getDepartDataByKey(this.currentFilter)
       }
     })
   }
+  onPageChange(event: any) {
+    if (event) {
+      this.pagination.offset = event.pageIndex
+      this.pagination.limit = event.pageSize
+      this.getAllDepartments('')
+    }
+  }
+
   onRoleClick(role: any,) {
     this.router.navigate([`/app/roles/${role.data.id}/users`], {
       queryParams:
@@ -354,6 +367,7 @@ export class DirectoryViewComponent implements OnInit {
   }
 
   onEnterkySearch(enterValue: any) {
+    this.pagination.offset = 0
     this.getAllDepartments(enterValue)
   }
 
