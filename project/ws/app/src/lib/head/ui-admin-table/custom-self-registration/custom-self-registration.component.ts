@@ -190,7 +190,7 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
     this.raiseInteractTelementry('share-on-mail')
     if (!link) return
 
-    const message = `Register for ${this.initialData.orgName} by clicking the link below:\n\n${link + ' '}`
+    const message = `Register for ${this.initialData.orgName} by clicking the link below:\n\n${link}\n\n\n\n`
     const subject = encodeURIComponent('Self Registration Link')
     const body = encodeURIComponent(message)
     const mailtoLink = `mailto:?subject=${subject}&body=${body}`
