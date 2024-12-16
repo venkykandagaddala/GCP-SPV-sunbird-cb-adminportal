@@ -11,7 +11,6 @@
   border: 1px solid #0000001f;
   padding: 20px 20px 40px;
   border-radius: 5px;
-  margin-bottom: 10px;
 
   .linkLable {
     /* stylelint-disable */
@@ -26,16 +25,6 @@
     width: 14px;
     height: 14px;
     margin: 0px 3px;
-  }
-
-  .fetchData {
-    height: 48px;
-    background-color: #1B4CA1;
-    border-radius: 25px;
-    color: #FFFFFF;
-    /* stylelint-disable */
-    font: 700 14px 'Lato';
-    /* stylelint-enable */
   }
 
   .apiTypeSelect {
@@ -75,6 +64,17 @@
   pointer-events: none;
 }
 
+.fetchData {
+  height: 40px;
+  background-color: #1B4CA1 !important;
+  border-radius: 20px;
+  color: #FFFFFF !important;
+  /* stylelint-disable */
+  font: 700 14px 'Lato';
+  /* stylelint-enable */
+}
+
+
 :host ::ng-deep .services-input-form{
    .mat-form-field-flex {
     height: 50px;
@@ -88,6 +88,54 @@
   .mat-form-field-subscript-wrapper {
     padding: 0px !important;
   }
+}
+
+.header {
+  /* stylelint-enable */
+  font: 700 20px / 30px Lato;
+  /* stylelint-disable */
+  color: #212529;
+}
+
+.transformation-box {
+  border: 1px solid hsla(0, 0%, 0%, 0.161);
+  border-radius: 5px;
+  min-height: 227px;
+  padding: 24px;
+
+  .lable {
+    /* stylelint-enable */
+    font: 700 14px Lato;
+    /* stylelint-disable */
+    color: #212529;
+    width:  180px;
+  }
+
+  .colun {
+    /* stylelint-enable */
+    font: 700 14px Lato;
+    /* stylelint-disable */
+    color: #212529;
+    width: 5px;
+  }
+}
+
+.transformation-required {
+  border: 1.7px solid #ff0000 !important;
+  border-radius: 5px;
+}
+
+.save-properties {
+  background-color: #1B4CA1 !important;
+  width: fit-content;
+  padding: '0px 15px';
+  height: 40px;
+  border-radius: 8px;
+
+  /* stylelint-enable */
+  font: 700 14px Lato;
+  /* stylelint-disable */
+  color: #FFFFFF !important;
 }
 
 :host ::ng-deep .description {
@@ -152,4 +200,16 @@
   .mat-tab-label {
     height: 38px;
   }
+}
+
+:host ::ng-deep .transformation-box {
+   .mat-form-field-flex {
+    height: 50px;
+    align-items: center;
+  }
+
+  .mat-form-field-wrapper {
+    padding: 0px !important;
+  }
+
 }

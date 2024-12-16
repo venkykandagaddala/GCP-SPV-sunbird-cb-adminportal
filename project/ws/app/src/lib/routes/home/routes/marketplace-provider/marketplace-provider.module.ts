@@ -34,6 +34,7 @@ import { TransformationsComponent } from './components/transformations/transform
 import { ViaApiParamsTableComponent } from './components/via-api-params-table/via-api-params-table.component'
 import { ViaApiComponent } from './components/via-api/via-api.component'
 import { MatRadioModule } from '@angular/material/radio'
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 
 const routes: Routes = [
   {
@@ -110,6 +111,7 @@ const routes: Routes = [
     NgJsonEditorModule,
     MatSelectModule,
     MatRadioModule,
+    MatSlideToggleModule
   ],
   providers: [DatePipe, LoaderService],
   entryComponents: [

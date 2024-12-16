@@ -19,7 +19,7 @@ const API_END_POINTS = {
   DOWNLOAD_LOG: (gcpfileName: string) => `/apis/proxies/v8/storage/v1/downloadCiosLogs/${gcpfileName}`,
   CREATE_CONFIGURATION: `apis/proxies/v8/serviceregistry/config/create`,
   UPDATE_CONFIGURATION: `apis/proxies/v8/serviceregistry/config/update`,
-  GET_CONFIGURATION: (configurationId: string) => `apis/proxies/v8/serviceregistry/config/read/${configurationId}`
+  GET_CONFIGURATION: (configurationId: string) => `apis/proxies/v8/serviceregistry/config/read/${configurationId}`,
 }
 
 @Injectable({
