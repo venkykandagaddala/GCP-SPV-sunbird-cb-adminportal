@@ -144,6 +144,9 @@ export class ViaApiComponent implements OnInit, OnChanges {
       this.marketPlaceSvc.getConfiguraionDetails(contentApisId).subscribe((responce: any) => {
         this.patchFormData(responce)
       })
+    } else {
+      const transformContent = _.get(this.providerConfiguration, 'transformContentViaApi')
+      this.transforamtionForm.controls.transformContent.patchValue(transformContent)
     }
   }
 
