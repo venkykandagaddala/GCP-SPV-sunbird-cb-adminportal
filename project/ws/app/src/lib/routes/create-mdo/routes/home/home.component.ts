@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.route.queryParams.subscribe(params => {
-      this.dept = params['currentDept']
+      this.dept = params['currentDept'] ? params['currentDept'] : params['subOrgType']
       this.mydept = params['depatName']
       this.deptType = params['deptType']
 

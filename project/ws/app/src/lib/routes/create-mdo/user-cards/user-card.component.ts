@@ -4,13 +4,13 @@ import {
   Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output,
   QueryList, TemplateRef, ViewChild, ViewChildren,
 } from '@angular/core'
-import { FormGroup, FormControl, Validators } from '@angular/forms'
+import { UntypedFormGroup, UntypedFormControl, Validators, FormControl, FormGroup } from '@angular/forms'
 import { UsersService } from '../../../routes/home/services/users.service'
-import { MatChipInputEvent } from '@angular/material/chips'
-import { MatDialog } from '@angular/material/dialog'
+// import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
 import { MatExpansionPanel } from '@angular/material/expansion'
-import { MatPaginator, PageEvent } from '@angular/material/paginator'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { MatLegacyPaginator as MatPaginator, LegacyPageEvent as PageEvent } from '@angular/material/legacy-paginator'
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { COMMA, ENTER } from '@angular/cdk/keycodes'
 // tslint:disable-next-line
 import * as _ from 'lodash'
@@ -75,8 +75,8 @@ export class UserCardComponent implements OnInit, OnChanges, AfterViewChecked {
   isMdoAdmin = false
   isMdoLeader = false
   isBoth = false
-  updateUserDataForm: FormGroup
-  approveUserDataForm: FormGroup
+  updateUserDataForm: UntypedFormGroup
+  approveUserDataForm: UntypedFormGroup
   designationsMeta: any = []
   groupsList: any = []
   selectedtags: any[] = []
@@ -121,12 +121,12 @@ export class UserCardComponent implements OnInit, OnChanges, AfterViewChecked {
   checked = false
   isSPVAdmin = false
   constructor(private usersSvc: UsersService, private roleservice: RolesService,
-              private dialog: MatDialog,
-              private route: ActivatedRoute,
-              private snackBar: MatSnackBar,
-              private events: EventService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private events: EventService,
     // private datePipe: DatePipe,
-              private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef) {
     this.updateUserDataForm = new FormGroup({
       designation: new FormControl('', []),
       group: new FormControl('', [Validators.required]),
@@ -135,18 +135,18 @@ export class UserCardComponent implements OnInit, OnChanges, AfterViewChecked {
       dob: new FormControl('', []),
       primaryEmail: new FormControl('', [Validators.required, Validators.email, Validators.pattern(EMAIL_PATTERN)]),
       // countryCode: new FormControl('+91', []),
-      mobile: new FormControl('', [Validators.required, Validators.pattern(this.phoneNumberPattern)]),
-      tags: new FormControl('', [Validators.pattern(this.namePatern)]),
-      roles: new FormControl('', [Validators.required]),
-      domicileMedium: new FormControl('', []),
-      gender: new FormControl('', []),
-      category: new FormControl('', []),
-      pincode: new FormControl('', []),
+      mobile: new UntypedFormControl('', [Validators.required, Validators.pattern(this.phoneNumberPattern)]),
+      tags: new UntypedFormControl('', [Validators.pattern(this.namePatern)]),
+      roles: new UntypedFormControl('', [Validators.required]),
+      domicileMedium: new UntypedFormControl('', []),
+      gender: new UntypedFormControl('', []),
+      category: new UntypedFormControl('', []),
+      pincode: new UntypedFormControl('', []),
     })
 
-    this.approveUserDataForm = new FormGroup({
-      approveDesignation: new FormControl('', []),
-      approveGroup: new FormControl('', []),
+    this.approveUserDataForm = new UntypedFormGroup({
+      approveDesignation: new UntypedFormControl('', []),
+      approveGroup: new UntypedFormControl('', []),
     })
 
     const fullProfile = _.get(this.route, 'snapshot.parent.data.configService.userRoles')
@@ -537,7 +537,7 @@ export class UserCardComponent implements OnInit, OnChanges, AfterViewChecked {
     this.selectedtags = _.get(profileData, 'additionalProperties.tag') || []
   }
 
-  addActivity(event: MatChipInputEvent) {
+  addActivity(event: any) {
     const input = event.input
     const value = event.value as string
     // if ((value && value.trim()) && this.updateUserDataForm.valid) {

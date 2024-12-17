@@ -280,7 +280,7 @@ a:not([href]):not([tabindex]) {
   box-shadow: none !important;
 }
 
-::ng-deep#directorycs {
+::ng-deep #directorycs {
   .mat-card-header-text {
     display: none !important;
     margin: 0 !important;
@@ -293,3 +293,4 @@ a:not([href]):not([tabindex]) {
   line-height: 1;
   align-self: center;
 }
+

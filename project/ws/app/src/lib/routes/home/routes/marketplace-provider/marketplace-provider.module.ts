@@ -114,9 +114,6 @@ const routes: Routes = [
     MatSlideToggleModule
   ],
   providers: [DatePipe, LoaderService],
-  entryComponents: [
-    ConformationPopupComponent,
-  ],
   exports: [RouterModule],
 })
 export class MarketplaceProviderModule { }

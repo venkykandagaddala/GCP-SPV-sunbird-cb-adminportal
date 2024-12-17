@@ -65,7 +65,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'directory/mdo',
+        // redirectTo: 'directory/mdo',
         // redirectTo: 'users/active',
         component: DirectoryViewComponent,
         // component: UsersViewComponent,
@@ -136,11 +136,21 @@ const routes: Routes = [
       {
         path: 'directory',
         // pathMatch: 'full',
-        redirectTo: 'directory/mdo',
+        // redirectTo: 'directory/mdo',
         component: DirectoryViewComponent,
         data: {
           // pageId: 'app/directory',
           module: 'Directory',
+          pageType: 'feature',
+          pageKey: 'Directory',
+        },
+      },
+      {
+        path: 'organisation',
+        // redirectTo: 'directory/organisation',
+        component: DirectoryViewComponent,
+        data: {
+          module: 'Onboarding',
           pageType: 'feature',
           pageKey: 'Directory',
         },
@@ -226,7 +236,7 @@ const routes: Routes = [
       },
       {
         path: 'requests',
-        redirectTo: 'requests/:type',
+        // redirectTo: 'requests/:type',
         component: OnboardingRequestsComponent,
         data: {
           pageId: 'home/requests',

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { PublicLogoutComponent } from './public-logout.component'
-import { MatCardModule } from '@angular/material/card'
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatExpansionModule } from '@angular/material/expansion'
 import { MatIconModule } from '@angular/material/icon'

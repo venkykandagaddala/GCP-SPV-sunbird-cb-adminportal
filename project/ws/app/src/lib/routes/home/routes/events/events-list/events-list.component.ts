@@ -7,7 +7,7 @@ import * as moment from 'moment'
 import * as _ from 'lodash'
 import { EventsService } from '../services/events.service'
 import { DialogConfirmComponent } from '../../../../../../../../../../src/app/component/dialog-confirm/dialog-confirm.component'
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { TelemetryEvents } from '../model/telemetry.event.model'
 
 @Component({

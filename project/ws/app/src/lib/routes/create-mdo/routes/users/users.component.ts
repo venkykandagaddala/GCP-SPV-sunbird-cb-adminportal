@@ -32,7 +32,8 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   createdDepartment!: any
   private defaultSideNavBarOpenedSubscription: any
   @ViewChild('stickyMenu', { static: true }) menuElement!: ElementRef
-
+  goToImportMaster = false
+  subOrgType: any
   @HostListener('window:scroll', ['$event'])
   handleScroll() {
     const windowScroll = window.pageYOffset
@@ -42,12 +43,13 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sticky = false
     }
   }
-
+  isReportsPath = false
   constructor(private usersSvc: UsersService, private router: Router,
-              private route: ActivatedRoute,
-              private profile: ProfileV2Service,
-              private profileUtilSvc: ProfileV2UtillService,
-              private usersService: UsersService) {
+    private route: ActivatedRoute,
+    private profile: ProfileV2Service,
+    private profileUtilSvc: ProfileV2UtillService,
+    private usersService: UsersService,
+  ) {
   }
   ngOnInit() {
     this.tabsData = [
@@ -68,7 +70,20 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
         key: 'mentormanage',
         render: true,
         enabled: true,
-      }]
+      },
+      {
+        name: 'Designation Master',
+        key: 'designation_master',
+        render: true,
+        enabled: true,
+      },
+      // {
+      //   name: 'Grade/Group setting',
+      //   key: 'grade_setting',
+      //   render: true,
+      //   enabled: true,
+      // },
+    ]
 
     const url = this.router.url.split('/')
     this.role = url[url.length - 2]
@@ -77,6 +92,15 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
       this.id = params['roleId']
       this.currentDept = params['currentDept']
       this.deptName = params['depatName']
+      this.currentTab = params['tab'] || 'users'
+      this.subOrgType = params['subOrgType']
+      this.isReportsPath = this.router.url.includes('path=reports')
+
+      if (this.currentTab.split('/').length > 1 && this.currentTab.split('/')[1] === 'import-designation') {
+        this.currentTab = 'designation_master'
+        this.goToImportMaster = true
+      }
+
       if (this.currentDept && this.deptName) {
         const obj = {
           depName: this.deptName,
@@ -254,6 +278,7 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
         createDept: JSON.stringify({ depName: this.deptName }),
         orgName: this.deptName,
         redirectionPath: window.location.href,
+        subOrgType: this.subOrgType && this.subOrgType.toLowerCase() === 'ministry' ? 'mdo' : 'state'
       }, state: { userData: event.row, updateButton: true },
     })
   }

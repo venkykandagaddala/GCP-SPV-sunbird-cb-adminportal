@@ -1,13 +1,12 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Resolve } from '@angular/router'
+
 import { of } from 'rxjs'
 import { map, catchError } from 'rxjs/operators'
 
 @Injectable()
 export class RejectedRequestsResolve
-  implements
-  Resolve<any> {
+   {
   requestType: any
   url: any
   pageLimit = 1000
