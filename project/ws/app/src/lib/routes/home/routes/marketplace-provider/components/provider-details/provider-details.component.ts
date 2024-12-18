@@ -7,7 +7,6 @@ import { HttpErrorResponse } from '@angular/common/http'
 import { DatePipe } from '@angular/common'
 import { forkJoin, of } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
-// import { JsonEditorOptions } from 'ang-jsoneditor'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { LoaderService } from '../../../../services/loader.service'
 import { environment } from '../../../../../../../../../../../src/environments/environment'
@@ -49,12 +48,6 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
   fileUploadedDate: string | null = ''
   thumbnailResourceId = ''
   pdfResourceId = ''
-  // providerConfiguration: any
-  // partnerCode = ''
-  // transforamtionForm!: FormGroup
-  // public contentEeditorOptions: JsonEditorOptions | undefined
-  // public progressEditorOptions: JsonEditorOptions | undefined
-  // public certificateEditorOptions: JsonEditorOptions | undefined
 
   constructor(
     private formBuilder: FormBuilder,
@@ -62,29 +55,10 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     private marketPlaceSvc: MarketplaceService,
     private snackBar: MatSnackBar,
     private datePipe: DatePipe,
-    // private activateRoute: ActivatedRoute,
     private loaderService: LoaderService,
   ) {
     this.initialization()
-    // this.setJsonEditorOptions()
   }
-
-  // setJsonEditorOptions() {
-  //   this.contentEeditorOptions = this.getEditorOptions
-  //   this.progressEditorOptions = this.getEditorOptions
-  //   this.certificateEditorOptions = this.getEditorOptions
-  // }
-
-  // get getEditorOptions(): JsonEditorOptions {
-  //   const editorOptions = new JsonEditorOptions()
-  //   editorOptions.mode = 'text'
-  //   editorOptions.mainMenuBar = false // Hide the menu bar
-  //   editorOptions.navigationBar = false // Hide the navigation bar
-  //   editorOptions.statusBar = false // Hide the status bar at the bottom
-  //   editorOptions.enableSort = false // Disable sorting
-  //   editorOptions.enableTransform = false // Disable transformation
-  //   return editorOptions
-  // }
 
   initialization() {
     this.providerFormGroup = this.formBuilder.group({
@@ -94,24 +68,10 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       description: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9,.\-_$/:\[\] ' !]*$/), Validators.maxLength(500)]),
       providerTips: this.formBuilder.array([]),
     })
-    // this.transforamtionForm = this.formBuilder.group({
-    //   trasformContentJson: new FormControl(''),
-    //   transformProgressJson: new FormControl(''),
-    //   trasformCertificateJson: new FormControl(''),
-    // })
   }
 
   ngOnInit() {
-    // this.getRoutesData()
   }
-
-  // getRoutesData() {
-  //   this.activateRoute.data.subscribe(data => {
-  //     if (data.pageData.data) {
-  //       this.providerConfiguration = data.pageData.data
-  //     }
-  //   })
-  // }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.providerDetails && changes.providerDetails.currentValue) {
@@ -127,7 +87,7 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       websiteUrl: _.get(providerDetails, 'data.websiteUrl', ''),
       description: _.get(providerDetails, 'data.description', ''),
     })
-    this.providerFormGroup.get('partnerCode')?.disable()
+    this.providerFormGroup.controls.partnerCode.disable()
     this.getTipsList.clear()
     this.imageUrl = _.get(providerDetails, 'data.link')
     this.thumbNailUrl = this.imageUrl
@@ -140,7 +100,6 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     _.get(providerDetails, 'data.providerTips', []).forEach((tip: string) => {
       this.addTips(tip)
     })
-    // this.setTransformationDetails(providerDetails)
   }
 
   get getFileName() {
@@ -153,19 +112,6 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
     }
     return fileName
   }
-
-  // setTransformationDetails(providerDetails: any) {
-  //   const providerName = _.get(providerDetails, 'data.contentPartnerName', '').toLowerCase()
-  //   if (providerName) {
-  //     const configuration = this.providerConfiguration[providerName]
-  //     // this.partnerCode = _.get(providerDetails, 'data.partnerCode', _.get(configuration, 'partnerCode', ''))
-  //     this.transforamtionForm.setValue({
-  //       trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : _.get(configuration, 'trasformContentJson', ''),
-  //       transformProgressJson: providerDetails.transformProgressJson ? providerDetails.transformProgressJson : _.get(configuration, 'transformProgressJson', ''),
-  //       trasformCertificateJson: providerDetails.trasformCertificateJson ? providerDetails.trasformCertificateJson : _.get(configuration, 'trasformCertificateJson', ''),
-  //     })
-  //   }
-  // }
 
   getControlValidation(controlName: string, validator: string): Boolean {
     const control = this.providerFormGroup.get(controlName)
@@ -375,32 +321,6 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
         partnerCode: formDetails.partnerCode.toUpperCase(),
       }
 
-      // if (this.providerDetails) {
-      //   if (this.providerDetails.id) {
-      //     formBody['id'] = this.providerDetails.id
-      //   }
-      //   if (this.partnerCode) {
-      //     formBody['partnerCode'] = this.partnerCode
-      //     const tranforamtions = this.transforamtionForm.value
-      //     formBody['trasformContentJson'] = tranforamtions.trasformContentJson
-      //     formBody['transformProgressJson'] = tranforamtions.transformProgressJson
-      //     formBody['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
-      //   }
-      // } else {
-      //   const providerDetails = {
-      //     data: {
-      //       contentPartnerName: formDetails.contentPartnerName,
-      //     },
-      //   }
-      //   this.setTransformationDetails(providerDetails)
-      //   const tranforamtions = this.transforamtionForm.value
-      //   if (tranforamtions.trasformContentJson !== '') {
-      //     formBody['trasformContentJson'] = tranforamtions.trasformContentJson
-      //     formBody['transformProgressJson'] = tranforamtions.transformProgressJson
-      //     formBody['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
-      //   }
-      // }
-
       this.marketPlaceSvc.createProvider(formBody).subscribe({
         next: (responce: any) => {
           this.loaderService.changeLoad.next(false)
@@ -435,10 +355,6 @@ export class ProviderDetailsComponent implements OnInit, OnChanges {
       this.providerDetalsBeforUpdate['data']['link'] = this.thumbNailUrl
       this.providerDetalsBeforUpdate['data']['documentUrl'] = this.uploadedPdfUrl
       this.providerDetalsBeforUpdate['data']['documentUploadedDate'] = this.fileUploadedDate
-      // const tranforamtions = this.transforamtionForm.value
-      // this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
-      // this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson
-      // this.providerDetalsBeforUpdate['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
 
       this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
         next: (responce: any) => {

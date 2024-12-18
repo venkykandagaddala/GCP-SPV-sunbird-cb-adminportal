@@ -179,43 +179,6 @@
         </ng-template>
       </div>
 
-      <!-- <ng-container *ngIf="providerDetalsBeforUpdate">
-        <form [formGroup]="transforamtionForm">
-          <div class=" mb-2"><span class="lable">Additional Properties</span></div>
-          <mat-accordion class="flex flex-column gap-2">
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>Trasform Content</mat-panel-title>
-              </mat-expansion-panel-header>
-              <div>
-                <json-editor [options]="contentEeditorOptions" formControlName="trasformContentJson"
-                  class="transformationEditor">
-                </json-editor>
-              </div>
-            </mat-expansion-panel>
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>Transform Progress</mat-panel-title>
-              </mat-expansion-panel-header>
-              <div>
-                <json-editor [options]="progressEditorOptions" formControlName="transformProgressJson"
-                  class="transformationEditor">
-                </json-editor>
-              </div>
-            </mat-expansion-panel><mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>Trasform Certificate</mat-panel-title>
-              </mat-expansion-panel-header>
-              <div>
-                <json-editor [options]="certificateEditorOptions" formControlName="trasformCertificateJson"
-                  class="transformationEditor">
-                </json-editor>
-              </div>
-            </mat-expansion-panel>
-          </mat-accordion>
-        </form>
-      </ng-container> -->
-
       <div class="flex items-center gap-4">
         <button mat-button type="button" class="cancelBtn" (click)="navigateToProvidersDashboard()">Cancel</button>
         <button mat-button type="submit" class="saveBtn">{{providerDetalsBeforUpdate ? 'Update' : 'Save'}}</button>

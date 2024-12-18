@@ -93,7 +93,6 @@ export class CoursesTableComponent implements OnInit, OnChanges {
   }
 
   selectAll() {
-    // this.allSelected = !this.allSelected
     this.selectedRowData = []
     _.get(this.dataSource, 'filteredData', []).forEach((rowData: any) => {
       if (!rowData.isActive) {

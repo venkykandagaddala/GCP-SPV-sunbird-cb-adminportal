@@ -11,19 +11,21 @@ const API_END_POINTS = {
   DELETE_PROVIDER: `/apis/proxies/v8/contentpartner/v1/delete/`,
   GET_PROVIDER_DETAILS: (id: string) => `/apis/proxies/v8/contentpartner/v1/read/${id}`,
   UPLOAD_CONTENT: `/apis/proxies/v8/ciosIntegration/v1/loadContentFromExcel/`,
+  UPLOAD_PROGRES: `/apis/proxies/v8/ciosIntegration/v1/loadContentProgressFromExcel/`,
   GET_FILES_LIST: `/apis/proxies/v8/ciosIntegration/v1/file/info/`,
   // GET_CONTENT_LIST: `/apis/proxies/v8/ciosIntegration/v1/readAllContentFromDb`,
   GET_CONTENT_LIST: `apis/proxies/v8/ciosIntegration/v1/search/content`,
   DELETE_NOT_PULISHED_COURSES: 'apis/proxies/v8/ciosIntegration/v1/deleteContent',
   DOWNLOAD_LOG: (gcpfileName: string) => `/apis/proxies/v8/storage/v1/downloadCiosLogs/${gcpfileName}`,
+  CREATE_CONFIGURATION: `apis/proxies/v8/serviceregistry/config/create`,
+  UPDATE_CONFIGURATION: `apis/proxies/v8/serviceregistry/config/update`,
+  GET_CONFIGURATION: (configurationId: string) => `apis/proxies/v8/serviceregistry/config/read/${configurationId}`,
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class MarketplaceService {
-
-  selectedCourse: any
 
   constructor(
     private http: HttpClient,
@@ -97,6 +99,20 @@ export class MarketplaceService {
     )
   }
 
+  uploadProgress(
+    data: any,
+    partnerCode: string
+  ): Observable<any> {
+    const file = data.get('content') as File
+    const newFormData = new FormData()
+    newFormData.append('file', file)
+    const url = `${API_END_POINTS.UPLOAD_PROGRES}${partnerCode}`
+    return this.http.post<any>(
+      url,
+      newFormData
+    )
+  }
+
   getCoursesList(formBody: any) {
     return this.http.post<any>(`${API_END_POINTS.GET_CONTENT_LIST}`, formBody)
   }
@@ -113,11 +129,17 @@ export class MarketplaceService {
     return this.http.get<any>(API_END_POINTS.DOWNLOAD_LOG(gcpfileName), { responseType: 'blob' as 'json' })
   }
 
-  setSelectedCourse(course: any) {
-    this.selectedCourse = course
+  //#region (via api)
+  createConfiguration(formBody: any) {
+    return this.http.post(`${API_END_POINTS.CREATE_CONFIGURATION}`, formBody)
   }
 
-  get getSelectedCourse() {
-    return this.selectedCourse
+  updateConfiguration(formBody: any) {
+    return this.http.post(`${API_END_POINTS.UPDATE_CONFIGURATION}`, formBody)
   }
+
+  getConfiguraionDetails(configurationId: string) {
+    return this.http.get(`${API_END_POINTS.GET_CONFIGURATION(configurationId)}`)
+  }
+  //#endregion
 }

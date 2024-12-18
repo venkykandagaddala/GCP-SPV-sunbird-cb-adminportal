@@ -4,7 +4,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms'
 export function preventHtmlAndJs(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value = control.value
-    if (value && value.match(/<[^>]*>|(function[^\s]+)|(javascript:[^\s]+)/i)) {
+    if (value && value.match(/<[^>]*>|(function\s*\([^)]*\))|(javascript:[^\s]+)/i)) {
       return { noHtml: true }
     }
     return null

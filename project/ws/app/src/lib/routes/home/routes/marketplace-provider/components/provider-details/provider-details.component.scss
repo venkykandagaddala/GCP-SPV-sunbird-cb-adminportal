@@ -235,13 +235,6 @@
   cursor: pointer;
 }
 
-:host ::ng-deep .transformationEditor {
-
-  textarea {
-    width: 100%;
-    min-height: 200px;
-  }
-}
 
 :host ::ng-deep .provider-input-form{
    .mat-form-field-flex {

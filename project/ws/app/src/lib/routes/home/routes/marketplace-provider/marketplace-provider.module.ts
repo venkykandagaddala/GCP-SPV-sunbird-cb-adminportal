@@ -7,31 +7,36 @@ import { ConfigureMarketplaceProvidersComponent } from './components/configure-m
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { BreadcrumbsOrgModule } from '@sunbird-cb/collection'
 import { HelpCenterGuideComponent } from './components/help-center-guide/help-center-guide.component'
-import { ProvidersComponent } from './components/providers/providers.component'
 import { ConformationPopupComponent } from './dialogs/conformation-popup/conformation-popup.component'
 import { ContentUploadComponent } from './components/content-upload/content-upload.component'
 import { CoursesTableComponent } from './components/courses-table/courses-table.component'
-import { CoursesPreviewComponent } from './components/courses-preview/courses-preview.component'
 import { DragDropDirective } from './directives/drag-drop.directive'
 import { PageResolve } from '@sunbird-cb/utils'
 import { NgJsonEditorModule } from 'ang-jsoneditor'
-import { MatInputModule } from '@angular/material/input'
-import { MatCardModule } from '@angular/material/card'
-import { MatButtonModule } from '@angular/material/button'
+import { MatLegacyInputModule } from '@angular/material/legacy-input'
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card'
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button'
 import { MatIconModule } from '@angular/material/icon'
 import { MatExpansionModule } from '@angular/material/expansion'
-import { MatTabsModule } from '@angular/material/tabs'
-import { MatMenuModule } from '@angular/material/menu'
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs'
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu'
 import { MatDialogModule } from '@angular/material/dialog'
-import { MatTooltipModule } from '@angular/material/tooltip'
-import { MatProgressBarModule } from '@angular/material/progress-bar'
-import { MatCheckboxModule } from '@angular/material/checkbox'
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
-import { MatPaginatorModule } from '@angular/material/paginator'
-import { MatTableModule } from '@angular/material/table'
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip'
+import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar'
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox'
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner'
+import { MatLegacyPaginatorModule as MatPaginatorModule } from '@angular/material/legacy-paginator'
+import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table'
 import { LoaderService } from '../../services/loader.service'
-import { TransformationsComponent } from './components/transformations/transformations.component'
 import { ProviderResolveService } from './services/provider-resolve.service'
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select'
+import { TransformationsComponent } from './components/transformations/transformations.component'
+import { ViaApiParamsTableComponent } from './components/via-api-params-table/via-api-params-table.component'
+import { ViaApiComponent } from './components/via-api/via-api.component'
+import { MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio'
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle'
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field'
+
 
 const routes: Routes = [
   {
@@ -68,11 +73,6 @@ const routes: Routes = [
       pageData: PageResolve,
     },
   },
-  {
-    path: 'course-preview',
-    pathMatch: 'full',
-    component: CoursesPreviewComponent,
-  },
 ]
 
 @NgModule({
@@ -82,19 +82,19 @@ const routes: Routes = [
     ProviderDetailsComponent,
     ConfigureMarketplaceProvidersComponent,
     HelpCenterGuideComponent,
-    ProvidersComponent,
     ContentUploadComponent,
     CoursesTableComponent,
-    CoursesPreviewComponent,
     DragDropDirective,
     TransformationsComponent,
+    ViaApiParamsTableComponent,
+    ViaApiComponent,
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule,
-    MatInputModule,
+    MatLegacyInputModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -111,6 +111,10 @@ const routes: Routes = [
     MatProgressBarModule,
     MatTooltipModule,
     NgJsonEditorModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatSlideToggleModule,
+    MatFormFieldModule
   ],
   providers: [DatePipe, LoaderService],
   exports: [RouterModule],
