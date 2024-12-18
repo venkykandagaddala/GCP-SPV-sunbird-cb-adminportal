@@ -43,12 +43,13 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sticky = false
     }
   }
-
+  isReportsPath = false
   constructor(private usersSvc: UsersService, private router: Router,
     private route: ActivatedRoute,
     private profile: ProfileV2Service,
     private profileUtilSvc: ProfileV2UtillService,
-    private usersService: UsersService) {
+    private usersService: UsersService,
+  ) {
   }
   ngOnInit() {
     this.tabsData = [
@@ -93,6 +94,7 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
       this.deptName = params['depatName']
       this.currentTab = params['tab'] || 'users'
       this.subOrgType = params['subOrgType']
+      this.isReportsPath = this.router.url.includes('path=reports')
 
       if (this.currentTab.split('/').length > 1 && this.currentTab.split('/')[1] === 'import-designation') {
         this.currentTab = 'designation_master'
