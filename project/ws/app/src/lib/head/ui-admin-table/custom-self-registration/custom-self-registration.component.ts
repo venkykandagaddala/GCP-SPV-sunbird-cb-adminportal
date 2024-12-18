@@ -81,7 +81,8 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
           this.selfRegistrationForm.get('endDate')?.setValue(new Date(this.latestRegisteredData.endDate))
           this.customRegistrationLinks = {
             registrationLink: this.latestRegisteredData.url,
-            qrRegistrationLink: this.getQRCodePath(this.latestRegisteredData),
+            qrRegistrationLink: this.latestRegisteredData.qrCodeImagePath?.replace('portal', 'spv'),
+            qrRegistrationLogoPath: this.getQRCodePath(this.latestRegisteredData),
 
           }
           this.numberOfUsersOnboarded = this.latestRegisteredData.numberOfUsersOnboarded
@@ -119,7 +120,8 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
 
           this.customRegistrationLinks = {
             registrationLink: response.result.registrationLink,
-            qrRegistrationLink: this.getQRCodePath(response.result),
+            qrRegistrationLink: response.result?.qrRegistrationLink.replace('portal', 'spv'),
+            qrRegistrationLogoPath: response.result?.qrCodeLogoPath.replace('portal', 'spv'),
           }
           this.latestRegisteredData.status = 'active'
 
@@ -148,17 +150,17 @@ export class CustomSelfRegistrationComponent implements OnInit, OnDestroy {
   }
 
   getQRCodePath(response: any) {
-    if (response && response.qrLogoPath) {
+    if (response && response?.qrLogoPath) {
       return response.qrLogoPath.replace('portal', 'spv')
     }
-    else if (response && response.qrRegistrationLink) {
-      return response.qrRegistrationLink.replace('portal', 'spv')
+    else if (response && response?.qrCodeLogoPath) {
+      return response.qrCodeLogoPath.replace('portal', 'spv')
     }
-    else if (response && response.qrLogoFilePath) {
-      return response.qrLogoFilePath.replace('portal', 'spv')
-    }
-    else if (response && response.qrCodeImagePath) {
+    else if (response && response?.qrCodeImagePath) {
       return response.qrCodeImagePath.replace('portal', 'spv')
+    }
+    else if (response && response?.qrRegistrationLink) {
+      return response.qrRegistrationLink.replace('portal', 'spv')
     }
   }
 
