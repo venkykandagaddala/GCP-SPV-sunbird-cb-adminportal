@@ -90,12 +90,19 @@
 
                   <mat-form-field class="w-full">
                     <input type="text" placeholder="Type to search" aria-label="Type to search" matInput
-                      (input)="filterStates($event.target.value)" formControlName="state" [matAutocomplete]="auto">
+                      (input)="filterStates($event.target.value)" formControlName="state" [matAutocomplete]="auto"
+                      (keydown)="onkeyDown($event)">
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                      (opened)="onAutoCompleteOpened()" (closed)="onAutoCompleteClosed()"
                       (optionSelected)="onSelectStateMinistry($event.option.value)">
-                      <ng-container *ngFor="let option of filteredStates">
-                        <mat-option [value]="option">{{ option.orgName }}</mat-option>
+                      <ng-container *ngIf="filteredStates?.length > 0; else noStates">
+                        <ng-container *ngFor="let option of filteredStates">
+                          <mat-option [value]="option">{{ option.orgName }}</mat-option>
+                        </ng-container>
                       </ng-container>
+                      <ng-template #noStates>
+                        <mat-option disabled>No States found</mat-option>
+                      </ng-template>
                     </mat-autocomplete>
                     <mat-error *ngIf="controls['state'].errors?.['required']">State is required.</mat-error>
                   </mat-form-field>
@@ -109,13 +116,22 @@
 
                   <mat-form-field class="w-full">
                     <input type="text" placeholder="Type to search" aria-label="Type to search" matInput
-                      (input)="filterMinistry($event.target.value)" formControlName="ministry" [matAutocomplete]="auto">
+                      (input)="filterMinistry($event.target.value)" formControlName="ministry" [matAutocomplete]="auto"
+                      (keydown)="onkeyDown($event)">
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
-                      (optionSelected)="onSelectStateMinistry($event.option.value)">
-                      <ng-container *ngFor="let option of filteredMinistry">
-                        <mat-option [value]="option">{{ option.orgName }}</mat-option>
+                      (optionSelected)="onSelectStateMinistry($event.option.value)" (opened)="onAutoCompleteOpened()"
+                      (closed)="onAutoCompleteClosed()">
+
+                      <ng-container *ngIf="filteredMinistry?.length > 0; else noMinisry">
+                        <ng-container *ngFor="let option of filteredMinistry">
+                          <mat-option [value]="option">{{ option.orgName }}</mat-option>
+                        </ng-container>
                       </ng-container>
+                      <ng-template #noMinisry>
+                        <mat-option disabled>No Ministry found</mat-option>
+                      </ng-template>
                     </mat-autocomplete>
+
                     <mat-error *ngIf="controls['ministry'].errors?.['required']">Center is required.</mat-error>
                   </mat-form-field>
                 </div>

@@ -46,6 +46,7 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   ORG_NAME_PATTERN = /^[a-zA-Z0-9 ().,@\-\$\/\\:\[\]!\s]*$/
 
   untilDestroyed$ = new Subject<void>();
+  isMatcompleteOpened = false;
   constructor(
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
@@ -302,7 +303,6 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
   onSelectStateMinistry(org: any) {
     this.getOrganization(org.orgName, this.controls['category'].value)
-
   }
 
   uploadOrganizationLogo() {
@@ -325,5 +325,17 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
         this.selectedLogoName = ''
       }
     })
+  }
+
+  onkeyDown(_event: any) {
+    return this.isMatcompleteOpened
+  }
+
+  onAutoCompleteOpened() {
+    this.isMatcompleteOpened = true
+  }
+
+  onAutoCompleteClosed() {
+    this.isMatcompleteOpened = false
   }
 }
