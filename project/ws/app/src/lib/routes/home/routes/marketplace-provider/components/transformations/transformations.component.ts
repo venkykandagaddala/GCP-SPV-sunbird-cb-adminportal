@@ -85,6 +85,8 @@ export class TransformationsComponent implements OnInit, OnChanges {
 
   initializTransforamtionControls() {
     this.transforamtionForm = this.formBuilder.group({})
+    this.providerDetalsBeforUpdate['certificateTemplateUrl'] =
+      _.get(this.providerDetalsBeforUpdate, 'certificateTemplateUrl', '').replace(' ', '')
     let trasformationJson: any = {}
     if (this.transformationType === 'trasformContentJson') {
       trasformationJson = _.get(this.providerConfiguration, 'trasformContentJson[0].spec')
