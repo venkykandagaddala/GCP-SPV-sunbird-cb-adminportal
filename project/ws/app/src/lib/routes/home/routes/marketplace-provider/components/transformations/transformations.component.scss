@@ -150,7 +150,8 @@
     font: 400 16px Lato;
     /* stylelint-disable */
     color: #000000DE;
-    width: 250px;
+    max-width: 250px;
+    width: fit-content;
     display: -webkit-box;
     overflow-wrap: break-word;
     white-space: pre-wrap;

@@ -28,7 +28,9 @@ export class ViaApiParamsTableComponent implements OnInit {
   }
 
   initialization() {
-    this.addParams()
+    if (this.paramsType !== 'authentication') {
+      this.addParams()
+    }
     switch (this.paramsType) {
       case 'params':
         this.paramsHeader = 'Query Params'
@@ -44,6 +46,17 @@ export class ViaApiParamsTableComponent implements OnInit {
         this.editorOptions.statusBar = false
         this.editorOptions.enableSort = false
         this.editorOptions.enableTransform = false
+        this.onBodyTypeChange()
+        break
+      case 'authentication':
+        this.paramsHeader = 'Authentication'
+        this.editorOptions.mode = 'text'
+        this.editorOptions.mainMenuBar = false
+        this.editorOptions.navigationBar = false
+        this.editorOptions.statusBar = false
+        this.editorOptions.enableSort = false
+        this.editorOptions.enableTransform = false
+        this.showTable = false
         break
 
     }
@@ -70,8 +83,12 @@ export class ViaApiParamsTableComponent implements OnInit {
     }
   }
 
-  onBodyTypeChange(event: any) {
-    this.showTable = event.value === 'urlencoded' ? true : false
+  onBodyTypeChange() {
+    if (this.tableListFormGroup && this.tableListFormGroup.controls && this.tableListFormGroup.controls.bodyType) {
+      this.tableListFormGroup.controls.bodyType.valueChanges.subscribe((val: string) => {
+        this.showTable = val === 'urlencoded' ? true : false
+      })
+    }
   }
 
 }

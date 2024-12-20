@@ -27,8 +27,11 @@ export class ViaApiComponent implements OnInit, OnChanges {
   headersFormGroup!: FormGroup
   paramsFormGroup!: FormGroup
   bodyFormGroup!: FormGroup
+  authenticationFormGroup!: FormGroup
   apiTypesList: any[] = []
   delayTabLoad = true
+  displayUrl = ''
+  apiUrlEdited = false
 
   //#region (transformation variables)
   transforamtionForm!: FormGroup
@@ -63,6 +66,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
       serviceName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/)]),
       serviceCode: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/)]),
       serviceDescription: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/)]),
+      isAuthenticated: new FormControl(false),
       strictCache: new FormControl(false),
       strictCacheTimeInMinutes: new FormControl()
     })
@@ -84,6 +88,11 @@ export class ViaApiComponent implements OnInit, OnChanges {
       tableListFormArray: this.formBuilder.array([]),
       bodyType: new FormControl('urlencoded'),
       rawData: new FormControl(''),
+    })
+
+    this.authenticationFormGroup = this.formBuilder.group({
+      bodyType: new FormControl('urlencoded'),
+      rawData: new FormControl('', Validators.required),
     })
 
     this.apiTypesList = [
@@ -108,25 +117,88 @@ export class ViaApiComponent implements OnInit, OnChanges {
       transformContent: new FormControl({}, Validators.required)
     })
 
-    // this.transforamtionForm = this.formBuilder.group({})
-    // let trasformationJson: any = {}
-    // trasformationJson = _.get(this.providerConfiguration, 'transformContentViaApi[0].spec')
+    this.paramsFormArray.valueChanges.subscribe((params: any) => {
+      if (!this.apiUrlEdited) {
+        this.constructDisplayUrl(params)
+      } else {
+        this.apiUrlEdited = false
+      }
+    })
+    this.viaApiFormGroup.controls.apiUrl.valueChanges.subscribe((event: string) => {
+      if (event !== this.displayUrl) {
+        this.displayUrl = event
+        this.apiUrlEdited = true
+        this.constructParamsFormArray()
+      }
+    })
+  }
 
-    // if (trasformationJson) {
-    //   Object.entries(trasformationJson).forEach(([key, path]) => {
-    //     const transFormContentKeysAndControl: {
-    //       lable: string,
-    //       controlName: string,
-    //       path: string
-    //     } = {
-    //       lable: key,
-    //       controlName: key.replace(' ', ''),
-    //       path: path as string,
-    //     }
-    //     this.transforamtionForm.addControl(key.replace(' ', ''), new FormControl('', Validators.required))
-    //     this.transFormContentKeysAndControls.push(transFormContentKeysAndControl)
-    //   })
-    // }
+  get actualUrl(): string {
+    const actualUrl = this.viaApiFormGroup.controls.apiUrl.value.split('?')[0]
+    return actualUrl
+  }
+
+  constructDisplayUrl(paramsArray: any) {
+    let paramsToUrl = ''
+    paramsArray.forEach((param: any) => {
+      if (param.key) {
+        paramsToUrl = `${paramsToUrl}${paramsToUrl === '' ? '?' : '&'}${param.key}`
+      }
+      if (!param.key && param.value) {
+        paramsToUrl = `${paramsToUrl}${paramsToUrl === '' ? '?&' : '&'}`
+      }
+      if (param.value) {
+        paramsToUrl = `${paramsToUrl}=${param.value}`
+      }
+    })
+    if (paramsToUrl) {
+      this.displayUrl = this.actualUrl + paramsToUrl
+      this.viaApiFormGroup.controls.apiUrl.patchValue(this.displayUrl)
+    }
+  }
+
+  get constructParams(): { key: string; value: string }[] {
+    const paramsArray: any = [
+    ]
+    const urlAndParams = this.displayUrl ? this.displayUrl.split('?') : []
+    const paramsUrlArray = urlAndParams[1] ? urlAndParams[1].split('&') : []
+    paramsUrlArray.forEach((e) => {
+      const keyValue = e.split('=')
+      const param = {
+        key: keyValue[0],
+        value: keyValue[1]
+      }
+      paramsArray.push(param)
+    })
+    paramsArray.push({
+      key: '',
+      value: ''
+    })
+
+    return paramsArray
+  }
+
+  get paramsFormArray(): FormArray {
+    return this.paramsFormGroup.controls.tableListFormArray as FormArray
+  }
+
+  constructParamsFormArray() {
+    const paramsArray = this.constructParams
+    this.paramsFormArray.patchValue(paramsArray)
+    while (this.paramsFormArray.length > paramsArray.length) {
+      this.apiUrlEdited = true
+      this.paramsFormArray.removeAt(this.paramsFormArray.length - 1)
+    }
+
+    while (paramsArray.length > this.paramsFormArray.length) {
+      const object = paramsArray[this.paramsFormArray.length]
+      this.apiUrlEdited = true
+      const formGroup = this.formBuilder.group({
+        key: new FormControl(object.key),
+        value: new FormControl(object.value),
+      })
+      this.paramsFormArray.insert(this.paramsFormArray.length - 1, formGroup)
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -151,30 +223,33 @@ export class ViaApiComponent implements OnInit, OnChanges {
   }
 
   patchFormData(configurationDetails: any) {
-    const urlSplit = _.get(configurationDetails, 'url').split('?byProgramIds=F3F_2DjnR0Wxf9g45zdFsg')
+    const urlSplit = _.get(configurationDetails, 'url')
     const headerMap = _.get(configurationDetails, 'requestPayload.headerMap')
-    const urlMap = _.get(configurationDetails, 'requestPayload.urlMap')
+    // const urlMap = _.get(configurationDetails, 'requestPayload.urlMap')
     const requestMap = _.get(configurationDetails, 'requestPayload.requestMap')
+    const authPayload = _.get(configurationDetails, 'authPayload', {})
     this.servicesFormGroup.setValue({
       serviceName: _.get(configurationDetails, 'serviceName'),
       serviceCode: _.get(configurationDetails, 'serviceCode'),
       serviceDescription: _.get(configurationDetails, 'serviceDescription'),
       strictCache: _.get(configurationDetails, 'requestPayload.strictCache', false),
-      strictCacheTimeInMinutes: _.get(configurationDetails, 'requestPayload.strictCacheTimeInMinutes', 0)
+      strictCacheTimeInMinutes: _.get(configurationDetails, 'requestPayload.strictCacheTimeInMinutes', 0),
+      isAuthenticated: false
     })
+    this.onToggleChange()
     this.servicesFormGroup.controls.serviceCode.disable()
     this.viaApiFormGroup.setValue({
       apiType: _.get(configurationDetails, 'requestMethod'),
-      apiUrl: urlSplit[0],
+      apiUrl: urlSplit,
     })
 
     if (headerMap) {
       this.pushObjectToFormArray(this.headersFormGroup.controls.tableListFormArray as FormArray, headerMap)
     }
 
-    if (urlMap) {
-      this.pushObjectToFormArray(this.paramsFormGroup.controls.tableListFormArray as FormArray, urlMap)
-    }
+    // if (urlMap) {
+    //   this.pushObjectToFormArray(this.paramsFormGroup.controls.tableListFormArray as FormArray, urlMap)
+    // }
 
     if (requestMap) {
       if (configurationDetails.isFormData) {
@@ -184,6 +259,11 @@ export class ViaApiComponent implements OnInit, OnChanges {
         this.bodyFormGroup.controls.bodyType.patchValue('raw')
         this.bodyFormGroup.controls.rawData.patchValue(requestMap)
       }
+    }
+
+    if (JSON.stringify(authPayload) !== '{}') {
+      this.servicesFormGroup.controls.isAuthenticated.patchValue(true)
+      this.authenticationFormGroup.controls.rawData.patchValue(authPayload)
     }
 
     const transformContent = _.get(configurationDetails, 'transformContentViaApi', _.get(this.providerConfiguration, 'transformContentViaApi'))
@@ -204,7 +284,6 @@ export class ViaApiComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    // this.getCoursesConfiguration()
   }
 
   getControlValidation(controlName: string, validator: string): Boolean {
@@ -219,6 +298,15 @@ export class ViaApiComponent implements OnInit, OnChanges {
     return _.get(this.servicesFormGroup.get(controlName), 'value.length', 0)
   }
 
+  authenticationToggleChange() {
+    if (!this.servicesFormGroup.controls.isAuthenticated.value) {
+      this.servicesFormGroup.controls.strictCache.patchValue(false)
+      this.servicesFormGroup.controls.strictCacheTimeInMinutes.clearValidators()
+      this.servicesFormGroup.controls.strictCacheTimeInMinutes.reset()
+      this.servicesFormGroup.controls.strictCacheTimeInMinutes.updateValueAndValidity()
+    }
+  }
+
   onToggleChange() {
     if (this.servicesFormGroup.controls.strictCache.value) {
       this.servicesFormGroup.controls.strictCacheTimeInMinutes.setValidators([Validators.required])
@@ -231,7 +319,6 @@ export class ViaApiComponent implements OnInit, OnChanges {
   configure() {
     this.configured = true
     if (this.servicesFormGroup.valid && this.viaApiFormGroup.valid && this.transformationsUpdated) {
-      // if (this.servicesFormGroup.valid && this.viaApiFormGroup.valid) {
       const formBody: any = this.generatCoursesConfiguration()
       if (_.get(this.providerDetails, 'serviceRegistryDetails.contentApisId', null)) {
         formBody['id'] = _.get(this.providerDetails, 'serviceRegistryDetails.contentApisId')
@@ -304,24 +391,29 @@ export class ViaApiComponent implements OnInit, OnChanges {
         strictCache: serviceDetails.strictCache,
         strictCacheTimeInMinutes: serviceDetails.strictCacheTimeInMinutes
       },
+      authPayload: this.authenticationFormGroup.value.rawData
     }
     return formBody
   }
 
   getParamsAndUrl() {
     const parmsAndUrl = {
-      url: `${this.viaApiFormGroup.controls.apiUrl.value}?byProgramIds=F3F_2DjnR0Wxf9g45zdFsg`,
+      url: `${this.viaApiFormGroup.controls.apiUrl.value.split('?')[0]}`,
       urlPlaceholder: '',
     }
     const params = this.paramsFormGroup.value.tableListFormArray
     if (params && params[0].key) {
+      let paramsUrl = ''
       params.forEach((element: any) => {
         if (element.key) {
-          parmsAndUrl.url = `${parmsAndUrl.url}&${element['key']}={${element['key']}}`
+          paramsUrl = `${paramsUrl}&${element['key']}={${element['key']}}`
           parmsAndUrl.urlPlaceholder =
             `${parmsAndUrl.urlPlaceholder}${parmsAndUrl.urlPlaceholder.length === 0 ? '{' : ',{'}${element['key']}}`
         }
       })
+      if (paramsUrl) {
+        parmsAndUrl.url = `${parmsAndUrl.url}?${paramsUrl}`
+      }
     }
     return parmsAndUrl
   }
@@ -343,19 +435,6 @@ export class ViaApiComponent implements OnInit, OnChanges {
     const hasTransformationAlready = this.providerDetails['transformContentViaApi'] ? true : false
     this.transforamtionForm.markAllAsTouched()
     if (this.transforamtionForm.valid) {
-      // const trasformContentSpec: any = {}
-      // const specValues = this.transforamtionForm.controls.transformContent.value
-      // this.transFormContentKeysAndControls.forEach((transFormContent: any) => {
-      //   trasformContentSpec[specValues[transFormContent.controlName]] = transFormContent.path
-      // })
-
-      // if (hasTransformationAlready) {
-      //   this.providerDetails['transformContentViaApi'][0]['spec'] = trasformContentSpec
-      // } else {
-      //   const transformContentViaApi = this.providerConfiguration.transformContentViaApi
-      //   transformContentViaApi[0]['spec'] = trasformContentSpec
-      //   this.providerDetails['transformContentViaApi'] = transformContentViaApi
-      // }
       this.providerDetails['transformContentViaApi'] = this.transforamtionForm.controls.transformContent.value
       this.marketPlaceSvc.updateProvider(this.providerDetails).subscribe({
         next: (responce: any) => {

@@ -6,7 +6,7 @@
       </div>
     </ng-container>
     <ng-template #reqBodyType>
-      <mat-radio-group class="reqBodyType flex gap-5" formControlName="bodyType" (change)="onBodyTypeChange($event)">
+      <mat-radio-group class="reqBodyType flex gap-5" formControlName="bodyType">
         <mat-radio-button class="params-type-header" value="urlencoded">
           x-www-form-urlencoded
         </mat-radio-button>
@@ -18,25 +18,21 @@
     <ng-container *ngIf="showTable; else rawData">
       <div class="flex">
         <div class="params-table-header w-full">Key</div>
-        <ng-container *ngIf="paramsType !== 'params'">
-          <div class="params-table-header w-full">Value</div>
-        </ng-container>
+        <div class="params-table-header w-full">Value</div>
       </div>
       <ng-container *ngFor="let param of tableList.controls; let i = index">
         <div [formGroup]="param" class="flex">
           <mat-form-field appearance="outline" class="w-full">
             <input type="text" matInput formControlName="key" placeholder="key" (input)="onParamInput(i)">
           </mat-form-field>
-          <ng-container *ngIf="paramsType !== 'params'">
-            <mat-form-field appearance="outline" class="w-full">
-              <input type="text" matInput formControlName="value" placeholder="value" (input)="onParamInput(i)">
-            </mat-form-field>
-          </ng-container>
+          <mat-form-field appearance="outline" class="w-full">
+            <input type="text" matInput formControlName="value" placeholder="value" (input)="onParamInput(i)">
+          </mat-form-field>
         </div>
       </ng-container>
     </ng-container>
     <ng-template #rawData>
-      <json-editor [options]="editorOptions" formControlName="rawData" class="transformationEditor">
+      <json-editor [options]="editorOptions" formControlName="rawData">
       </json-editor>
     </ng-template>
   </div>
