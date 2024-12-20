@@ -134,7 +134,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
   }
 
   get actualUrl(): string {
-    const actualUrl = this.viaApiFormGroup.controls.apiUrl.value.split('?')[0]
+    const actualUrl = this.actualUrl
     return actualUrl
   }
 
