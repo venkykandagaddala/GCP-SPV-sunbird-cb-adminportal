@@ -271,6 +271,7 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     )
   }
+
   editUser(event: any) {
     this.router.navigate(['app/home/create-user'], {
       queryParams: {
@@ -278,11 +279,24 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
         createDept: JSON.stringify({ depName: this.deptName }),
         orgName: this.deptName,
         redirectionPath: window.location.href,
-        subOrgType: this.subOrgType && this.subOrgType.toLowerCase() === 'ministry' ? 'mdo' : 'state'
+        subOrgType: this.getSubOrgType()
       }, state: { userData: event.row, updateButton: true },
     })
   }
+
   getMentorManage() {
 
+  }
+
+  getSubOrgType(): string {
+    const subOrgTypeLowerCase = this.subOrgType?.toLowerCase()
+    switch (subOrgTypeLowerCase) {
+      case 'ministry':
+        return 'mdo'
+      case 'state':
+        return 'state'
+      default:
+        return 'cbp-providers'
+    }
   }
 }

@@ -261,10 +261,22 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
           createDept: JSON.stringify(this.otherInput),
           orgName: this.orgName,
           redirectionPath: window.location.href,
-          subOrgType: this.subOrgType && this.subOrgType.toLowerCase() === 'ministry' ? 'mdo' : 'state'
+          subOrgType: this.getSubOrgType()
 
         },
       })
+  }
+
+  getSubOrgType(): string {
+    const subOrgTypeLowerCase = this.subOrgType?.toLowerCase()
+    switch (subOrgTypeLowerCase) {
+      case 'ministry':
+        return 'mdo'
+      case 'state':
+        return 'state'
+      default:
+        return 'cbp-providers'
+    }
   }
 
   gotoCreatePosition() {

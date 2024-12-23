@@ -370,7 +370,7 @@ export class CreateUserComponent implements OnInit {
         {
           queryParams:
           {
-            currentDept: this.currentDept === 'mdo' || 'state' ? 'organisation' : this.currentDept,
+            currentDept: this.currentDept === 'mdo' || 'state' ? 'organisation' : 'cbp-providers',
             roleId: this.deptId,
             depatName: this.createdDepartment.depName
           }
