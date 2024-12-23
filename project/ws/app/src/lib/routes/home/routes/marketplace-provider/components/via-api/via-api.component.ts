@@ -185,19 +185,21 @@ export class ViaApiComponent implements OnInit, OnChanges {
   constructParamsFormArray() {
     const paramsArray = this.constructParams
     this.paramsFormArray.patchValue(paramsArray)
-    while (this.paramsFormArray.length > paramsArray.length) {
-      this.apiUrlEdited = true
-      this.paramsFormArray.removeAt(this.paramsFormArray.length - 1)
-    }
+    if (this.paramsFormArray && paramsArray) {
+      while (this.paramsFormArray.length > paramsArray.length) {
+        this.apiUrlEdited = true
+        this.paramsFormArray.removeAt(this.paramsFormArray.length - 1)
+      }
 
-    while (paramsArray.length > this.paramsFormArray.length) {
-      const object = paramsArray[this.paramsFormArray.length]
-      this.apiUrlEdited = true
-      const formGroup = this.formBuilder.group({
-        key: new FormControl(object.key),
-        value: new FormControl(object.value),
-      })
-      this.paramsFormArray.insert(this.paramsFormArray.length - 1, formGroup)
+      while (paramsArray.length > this.paramsFormArray.length) {
+        const object = paramsArray[this.paramsFormArray.length]
+        this.apiUrlEdited = true
+        const formGroup = this.formBuilder.group({
+          key: new FormControl(object.key),
+          value: new FormControl(object.value),
+        })
+        this.paramsFormArray.insert(this.paramsFormArray.length - 1, formGroup)
+      }
     }
   }
 
@@ -272,13 +274,15 @@ export class ViaApiComponent implements OnInit, OnChanges {
   }
 
   pushObjectToFormArray(formArray: FormArray, object: any) {
-    for (const key in object) {
-      if (object.hasOwnProperty(key)) {
-        const formGroup = this.formBuilder.group({
-          key: new FormControl(key),
-          value: new FormControl(object[key]),
-        })
-        formArray.insert(formArray.length - 1, formGroup)
+    if (formArray && object) {
+      for (const key in object) {
+        if (object.hasOwnProperty(key)) {
+          const formGroup = this.formBuilder.group({
+            key: new FormControl(key),
+            value: new FormControl(object[key]),
+          })
+          formArray.insert(formArray.length - 1, formGroup)
+        }
       }
     }
   }
