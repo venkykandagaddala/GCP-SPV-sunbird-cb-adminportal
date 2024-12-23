@@ -17,24 +17,24 @@
           <div class="flex flex-col gap-1 mt-1 items-center">
             <span class="file-size">Max file size: 100 MB</span>
             <span class="file-type">
-              Supported file types: {{transformationType === 'trasformCertificateUrl' ? '.svg' : '.csv, .xlsx'}}
+              Supported file types: {{transformationType === 'certificateTemplateUrl' ? '.svg' : '.csv, .xlsx'}}
             </span>
           </div>
         </div>
 
         <input type="file" style="display: none;" #fileInput
-          accept="{{transformationType === 'trasformCertificateUrl' ? '.svg' : '.xlsx, .csv'}}"
+          accept="{{transformationType === 'certificateTemplateUrl' ? '.svg' : '.xlsx, .csv'}}"
           (change)="onDrop($event.target.files[0]); fileInput.value = null" />
       </div>
     </ng-container>
     <ng-template #fileUploaded>
       <div class="flex flex-col file-upload-box justify-center gap-4 file-uploaded-box"
-        [ngClass]="{'margin-r10': transformationType === 'trasformCertificateUrl'}">
+        [ngClass]="{'margin-r10': transformationType === 'certificateTemplateUrl'}">
         <mat-icon
-          *ngIf="!(transformationType === 'trasformCertificateUrl' && providerDetalsBeforUpdate['trasformCertificateUrl'])"
+          *ngIf="!(transformationType === 'certificateTemplateUrl' && providerDetalsBeforUpdate['certificateTemplateUrl'])"
           class="removeFile" matTooltip="Remove File" (click)="removeFile()">close</mat-icon>
         <div class="flex items-center justify-center">
-          <img src="/assets/icons/samplePdf.svg" alt="file" class="samplePdf">
+          <!-- <img src="/assets/icons/samplePdf.svg" alt="file" class="samplePdf"> -->
           <div class="flex flex-column gap-4 pdfDetails">
             <ng-container *ngIf="fileName">
               <span class="pdfName">{{fileName}}</span>
@@ -49,7 +49,7 @@
     </ng-template>
   </div>
 
-  <ng-container *ngIf="transformationType !== 'trasformCertificateUrl'">
+  <ng-container *ngIf="transformationType !== 'certificateTemplateUrl'">
     <div class="flex w-full flex-col gap-1">
       <div>
         <span class="header">Transform {{transformationType === 'trasformContentJson' ? 'Content' : 'Progress'}}</span>
@@ -91,7 +91,7 @@
   </ng-container>
 </div>
 <ng-container
-  *ngIf="!(transformationType === 'trasformCertificateUrl' && providerDetalsBeforUpdate['trasformCertificateUrl'])">
+  *ngIf="!(transformationType === 'certificateTemplateUrl' && providerDetalsBeforUpdate['certificateTemplateUrl'])">
   <div class="flex w-full justify-center mt-8">
     <button mat-button class="save-properties" (click)="uploadFile()">
       Execute</button>

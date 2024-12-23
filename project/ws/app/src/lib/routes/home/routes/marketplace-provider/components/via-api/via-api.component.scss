@@ -100,24 +100,9 @@
 .transformation-box {
   border: 1px solid hsla(0, 0%, 0%, 0.161);
   border-radius: 5px;
-  min-height: 227px;
+  min-height: 803px;
   padding: 24px;
 
-  .lable {
-    /* stylelint-enable */
-    font: 700 14px Lato;
-    /* stylelint-disable */
-    color: #212529;
-    width:  180px;
-  }
-
-  .colun {
-    /* stylelint-enable */
-    font: 700 14px Lato;
-    /* stylelint-disable */
-    color: #212529;
-    width: 5px;
-  }
 }
 
 .transformation-required {
@@ -212,4 +197,10 @@
     padding: 0px !important;
   }
 
+}
+
+:host ::ng-deep .transformationEditor {
+  .jsoneditor {
+    height: 731px;
+  }
 }

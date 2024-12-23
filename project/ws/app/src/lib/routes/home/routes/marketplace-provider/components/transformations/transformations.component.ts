@@ -85,12 +85,14 @@ export class TransformationsComponent implements OnInit, OnChanges {
 
   initializTransforamtionControls() {
     this.transforamtionForm = this.formBuilder.group({})
+    this.providerDetalsBeforUpdate['certificateTemplateUrl'] =
+      _.get(this.providerDetalsBeforUpdate, 'certificateTemplateUrl', '').replace(' ', '')
     let trasformationJson: any = {}
     if (this.transformationType === 'trasformContentJson') {
       trasformationJson = _.get(this.providerConfiguration, 'trasformContentJson[0].spec')
     } else if (this.transformationType === 'transformProgressJson') {
       trasformationJson = _.get(this.providerConfiguration, 'transformProgressJson[0].spec')
-    } else if (_.get(this.providerDetalsBeforUpdate, 'trasformCertificateUrl')) {
+    } else if (_.get(this.providerDetalsBeforUpdate, 'certificateTemplateUrl')) {
       this.contentFileUploaded = true
     }
 
@@ -117,10 +119,10 @@ export class TransformationsComponent implements OnInit, OnChanges {
   //#region (contain browsing file and related events to get drop down list)
   onDrop(file: File) {
     this.fileName = file.name.replace(/[^A-Za-z0-9_.]/g, '')
-    if (this.transformationType !== 'trasformCertificateUrl' &&
+    if (this.transformationType !== 'certificateTemplateUrl' &&
       !(this.fileName.toLowerCase().endsWith('.csv') || this.fileName.toLowerCase().endsWith('.xlsx'))) {
       this.showSnackBar('Unsupported File Format. Please upload a CSV or XLSX file.')
-    } else if (this.transformationType === 'trasformCertificateUrl' && !this.fileName.toLowerCase().endsWith('.svg')) {
+    } else if (this.transformationType === 'certificateTemplateUrl' && !this.fileName.toLowerCase().endsWith('.svg')) {
       this.showSnackBar('Unsupported File Format. Please upload a SVG file.')
     } else if (file.size > this.FILE_UPLOAD_MAX_SIZE) {
       this.showSnackBar('Please upload a file less than 100 MB')
@@ -188,7 +190,7 @@ export class TransformationsComponent implements OnInit, OnChanges {
     const hasTransformationAlready = this.providerDetalsBeforUpdate[this.transformationType] ? true : false
     this.transforamtionForm.markAllAsTouched()
     if (this.transforamtionForm.valid) {
-      if (this.transformationType !== 'trasformCertificateUrl') {
+      if (this.transformationType !== 'certificateTemplateUrl') {
         const trasformContentSpec: any = {} // contains maped transform spec for db
         const specValues = this.transforamtionForm.value
         this.transFormContentKeysAndControls.forEach((transFormContent: any) => {
@@ -212,7 +214,7 @@ export class TransformationsComponent implements OnInit, OnChanges {
                 successMsg = hasTransformationAlready ? 'Transform Content updated successfully.' : 'Transform Content saved successfully.'
               } else if (this.transformationType === 'transformProgressJson') {
                 successMsg = hasTransformationAlready ? 'Transform Progress updated successfully.' : 'Transform Progress saved successfully.'
-              } else if (this.transformationType === 'trasformCertificateUrl') {
+              } else if (this.transformationType === 'certificateTemplateUrl') {
                 successMsg = hasTransformationAlready ? 'Transform Certificate updated successfully.' : 'Transform Certificate saved successfully.'
               }
               this.showSnackBar(successMsg)
@@ -266,7 +268,7 @@ export class TransformationsComponent implements OnInit, OnChanges {
       case 'transformProgressJson':
         header = 'Upload Course Pregress'
         break
-      case 'trasformCertificateUrl':
+      case 'certificateTemplateUrl':
         header = 'Upload Course Certificate'
         break
     }
@@ -294,8 +296,8 @@ export class TransformationsComponent implements OnInit, OnChanges {
   uploadFile() {
     this.executed = true
     if (this.contentFile && (this.transformationsUpdated ||
-      this.transformationType === 'trasformCertificateUrl')) {
-      const popupMessage = this.transformationType === 'trasformCertificateUrl' ?
+      this.transformationType === 'certificateTemplateUrl')) {
+      const popupMessage = this.transformationType === 'certificateTemplateUrl' ?
         `Certificate uploading` : `File processing`
       let dialogType = 'csvLoader'
       if (this.contentFile.name.toLowerCase().endsWith('.csv')) {
@@ -320,7 +322,7 @@ export class TransformationsComponent implements OnInit, OnChanges {
         case 'transformProgressJson':
           this.uploadProgress(formData, partnerCode)
           break
-        case 'trasformCertificateUrl':
+        case 'certificateTemplateUrl':
           this.uploadCertificate(formData)
           break
       }
@@ -338,7 +340,7 @@ export class TransformationsComponent implements OnInit, OnChanges {
           message = this.providerDetalsBeforUpdate.transformProgressJson ?
             'Please update transform progress' : 'Please add transform progress'
           break
-        case 'trasformCertificateUrl':
+        case 'certificateTemplateUrl':
           message = 'Please upload Certificate'
           break
       }
@@ -410,7 +412,7 @@ export class TransformationsComponent implements OnInit, OnChanges {
           const urlSplice = createdUrl.slice(urlToReplace.length).split('/')
           url = `${environment.karmYogiPath}/content-store/${urlSplice.slice(1).join('/')}`
         }
-        this.providerDetalsBeforUpdate['trasformCertificateUrl'] = url
+        this.providerDetalsBeforUpdate['certificateTemplateUrl'] = url
         this.fileName = ''
         this.upDateTransforamtionDetails()
         this.dialogRef.close()
