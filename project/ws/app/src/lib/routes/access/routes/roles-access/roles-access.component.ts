@@ -34,11 +34,12 @@ export class RolesAccessComponent implements OnInit, AfterViewInit {
       // this.currentDept = params['currentDept']
       this.currentDept = params['subOrgType']
     })
-    if (this.currentDept === 'CBP Providers' || this.currentDept === 'cbp-providers') {
-      this.currentDept = 'CBP'
-    }
-    else if (this.currentDept && this.currentDept.toLowerCase() === 'ministry') this.currentDept = 'mdo'
+    // if (this.currentDept === 'CBP Providers' || this.currentDept === 'cbp-providers') {
+    //   this.currentDept = 'CBP'
+    // }
+    if (this.currentDept && this.currentDept.toLowerCase() === 'ministry') this.currentDept = 'mdo'
     else if (this.currentDept && this.currentDept.toLowerCase() === 'state') this.currentDept = 'state'
+    else this.currentDept = 'CBP'
 
   }
 

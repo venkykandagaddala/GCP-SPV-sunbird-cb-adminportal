@@ -372,12 +372,25 @@ export class CreateUserComponent implements OnInit {
           {
             currentDept: this.currentDept === 'mdo' || 'state' ? 'organisation' : this.currentDept,
             roleId: this.deptId,
-            depatName: this.createdDepartment.depName
+            depatName: this.createdDepartment.depName,
+            subOrgType: this.getSubOrgType(),
           }
         })
 
     } else {
       this.router.navigate([`/app/home/users`])
+    }
+  }
+
+  getSubOrgType(): string {
+    const subOrgTypeLowerCase = this.currentDept?.toLowerCase()
+    switch (subOrgTypeLowerCase) {
+      case 'mdo':
+        return 'ministry'
+      case 'state':
+        return 'state'
+      default:
+        return 'cbp-providers'
     }
   }
 
