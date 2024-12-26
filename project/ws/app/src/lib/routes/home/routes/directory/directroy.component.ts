@@ -140,8 +140,8 @@ export class DirectoryViewComponent implements OnInit {
   }
   onPageChange(event: any) {
     if (event) {
-      this.pagination.offset = event.pageIndex
       this.pagination.limit = event.pageSize
+      this.pagination.offset = (event.pageIndex) * event.pageSize
       this.getAllDepartments('')
     }
   }
