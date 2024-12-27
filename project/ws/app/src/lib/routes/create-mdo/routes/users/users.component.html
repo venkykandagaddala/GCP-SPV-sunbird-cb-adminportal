@@ -10,8 +10,8 @@
   <div class="flex-display" [ngClass]="{ 'override-text-css': isReportsPath}">
 
     <ws-widget-ui-user-table *ngIf="currentTab==='users'" [tableData]="tabledata" [data]="data"
-      [otherInput]="createdDepartment" [needAddAdmin]="true" [needCreateUser]="true" (actionsClick)="editUser($event)"
-      (searchByEnterKey)="onEnterkySearch($event)">
+      [otherInput]="createdDepartment" [needAddAdmin]="true" [needCreateUser]="isAllowed(allowedCreateRoles)"
+      (actionsClick)="editUser($event)" (searchByEnterKey)="onEnterkySearch($event)">
     </ws-widget-ui-user-table>
 
     <ws-app-roles-access *ngIf="currentTab==='rolesandaccess'" (clickedDepartment)="fClickedDepartment($event)">

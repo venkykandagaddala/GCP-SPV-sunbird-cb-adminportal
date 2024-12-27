@@ -81,7 +81,8 @@
                                         Access</button>
                                     <button mat-menu-item (click)="goToRoute('mentormanage', row)">Mentor
                                         Management</button>
-                                    <button mat-menu-item (click)="goToRoute('designation_master', row)">Manage
+                                    <button mat-menu-item (click)="goToRoute('designation_master', row)"
+                                        *ngIf="needCreate">Manage
                                         Designations</button>
                                     <!-- <button mat-menu-item
                                         (click)="goToRoute('grade_setting', row)">Grades/Group</button> -->

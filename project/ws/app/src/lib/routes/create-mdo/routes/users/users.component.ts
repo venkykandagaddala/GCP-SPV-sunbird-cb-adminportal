@@ -44,6 +44,8 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   isReportsPath = false
+  userRoles: any
+  allowedCreateRoles = ['DASHBOARD_ADMIN', 'SPV_ADMIN', 'SPV_PUBLISHER']
   constructor(private usersSvc: UsersService, private router: Router,
     private route: ActivatedRoute,
     private profile: ProfileV2Service,
@@ -52,6 +54,7 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
   }
   ngOnInit() {
+    this.userRoles = this.route.parent && this.route.parent.snapshot.data.configService.userRoles
     this.tabsData = [
       {
         name: 'Users',
@@ -131,6 +134,10 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.currentDept === 'mdo') {
       this.tabledata['actions'] = [{ name: 'Edit', label: 'Edit info', optional: true, icon: 'remove_red_eye', type: 'button' }]
+    }
+
+    if (!this.isAllowed(this.allowedCreateRoles)) {
+      this.tabsData = this.tabsData.filter(item => !(['designation_master'].includes(item.key)))
     }
 
   }
@@ -298,5 +305,13 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
       default:
         return 'cbp-providers'
     }
+  }
+
+  isAllowed(allowedRoles: string[]): boolean {
+    if (this.userRoles && this.userRoles.size > 0) {
+      const lowerConfigRoles = new Set([...this.userRoles].map(role => role.toLowerCase()))
+      return allowedRoles.some(role => lowerConfigRoles.has(role.toLowerCase()))
+    }
+    return false
   }
 }

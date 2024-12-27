@@ -37,6 +37,8 @@ export class DirectoryViewComponent implements OnInit {
   currentTab: any
   pagination = { limit: 20, offset: 0 }
   totalCount = 0
+  userRoles: any
+  allowedCreateRoles = ['DASHBOARD_ADMIN', 'SPV_ADMIN', 'SPV_PUBLISHER']
   constructor(
     public dialog: MatDialog,
     private route: ActivatedRoute,
@@ -54,6 +56,8 @@ export class DirectoryViewComponent implements OnInit {
         && data.profile.data.length > 0
         && data.profile.data[0]
     })
+    this.userRoles = this.route.parent && this.route.parent.snapshot.data.configService.userRoles
+
   }
 
   ngOnInit() {
@@ -107,6 +111,11 @@ export class DirectoryViewComponent implements OnInit {
         loader: true,
         tableDataCount: this.totalCount
       }
+
+      const isAllowed = this.isAllowed(this.allowedCreateRoles)
+      if (!isAllowed) {
+        delete this.tabledata.link
+      }
     } else {
       this.tabledata = {
         actions: [{ name: 'Edit', label: 'Edit info', icon: 'remove_red_eye', type: 'button' }],
@@ -155,7 +164,9 @@ export class DirectoryViewComponent implements OnInit {
         depatName: role.data.channel,
         orgName: role.data.mdo || role.data.organisation,
         tab: role.type,
-        subOrgType: role.data.type
+        // subOrgType: !this.isAllowed(this.allowedCreateRoles) ? 'ministry' : role.data.type ? role.data.type : 'cbp-providers'
+        // subOrgType: !this.isAllowed(this.allowedCreateRoles) ? 'ministry' : role.data.type ? role.data.type : 'ministry'
+        subOrgType: this.getSubOrgType(role.data.type)
       }
     })
   }
@@ -378,5 +389,23 @@ export class DirectoryViewComponent implements OnInit {
       .replace(/(\+\d{2})(\d{2})$/, '$1:$2')
 
     return this.datePipe.transform(isoDateString, 'dd/MM/yyyy, hh:mm a')
+  }
+
+  isAllowed(allowedRoles: string[]): boolean {
+    if (this.userRoles && this.userRoles.size > 0) {
+      const lowerConfigRoles = new Set([...this.userRoles].map(role => role.toLowerCase()))
+      return allowedRoles.some(role => lowerConfigRoles.has(role.toLowerCase()))
+    }
+    return false
+  }
+
+  getSubOrgType(type: string) {
+    if (this.currentFilter === 'organisation') {
+      return 'ministry'
+    }
+    else if (type === 'cbp-providers') {
+      return 'cbp-providers'
+    }
+    return ''
   }
 }
