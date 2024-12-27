@@ -52,8 +52,9 @@
       </div>
       <ng-container>
         <ws-widget-directory-table [selectedDepartment]='currentDepartment' [tableData]='tabledata' [data]='data'
-          (eOnRowClick)="onRoleClick($event)" (actionsClick)="actionClick($event)"
-          (searchByEnterKey)="onEnterkySearch($event)" (pageChangeEvent)="onPageChange($event)">
+          [needCreate]="isAllowed(allowedCreateRoles)" (eOnRowClick)="onRoleClick($event)"
+          (actionsClick)="actionClick($event)" (searchByEnterKey)="onEnterkySearch($event)"
+          (pageChangeEvent)="onPageChange($event)">
         </ws-widget-directory-table>
       </ng-container>
     </mat-card-content>
