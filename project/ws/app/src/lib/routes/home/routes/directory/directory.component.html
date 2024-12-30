@@ -52,9 +52,9 @@
       </div>
       <ng-container>
         <ws-widget-directory-table [selectedDepartment]='currentDepartment' [tableData]='tabledata' [data]='data'
-          [needCreate]="isAllowed(allowedCreateRoles)" (eOnRowClick)="onRoleClick($event)"
-          (actionsClick)="actionClick($event)" (searchByEnterKey)="onEnterkySearch($event)"
-          (pageChangeEvent)="onPageChange($event)">
+          [needCreate]="currentFilter === 'mdo' || currentFilter === 'state' ? false : true"
+          (eOnRowClick)="onRoleClick($event)" (actionsClick)="actionClick($event)"
+          (searchByEnterKey)="onEnterkySearch($event)">
         </ws-widget-directory-table>
       </ng-container>
     </mat-card-content>
