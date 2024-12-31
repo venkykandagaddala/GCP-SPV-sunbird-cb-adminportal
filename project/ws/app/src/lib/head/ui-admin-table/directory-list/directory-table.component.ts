@@ -101,7 +101,6 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
   }
 
   ngOnChanges(data: SimpleChanges) {
-
     this.tableData = null
     this.tableData = _.get(data, 'tableData.currentValue')
     if (this.dataSource && this.dataSource.filter) this.dataSource.filter = ''
@@ -115,7 +114,6 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
     else if (this.dataSource && this.dataSource.data && this.dataSource.data.length === 0 && this.getFilterValue) {
       this.tableData.loader = false
     }
-
     if (data && data['selectedDepartment']) {
       this.pageIndex = 0
     }
