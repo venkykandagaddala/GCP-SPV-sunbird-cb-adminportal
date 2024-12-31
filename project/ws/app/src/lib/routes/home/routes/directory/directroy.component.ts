@@ -39,6 +39,7 @@ export class DirectoryViewComponent implements OnInit {
   totalCount = 0
   userRoles: any
   allowedCreateRoles = ['DASHBOARD_ADMIN', 'SPV_ADMIN', 'SPV_PUBLISHER']
+  resetPaginationFlag = false
   constructor(
     public dialog: MatDialog,
     private route: ActivatedRoute,
@@ -155,6 +156,7 @@ export class DirectoryViewComponent implements OnInit {
     }
   }
 
+
   onRoleClick(role: any,) {
     this.router.navigate([`/app/roles/${role.data.id}/users`], {
       queryParams:
@@ -207,6 +209,7 @@ export class DirectoryViewComponent implements OnInit {
     this.getAllDepartments('')
     this.raiseTabTelemetry(key, data)
     this.getDepartDataByKey(key)
+
   }
   getDepartDataByKey(key: string) {
     if (key) {
