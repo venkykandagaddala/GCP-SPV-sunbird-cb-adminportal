@@ -234,7 +234,7 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         })
       }
-      this.data = this.userWholeData1
+      this.data = usersData
       this.currentTab = 'users'
     })
 
