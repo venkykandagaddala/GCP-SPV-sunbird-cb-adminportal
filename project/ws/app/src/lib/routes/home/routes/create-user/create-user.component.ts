@@ -315,14 +315,11 @@ export class CreateUserComponent implements OnInit {
             //       this.openSnackbar(`Error in assigning roles`)
             //     })
             this.openSnackbar(`User created successfully!`)
-            if (this.redirectionPath.indexOf('/app/home/') < 0) {
-              // this.exact = this.redirectionPath.split("/app")
-              // this.exactPath = "/app" + this.exact[1]
-              // this.exactPath = this.exactPath.replace("%3B", ";")
-              // this.exactPath = this.exactPath.replace("%3D", "=")
+            if (this.redirectionPath && this.redirectionPath.indexOf('/app/home/') < 0) {
               location.replace(this.redirectionPath)
             } else {
-              this.router.navigate(['/app/home/directory'])
+              this.router.navigate(['/app/home/users'])
+
             }
           }
         },
@@ -333,8 +330,8 @@ export class CreateUserComponent implements OnInit {
             // this.openSnackbar(`${err.error.params.errmsg}`)
             if (err.error.params.errmsg.toLowerCase() === 'this phone is already registered with an existing user') {
               this.openSnackbar('This Phone is already registered with an existing User')
-            } else if (err.error.params.errmsg.toLowerCase() === 'email already exists') {
-              this.openSnackbar('Email Id already exists')
+            } else if (err.error.params.errmsg.toLowerCase() === 'this email is already registered with an existing user') {
+              this.openSnackbar('This Email is already registered with an existing User')
             } else if (err.error.params.errmsg.toLowerCase() === 'Invalid format for given phone.') {
               this.openSnackbar('Please enter valid phone number')
             } else {
@@ -372,12 +369,25 @@ export class CreateUserComponent implements OnInit {
           {
             currentDept: this.currentDept === 'mdo' || 'state' ? 'organisation' : this.currentDept,
             roleId: this.deptId,
-            depatName: this.createdDepartment.depName
+            depatName: this.createdDepartment.depName,
+            subOrgType: this.getSubOrgType(),
           }
         })
 
     } else {
       this.router.navigate([`/app/home/users`])
+    }
+  }
+
+  getSubOrgType(): string {
+    const subOrgTypeLowerCase = this.currentDept?.toLowerCase()
+    switch (subOrgTypeLowerCase) {
+      case 'mdo':
+        return 'ministry'
+      case 'state':
+        return 'state'
+      default:
+        return 'cbp-providers'
     }
   }
 

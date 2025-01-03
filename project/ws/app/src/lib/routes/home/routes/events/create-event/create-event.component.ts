@@ -49,6 +49,7 @@ export class CreateEventComponent implements OnInit {
   participantsArr: any = []
   // presentersArr: any = []
   displayedColumns: string[] = ['fullname', 'email', 'type']
+  allowedCurrentDates: any = ['Karmayogi Talks', 'Karmayogi Saptah']
   @Input() tableData!: ITableData | undefined
   @Input() data?: []
   @Input() isUpload?: boolean

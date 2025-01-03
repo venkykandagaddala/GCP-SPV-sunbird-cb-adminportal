@@ -107,14 +107,15 @@ export class UIDirectoryTableComponent implements OnInit, AfterViewInit, OnChang
     this.showNewNoContent = this.tableData?.showNewNoContent ? true : false
     this.dataSource.data = _.get(data, 'data.currentValue', [])
     this.length = this.tableData.tableDataCount
-
     // this.paginator.firstPage()
     if (this.dataSource && this.dataSource.data && this.dataSource.data.length > 0) {
       this.tableData.loader = false
     }
-
     else if (this.dataSource && this.dataSource.data && this.dataSource.data.length === 0 && this.getFilterValue) {
       this.tableData.loader = false
+    }
+    if (data && data['selectedDepartment']) {
+      this.pageIndex = 0
     }
   }
   ngAfterViewInit() { }
