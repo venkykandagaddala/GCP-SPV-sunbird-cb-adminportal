@@ -16,6 +16,7 @@ import { UserPopupComponent } from '../user-popup/user-popup'
 import { CreateMDOService as MDO2 } from '../../../routes/home/services/create-mdo.services'
 import { EventService } from '@sunbird-cb/utils'
 import { environment } from '../../../../../../../../src/environments/environment'
+import { PageEvent } from '@angular/material/paginator'
 
 @Component({
   selector: 'ws-widget-ui-user-table',
@@ -32,6 +33,7 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
   @Input() isCreate?: boolean
   @Input() otherInput?: any
   @Input() totalDataRecords?: any
+  @Input() totalRecords?: any = 0
   @Input() currentTabData!: string
   @Input() inputDepartmentId?: string | undefined
   @Input() showFirstLastButtonsFlag = false
@@ -39,6 +41,7 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
   @Output() actionsClick?: EventEmitter<any>
   @Output() eOnRowClick = new EventEmitter<any>()
   @Output() searchByEnterKey = new EventEmitter<any>()
+  @Output() paginationData = new EventEmitter()
   bodyHeight = document.body.clientHeight - 125
   displayedColumns: IColums[] | undefined
   viewPaginator = false
@@ -62,6 +65,9 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
   reportsPath: any
   orgName!: string
   subOrgType: string = ''
+  startIndex = 0
+  lastIndex = 20
+  searchText: string = ''
   constructor(
     private router: Router, public dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
@@ -166,6 +172,11 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
       return columns
     }
     return ''
+  }
+  onChangePage(pe: PageEvent): void {
+    this.startIndex = (pe.pageIndex) * pe.pageSize // Calculate offset
+    this.lastIndex = pe.pageSize
+    this.searchByEnterKey.emit({ query: (this.searchText) ? this.searchText : '', limit: pe.pageSize, offset: this.startIndex })
   }
   openPopup() {
     const dialogRef = this.dialog.open(UserPopupComponent, {
@@ -299,6 +310,7 @@ export class UIAdminUserTableComponent implements OnInit, AfterViewInit, OnChang
   }
 
   onSearchEnter(event: any) {
+    this.searchText = event.target.value
     this.searchByEnterKey.emit(event.target.value)
   }
 

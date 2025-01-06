@@ -30,6 +30,10 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   userWholeData!: any
   userWholeData1!: any
   createdDepartment!: any
+  limit: number = 20
+  pageIndex = 0
+  currentOffset = 0
+  totalRecordsCount = 0
   private defaultSideNavBarOpenedSubscription: any
   @ViewChild('stickyMenu', { static: true }) menuElement!: ElementRef
   goToImportMaster = false
@@ -236,9 +240,13 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
   getAllKongUsers() {
-    this.usersSvc.getAllKongUsers(this.id).subscribe(data => {
+    const status = 1
+    this.currentOffset = this.limit * ((this.pageIndex + 1) - 1)
+    const query = ''
+    this.usersService.getAllKongUsersPaginated(this.id, status, this.limit, this.currentOffset, query).subscribe(data => {
       if (data.result.response.content) {
         this.userWholeData = data.result.response.content || []
+        this.totalRecordsCount = data.result.response.count || 0
         this.newKongUser()
       }
     })
@@ -271,9 +279,22 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onEnterkySearch(enterValue: any) {
-    const rootOrgId = this.id
-    this.usersSvc.searchUserByenter(enterValue, rootOrgId).subscribe(data => {
+    let query: string = ''
+    let limit: number = 20 // Default limit
+    let offset: number = 0 // Default offset
+    const status: number = 1
+
+    if (typeof enterValue === 'string') {
+      query = enterValue
+    } else if (typeof enterValue === 'object') {
+      query = enterValue.query || ''
+      limit = enterValue.limit || 20 // Fallback to default limit
+      offset = enterValue.offset || 0 // Fallback to default offset
+    }
+
+    this.usersService.getAllKongUsersPaginated(this.id, status, limit, offset, query).subscribe(data => {
       this.userWholeData = data.result.response.content || []
+      this.totalRecordsCount = data.result.response.count || 0
       this.newKongUser()
     }
     )
