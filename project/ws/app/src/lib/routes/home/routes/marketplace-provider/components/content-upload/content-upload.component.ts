@@ -1,15 +1,10 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
 import { MarketplaceService } from '../../services/marketplace.service'
 import { map } from 'rxjs/operators'
 import * as _ from 'lodash'
 import { DatePipe } from '@angular/common'
 import { HttpErrorResponse } from '@angular/common/http'
-import { ConformationPopupComponent } from '../../dialogs/conformation-popup/conformation-popup.component'
-import { MatDialog } from '@angular/material/dialog'
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms'
-import { JsonEditorOptions } from 'ang-jsoneditor'
 
 @Component({
   selector: 'ws-app-content-upload',
@@ -21,7 +16,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   //#region (global variables)
   //#region (view chaild, input and output)
   @ViewChild('fileInput', { static: false }) fileInput!: ElementRef<HTMLInputElement>
-  @ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>
 
   @Input() providerDetails?: any
   @Input() selectedTabIndex = 0
@@ -37,17 +31,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     ],
     helpVideoLink: `/assets/public/content/guide-videos/CIOS_Updated_demo.mp4`,
   }
-
-  //#region (transformation variables)
-  transforamtionForm!: FormGroup
-  providerDetalsBeforUpdate: any
-  public contentEeditorOptions: JsonEditorOptions | undefined
-  public progressEditorOptions: JsonEditorOptions | undefined
-  public certificateEditorOptions: JsonEditorOptions | undefined
-  transformationsUpdated = false
-  providerConfiguration: any
-  executed = false
-  //#endregion
 
   contentTableData: any
   uploadedContentList = []
@@ -78,12 +61,8 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   unPublishedCoursesSearchKey = ''
   unPublishedCoursesTablePaginationDetails: any
 
-  FILE_UPLOAD_MAX_SIZE: number = 100 * 1024 * 1024
-  contentFile: any
-  contentFileUploaded = false
-  fileName = ''
-  fileUploadedDate: string | null = ''
-  dialogRef: any
+  uploadMode = 'viaCsv'
+
   defaultPagination = {
     startIndex: 0,
     lastIndes: 20,
@@ -93,59 +72,24 @@ export class ContentUploadComponent implements OnInit, OnChanges {
   }
 
   delayTabLoad = true
+  viaApiTabIndex = 0
   //#endregion
 
+  //#region (constructor: contains Intialization of TransforamtionControls from routes data)
   constructor(
-    private router: Router,
     private marketPlaceSvc: MarketplaceService,
-    private formBuilder: FormBuilder,
     private datePipe: DatePipe,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    private activateRoute: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
-    this.initialization()
-    this.setJsonEditorOptions()
-    this.getRoutesData()
   }
 
-  initialization() {
-    this.transforamtionForm = this.formBuilder.group({
-      trasformContentJson: new FormControl(''),
-      // transformProgressJson: new FormControl(''),
-      // trasformCertificateJson: new FormControl(''),
-    })
-  }
-
-  setJsonEditorOptions() {
-    this.contentEeditorOptions = this.getEditorOptions
-    this.progressEditorOptions = this.getEditorOptions
-    this.certificateEditorOptions = this.getEditorOptions
-  }
-
-  get getEditorOptions(): JsonEditorOptions {
-    const editorOptions = new JsonEditorOptions()
-    editorOptions.mode = 'text'
-    editorOptions.mainMenuBar = false // Hide the menu bar
-    editorOptions.navigationBar = false // Hide the navigation bar
-    editorOptions.statusBar = false // Hide the status bar at the bottom
-    editorOptions.enableSort = false // Disable sorting
-    editorOptions.enableTransform = false // Disable transformation
-    return editorOptions
-  }
+  //#endregion
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes.providerDetails &&
       changes.providerDetails.currentValue) {
-      this.providerDetalsBeforUpdate = JSON.parse(JSON.stringify(changes.providerDetails.currentValue))
-      this.setTransformationDetails(changes.providerDetails.currentValue)
       this.tableDataInitialzation()
-      // if (changes.providerDetails.currentValue.trasformContentJson) {
-      //   this.getContentList()
-      //   this.getPublishedCoursesList()
-      //   this.getUnPublishedCoursesList()
-      // }
     }
 
     if (changes.selectedTabIndex && changes.selectedTabIndex.currentValue === 1) {
@@ -153,16 +97,74 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     }
   }
 
-  setTransformationDetails(providerDetails: any) {
-    const configuration = this.providerConfiguration['ecornel']
-    this.transforamtionForm.setValue({
-      trasformContentJson: providerDetails.trasformContentJson ? providerDetails.trasformContentJson : _.get(configuration, 'trasformContentJson', ''),
-      // transformProgressJson: providerDetails.transformProgressJson ? providerDetails.transformProgressJson : _.get(configuration, 'transformProgressJson', ''),
-      // trasformCertificateJson: providerDetails.trasformCertificateJson ? providerDetails.trasformCertificateJson : _.get(configuration, 'trasformCertificateJson', ''),
-    })
+  tableDataInitialzation() { // All tables data Initialzation
+    this.contentTableData = {
+      columns: [
+        { displayName: 'File Name', key: 'name', cellType: 'text' },
+        { displayName: 'File Status', key: 'status', cellType: 'status' },
+        { displayName: 'Initiated On', key: 'intiatedOn', cellType: 'text' },
+        { displayName: 'Completed On', key: 'completedOn', cellType: 'text' },
+      ],
+      needCheckBox: false,
+      showDeleteAll: false,
+      showSearchBox: false,
+      showPagination: false,
+    }
+    this.contenetMenuItems = [
+      {
+        icon: '',
+        btnText: 'Download Log',
+        action: 'downloadLog',
+      },
+    ]
+
+    this.unPublishedCoursesTableData = {
+      columns: [
+        { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg', cellClass: 'text-overflow-elipse' },
+        { displayName: 'Source', key: 'source', cellType: 'text' },
+        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' },
+
+      ],
+      needCheckBox: true,
+      showDeleteAll: true,
+    }
+    this.unpublishedCoursesMenuItems = [
+      {
+        icon: '',
+        btnText: 'Delete',
+        action: 'delete',
+      },
+    ]
+    this.setPagination('notPublished', this.defaultPagination)
+
+    this.publishedCoursesTableData = {
+      columns: [
+        { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg', cellClass: 'text-overflow-elipse' },
+        { displayName: 'Source', key: 'source', cellType: 'text' },
+        { displayName: 'Publised On', key: 'publishedOn', cellType: 'text' },
+        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' },
+
+      ],
+      needCheckBox: false,
+      showDeleteAll: false,
+    }
+    this.setPagination('published', this.defaultPagination)
   }
 
-  //#region (content files)
+  //#region (ng Onint: contains Initialing api calls to get all 3 tables data)
+  ngOnInit() {
+    if (this.providerDetails.trasformContentJson) {
+      this.getTablesData()
+    }
+  }
+
+  //#region (get data for tables)
+  getTablesData() {
+    this.getContentList()
+    this.getPublishedCoursesList()
+    this.getUnPublishedCoursesList()
+  }
+
   getContentList() {
     if (this.providerDetails && this.providerDetails.id) {
       this.showUploadedStatusLoader = true
@@ -206,14 +208,11 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     }
     return formatedList
   }
-  //#endregion
 
-  //#region (courses)
   getPublishedCoursesList() {
     if (_.get(this.providerDetails, 'data.partnerCode')) {
       this.showPublishedCoursesLoader = true
       this.publishedCoursesList = []
-      // }
       const formBody = {
         filterCriteriaMap: {
           partnerCode: _.get(this.providerDetails, 'data.partnerCode'),
@@ -312,7 +311,26 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     })
     return formatedList
   }
+  //#endregion
+  //#endregion
 
+  setPagination(tableType: string, pagination: any) {
+    switch (tableType) {
+      case 'published':
+        this.publishedCoursesTablePaginationDetails = JSON.parse(JSON.stringify(pagination))
+        break
+      case 'notPublished':
+        this.unPublishedCoursesTablePaginationDetails = JSON.parse(JSON.stringify(pagination))
+        break
+    }
+  }
+  //#endregion
+
+  sendDetailsUpdateEvent() { // send event to parrent to get updated data so that chailds get updated detail
+    this.loadProviderDetails.emit(true)
+  }
+
+  //#region (table event: All table click events and search events)
   searchCourses(publishedCourses: boolean, searchKey: string) {
     if (publishedCourses) {
       this.publishedCoursesSerachKey = searchKey
@@ -334,94 +352,9 @@ export class ContentUploadComponent implements OnInit, OnChanges {
       this.getUnPublishedCoursesList()
     }
   }
-  //#endregion
-
-  ngOnInit() {
-    if (this.providerDetails.trasformContentJson) {
-      this.getContentList()
-      this.getPublishedCoursesList()
-      this.getUnPublishedCoursesList()
-    }
-  }
-
-  getRoutesData() {
-    this.activateRoute.data.subscribe(data => {
-      if (data.pageData.data) {
-        this.providerConfiguration = data.pageData.data
-      }
-    })
-  }
-
-  tableDataInitialzation() {
-    this.contentTableData = {
-      columns: [
-        { displayName: 'File Name', key: 'name', cellType: 'text' },
-        { displayName: 'File Status', key: 'status', cellType: 'status' },
-        { displayName: 'Initiated On', key: 'intiatedOn', cellType: 'text' },
-        { displayName: 'Completed On', key: 'completedOn', cellType: 'text' },
-      ],
-      needCheckBox: false,
-      showDeleteAll: false,
-      showSearchBox: false,
-      showPagination: false,
-    }
-    this.contenetMenuItems = [
-      {
-        icon: '',
-        btnText: 'Download Log',
-        action: 'downloadLog',
-      },
-    ]
-
-    this.unPublishedCoursesTableData = {
-      columns: [
-        { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg', cellClass: 'text-overflow-elipse' },
-        { displayName: 'Source', key: 'source', cellType: 'text' },
-        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' },
-
-      ],
-      needCheckBox: true,
-      showDeleteAll: true,
-    }
-    this.unpublishedCoursesMenuItems = [
-      {
-        icon: '',
-        btnText: 'Delete',
-        action: 'delete',
-      },
-    ]
-    this.setPagination('notPublished', this.defaultPagination)
-
-    this.publishedCoursesTableData = {
-      columns: [
-        { displayName: 'Course name', key: 'courseName', cellType: 'text', imageKey: 'courseImg', cellClass: 'text-overflow-elipse' },
-        { displayName: 'Source', key: 'source', cellType: 'text' },
-        { displayName: 'Publised On', key: 'publishedOn', cellType: 'text' },
-        { displayName: 'Listed On', key: 'listedOn', cellType: 'text' },
-
-      ],
-      needCheckBox: false,
-      showDeleteAll: false,
-    }
-    this.setPagination('published', this.defaultPagination)
-  }
-
-  setPagination(tableType: string, pagination: any) {
-    switch (tableType) {
-      case 'published':
-        this.publishedCoursesTablePaginationDetails = JSON.parse(JSON.stringify(pagination))
-        break
-      case 'notPublished':
-        this.unPublishedCoursesTablePaginationDetails = JSON.parse(JSON.stringify(pagination))
-        break
-    }
-  }
 
   contentEvents(event: any) {
     switch (event.action) {
-      case 'view':
-        this.navigateToPreview(event.rows)
-        break
       case 'delete':
         this.deletedSelectedCourses(event)
         break
@@ -431,128 +364,9 @@ export class ContentUploadComponent implements OnInit, OnChanges {
         }
         break
       case 'refresh':
-        this.getContentList()
-        this.getUnPublishedCoursesList()
-        this.getPublishedCoursesList()
+        this.getTablesData()
         break
     }
-  }
-
-  upDateTransforamtionDetails() {
-    this.providerDetalsBeforUpdate['data']['isActive'] = true
-    const hasTransformationAlready = this.providerDetalsBeforUpdate['trasformContentJson'] ? true : false
-    const tranforamtions = this.transforamtionForm.value
-    this.providerDetalsBeforUpdate['trasformContentJson'] = tranforamtions.trasformContentJson
-    // this.providerDetalsBeforUpdate['transformProgressJson'] = tranforamtions.transformProgressJson
-    // this.providerDetalsBeforUpdate['trasformCertificateJson'] = tranforamtions.trasformCertificateJson
-
-    this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
-      next: (responce: any) => {
-        if (responce) {
-          setTimeout(() => {
-            const successMsg = hasTransformationAlready ? 'Transform Content updated successfully.' : 'Transform Content saved successfully.'
-            this.showSnackBar(successMsg)
-            this.sendDetailsUpdateEvent()
-          },         1000)
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        const errmsg = _.get(error, 'error.params.errMsg', 'Something went worng, please try again later')
-        this.showSnackBar(errmsg)
-      },
-    })
-  }
-
-  sendDetailsUpdateEvent() {
-    this.transformationsUpdated = true
-    this.loadProviderDetails.emit(true)
-  }
-
-  onDrop(file: File) {
-    this.fileName = file.name.replace(/[^A-Za-z0-9_.]/g, '')
-    if (!(this.fileName.toLowerCase().endsWith('.csv') || this.fileName.toLowerCase().endsWith('.xlsx'))) {
-      this.showSnackBar('Unsupported File Format. Please upload a CSV or XLSX file.')
-    } else if (file.size > this.FILE_UPLOAD_MAX_SIZE) {
-      this.showSnackBar('Please upload a file less than 100 MB')
-    } else {
-      this.contentFile = file
-      this.contentFileUploaded = true
-      this.fileUploadedDate = this.datePipe.transform(new Date(), 'dd/MM/yyyy')
-      // this.uploadFile()
-    }
-  }
-
-  uploadFile() {
-    this.executed = true
-    if (this.contentFile && this.transformationsUpdated) {
-      this.openFileUploadPopup()
-      const formData = new FormData()
-      formData.append(
-        'content',
-        this.contentFile as Blob,
-        (this.contentFile as File).name.replace(/[^A-Za-z0-9_.]/g, ''),
-      )
-      const partnerCode = _.get(this.providerDetails, 'data.partnerCode')
-      this.marketPlaceSvc.uploadContent(formData, partnerCode, this.providerDetails.id)
-        .subscribe({
-          next: (res: any) => {
-            this.executed = false
-            if (res) {
-              setTimeout(() => {
-                this.showSnackBar('File imported successfully')
-                this.transformationsUpdated = false
-                this.contentFileUploaded = false
-                this.dialogRef.close()
-                this.getContentList()
-                this.getUnPublishedCoursesList()
-                this.getPublishedCoursesList()
-              },         1000)
-            }
-          },
-          error: (error: HttpErrorResponse) => {
-            this.executed = false
-            this.transformationsUpdated = false
-            this.contentFileUploaded = false
-            const errmsg = _.get(error, 'error.params.errmsg', 'Some thing went wrong while uploading. Please try again')
-            // if (error && error.error && error.error.includes('unsupported file type')) {
-            //   errmsg = 'Uploaded file format is not supported. Please try again with a supported file format.'
-            // }
-            this.dialogRef.close()
-            this.showSnackBar(errmsg)
-          },
-        })
-    } else if (!this.contentFile) {
-      this.showSnackBar('Please upload a file to import')
-    } else {
-      const message = this.providerDetalsBeforUpdate.trasformContentJson ?
-        'Please update transform content' : 'Please add transform content'
-      this.showSnackBar(message)
-    }
-  }
-
-  openFileUploadPopup() {
-    const dialogData = {
-      dialogType: 'csvLoader',
-      descriptions: [
-        {
-          messages: [
-            {
-              msgClass: '',
-              msg: `File processing`,
-            },
-          ],
-        },
-      ],
-    }
-    this.dialogRef = this.dialog.open(ConformationPopupComponent, {
-      data: dialogData,
-      autoFocus: false,
-      width: '956px',
-      maxWidth: '80vw',
-      maxHeight: '90vh',
-      height: '427px',
-      disableClose: true,
-    })
   }
 
   deletedSelectedCourses(event: any) {
@@ -580,11 +394,6 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     } else {
       this.showSnackBar('Please select course to delete.')
     }
-  }
-
-  navigateToPreview(course: any) {
-    this.marketPlaceSvc.setSelectedCourse(course)
-    this.router.navigateByUrl('/app/home/marketplace-providers/course-preview')
   }
 
   downloadLog(gcpfileName: string, fileName: string) {
@@ -615,6 +424,7 @@ export class ContentUploadComponent implements OnInit, OnChanges {
     const message = 'Logs Downloaded Successfully.'
     this.showSnackBar(message)
   }
+  //#endregion
 
   showSnackBar(message: string) {
     this.snackBar.open(message)
