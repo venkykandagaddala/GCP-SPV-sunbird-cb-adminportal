@@ -9,6 +9,7 @@ import { ConformationPopupComponent } from '../../dialogs/conformation-popup/con
 import { HttpErrorResponse } from '@angular/common/http'
 import * as XLSX from 'xlsx'
 import { environment } from '../../../../../../../../../../../src/environments/environment'
+import { JsonEditorOptions } from 'ang-jsoneditor'
 
 @Component({
   selector: 'ws-app-transformations',
@@ -35,7 +36,9 @@ export class TransformationsComponent implements OnInit, OnChanges {
   dialogRef: any
 
   //#region (transformation variables)
+  transforamtionType = 'viaForm'
   transforamtionForm!: FormGroup
+  transformationSpecForm!: FormControl
   providerDetalsBeforUpdate: any
   transFormContentKeysAndControls: {
     lable: string,
@@ -47,6 +50,7 @@ export class TransformationsComponent implements OnInit, OnChanges {
   executed = false
   uploadedFileHeadersList: string[] = []
   availableHeadrsList: string[] = []
+  editorOptions = new JsonEditorOptions()
   //#endregion
   //#endregion
 
@@ -84,7 +88,15 @@ export class TransformationsComponent implements OnInit, OnChanges {
   }
 
   initializTransforamtionControls() {
+    this.transformationSpecForm = new FormControl(
+      _.get(this.providerDetalsBeforUpdate, this.transformationType, {}), Validators.required)
     this.transforamtionForm = this.formBuilder.group({})
+    this.editorOptions.mode = 'text'
+    this.editorOptions.mainMenuBar = false
+    this.editorOptions.navigationBar = false
+    this.editorOptions.statusBar = false
+    this.editorOptions.enableSort = false
+    this.editorOptions.enableTransform = false
     this.providerDetalsBeforUpdate['certificateTemplateUrl'] =
       _.get(this.providerDetalsBeforUpdate, 'certificateTemplateUrl', '').replace(' ', '')
     let trasformationJson: any = {}
@@ -162,7 +174,8 @@ export class TransformationsComponent implements OnInit, OnChanges {
     reader.onload = () => {
       const csvData = reader.result
       const csvRecordsArray = (<string>csvData).split(/\r\n|\n/)
-      this.availableHeadrsList = this.getHeaderArray(csvRecordsArray)
+      this.uploadedFileHeadersList = this.getHeaderArray(csvRecordsArray)
+      this.availableHeadrsList = JSON.parse(JSON.stringify(this.uploadedFileHeadersList))
     }
     const that = this.showSnackBar
     reader.onerror = function () {
@@ -189,20 +202,27 @@ export class TransformationsComponent implements OnInit, OnChanges {
     this.providerDetalsBeforUpdate['data']['isActive'] = true
     const hasTransformationAlready = this.providerDetalsBeforUpdate[this.transformationType] ? true : false
     this.transforamtionForm.markAllAsTouched()
-    if (this.transforamtionForm.valid) {
+    this.transformationSpecForm.markAsTouched()
+    if ((this.transforamtionType === 'viaForm' && this.transforamtionForm.valid) ||
+      (this.transforamtionType === 'viaSpec' && this.transformationSpecForm.valid && this.transformationSpecForm.value !== '{}')) {
       if (this.transformationType !== 'certificateTemplateUrl') {
-        const trasformContentSpec: any = {} // contains maped transform spec for db
-        const specValues = this.transforamtionForm.value
-        this.transFormContentKeysAndControls.forEach((transFormContent: any) => {
-          trasformContentSpec[specValues[transFormContent.controlName]] = transFormContent.path
-        })
+        if (this.transforamtionType === 'viaForm') {
+          const trasformContentSpec: any = {} // contains maped transform spec for db
+          const specValues = this.transforamtionForm.value
+          this.transFormContentKeysAndControls.forEach((transFormContent: any) => {
+            trasformContentSpec[specValues[transFormContent.controlName]] = transFormContent.path
+          })
 
-        if (hasTransformationAlready) {
-          this.providerDetalsBeforUpdate[this.transformationType][0]['spec'] = trasformContentSpec
+          if (hasTransformationAlready && _.get(this.providerDetalsBeforUpdate, `${this.transformationType}[0].spec`)) {
+            this.providerDetalsBeforUpdate[this.transformationType]['0']['spec'] = trasformContentSpec
+          } else {
+            const trasformContentJson = this.providerConfiguration.trasformContentJson
+            trasformContentJson[0]['spec'] = trasformContentSpec
+            this.providerDetalsBeforUpdate[this.transformationType] = trasformContentJson
+            this.transformationSpecForm.patchValue(trasformContentJson)
+          }
         } else {
-          const trasformContentJson = this.providerConfiguration.trasformContentJson
-          trasformContentJson[0]['spec'] = trasformContentSpec
-          this.providerDetalsBeforUpdate[this.transformationType] = trasformContentJson
+          this.providerDetalsBeforUpdate[this.transformationType] = this.transformationSpecForm.value
         }
       }
       this.marketPlaceSvc.updateProvider(this.providerDetalsBeforUpdate).subscribe({
