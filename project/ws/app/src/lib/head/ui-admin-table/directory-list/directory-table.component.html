@@ -33,8 +33,11 @@
             class="example-table table1 responsiveTable">
 
             <ng-container matColumnDef="{{col.key}}" *ngFor="let col of tableData!.columns">
-                <mat-header-cell *matHeaderCellDef mat-sort-header> {{col.displayName}} </mat-header-cell>
-                <mat-cell *matCellDef="let element" (click)="selection.toggle(element); onRowClick(element)">
+                <mat-header-cell *matHeaderCellDef mat-sort-header
+                    [ngClass]="{'organization-table': selectedDepartment === 'organisation'}"> {{col.displayName}}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element" (click)="selection.toggle(element); onRowClick(element)"
+                    [ngClass]="{'organization-table': selectedDepartment === 'organisation'}">
                     <span *ngIf="col.isList" class="textclass"
                         [matTooltip]="(element[col.key]).split('<br />').join(', ')">
                         <div innerHTML="{{element[col.key]}}"></div>
@@ -45,8 +48,11 @@
                 </mat-cell>
             </ng-container>
             <ng-container matColumnDef="Actions" *ngIf="tableData!.actions && tableData!.actions.length > 0">
-                <mat-header-cell *matHeaderCellDef class="clr-darkish-blue action-header"> Actions </mat-header-cell>
-                <mat-cell *matCellDef="let row" class="action-cell">
+                <mat-header-cell *matHeaderCellDef class="clr-darkish-blue action-header"
+                    [ngClass]="{'organization-table': selectedDepartment === 'organisation'}"> Actions
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" class="action-cell"
+                    [ngClass]="{'organization-table': selectedDepartment === 'organisation'}">
                     <div *ngFor="let ac of tableData!.actions">
                         <ng-container *ngIf="ac.type === 'button'">
                             <div *ngIf="ac.optional">
@@ -75,7 +81,8 @@
                                         Access</button>
                                     <button mat-menu-item (click)="goToRoute('mentormanage', row)">Mentor
                                         Management</button>
-                                    <button mat-menu-item (click)="goToRoute('designation_master', row)">Manage
+                                    <button mat-menu-item (click)="goToRoute('designation_master', row)"
+                                        *ngIf="needCreate">Manage
                                         Designations</button>
                                     <!-- <button mat-menu-item
                                         (click)="goToRoute('grade_setting', row)">Grades/Group</button> -->

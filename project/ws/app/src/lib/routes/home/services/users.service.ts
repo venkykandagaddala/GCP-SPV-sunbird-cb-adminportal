@@ -48,6 +48,9 @@ export class UsersService {
           rootOrgId: depId,
           status: userStatus,
         },
+        sort_by: {
+          createdDate: "desc",
+        },
         limit: pageLimit,
         offset: offsetNum,
         query: searchText,

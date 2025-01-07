@@ -6,7 +6,7 @@ import { FormControl } from '@angular/forms'
 import { catchError, delay, map } from 'rxjs/operators'
 import { forkJoin, of, Subscription } from 'rxjs'
 import * as _ from 'lodash'
-import { ActivatedRoute, } from '@angular/router'
+import { ActivatedRoute, Router, } from '@angular/router'
 import { DatePipe } from '@angular/common'
 import { ConfirmationBoxComponent } from '../../../../../home/components/confirmation-box/confirmation.box.component'
 import { LoaderService } from '../../../../../home/services/loader.service'
@@ -22,6 +22,7 @@ import { ConformationPopupDesignationComponent } from '../../../../../home/compo
 export class ImportDesignationComponent implements OnInit, OnDestroy {
   @Output() closeComponent: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() loader: boolean = false;
+  @Input() importMasterflag: boolean = false;
   environmentVal: any
   designationConfig: any
   frameworkConfig: any
@@ -50,7 +51,8 @@ export class ImportDesignationComponent implements OnInit, OnDestroy {
     private loaderService: LoaderService,
     private snackBar: MatSnackBar,
     private datePipe: DatePipe,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    private router: Router
   ) {
     this.getFrameWorkDetails()
   }
@@ -377,14 +379,23 @@ export class ImportDesignationComponent implements OnInit, OnDestroy {
         disableClose: true,
       })
       dialogRef.afterClosed().subscribe(() => {
-        this.navigateToMyDesignations()
+        if (this.importMasterflag) {
+          this.router.navigate(['/app/home/directory/organisation'])
+        }
+        else {
+          this.navigateToMyDesignations()
+        }
       })
     } else {
       setTimeout(() => {
         const successMessage = _.get(this.designationConfig, 'successMsg')
         this.openSnackbar(successMessage, 10000, 'success')
         this.dialog.closeAll()
-        this.navigateToMyDesignations()
+        if (this.importMasterflag) {
+          this.router.navigate(['/app/home/directory/organisation'])
+        } else {
+          this.navigateToMyDesignations()
+        }
       }, 4000)
 
     }
