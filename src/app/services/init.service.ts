@@ -442,12 +442,16 @@ export class InitService {
   // }
   private async fetchStartUpDetails(): Promise<any> {
     // const userRoles: string[] = []
+    let apiResponse: any
     if (this.configSvc.instanceConfig && !Boolean(this.configSvc.instanceConfig.disablePidCheck)) {
       let userPidProfile: any | null = null
       try {
         userPidProfile = await this.http
           .get<any>(endpoint.profilePid)
-          .pipe(map((res: any) => res.result.response))
+          .pipe(map((res: any) => {
+            apiResponse = res
+            return _.get(res, 'result.response')
+          }))
           .toPromise()
         if (userPidProfile && userPidProfile.roles && userPidProfile.roles.length > 0 &&
           this.hasRole(userPidProfile.roles)) {
@@ -500,7 +504,12 @@ export class InitService {
         } else {
           // this.authSvc.force_logout()
           // await this.http.get('/apis/reset').toPromise()
-          window.location.href = `${this.defaultRedirectUrl}apis/reset`
+          // window.location.href = `${this.defaultRedirectUrl}apis/reset`
+          if (apiResponse && apiResponse.redirectUrl) {
+            window.location.href = apiResponse.redirectUrl
+          } else {
+            window.location.href = `${this.defaultRedirectUrl}apis/reset`
+          }
         }
         const details: any = {
           group: [],

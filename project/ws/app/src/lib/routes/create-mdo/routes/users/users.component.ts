@@ -30,6 +30,10 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   userWholeData!: any
   userWholeData1!: any
   createdDepartment!: any
+  limit: number = 20
+  pageIndex = 0
+  currentOffset = 0
+  totalRecordsCount = 0
   private defaultSideNavBarOpenedSubscription: any
   @ViewChild('stickyMenu', { static: true }) menuElement!: ElementRef
   goToImportMaster = false
@@ -44,6 +48,8 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   isReportsPath = false
+  userRoles: any
+  allowedCreateRoles = ['DASHBOARD_ADMIN', 'SPV_ADMIN', 'SPV_PUBLISHER']
   constructor(private usersSvc: UsersService, private router: Router,
     private route: ActivatedRoute,
     private profile: ProfileV2Service,
@@ -52,6 +58,7 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
   }
   ngOnInit() {
+    this.userRoles = this.route.parent && this.route.parent.snapshot.data.configService.userRoles
     this.tabsData = [
       {
         name: 'Users',
@@ -131,6 +138,10 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.currentDept === 'mdo') {
       this.tabledata['actions'] = [{ name: 'Edit', label: 'Edit info', optional: true, icon: 'remove_red_eye', type: 'button' }]
+    }
+
+    if (!this.isAllowed(this.allowedCreateRoles)) {
+      this.tabsData = this.tabsData.filter(item => !(['designation_master'].includes(item.key)))
     }
 
   }
@@ -229,9 +240,13 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
   getAllKongUsers() {
-    this.usersSvc.getAllKongUsers(this.id).subscribe(data => {
+    const status = 1
+    this.currentOffset = this.limit * ((this.pageIndex + 1) - 1)
+    const query = ''
+    this.usersService.getAllKongUsersPaginated(this.id, status, this.limit, this.currentOffset, query).subscribe(data => {
       if (data.result.response.content) {
         this.userWholeData = data.result.response.content || []
+        this.totalRecordsCount = data.result.response.count || 0
         this.newKongUser()
       }
     })
@@ -264,13 +279,27 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onEnterkySearch(enterValue: any) {
-    const rootOrgId = this.id
-    this.usersSvc.searchUserByenter(enterValue, rootOrgId).subscribe(data => {
+    let query: string = ''
+    let limit: number = 20 // Default limit
+    let offset: number = 0 // Default offset
+    const status: number = 1
+
+    if (typeof enterValue === 'string') {
+      query = enterValue
+    } else if (typeof enterValue === 'object') {
+      query = enterValue.query || ''
+      limit = enterValue.limit || 20 // Fallback to default limit
+      offset = enterValue.offset || 0 // Fallback to default offset
+    }
+
+    this.usersService.getAllKongUsersPaginated(this.id, status, limit, offset, query).subscribe(data => {
       this.userWholeData = data.result.response.content || []
+      this.totalRecordsCount = data.result.response.count || 0
       this.newKongUser()
     }
     )
   }
+
   editUser(event: any) {
     this.router.navigate(['app/home/create-user'], {
       queryParams: {
@@ -278,11 +307,32 @@ export class UsersComponent implements OnInit, AfterViewInit, OnDestroy {
         createDept: JSON.stringify({ depName: this.deptName }),
         orgName: this.deptName,
         redirectionPath: window.location.href,
-        subOrgType: this.subOrgType && this.subOrgType.toLowerCase() === 'ministry' ? 'mdo' : 'state'
+        subOrgType: this.getSubOrgType()
       }, state: { userData: event.row, updateButton: true },
     })
   }
+
   getMentorManage() {
 
+  }
+
+  getSubOrgType(): string {
+    const subOrgTypeLowerCase = this.subOrgType?.toLowerCase()
+    switch (subOrgTypeLowerCase) {
+      case 'ministry':
+        return 'mdo'
+      case 'state':
+        return 'state'
+      default:
+        return 'cbp-providers'
+    }
+  }
+
+  isAllowed(allowedRoles: string[]): boolean {
+    if (this.userRoles && this.userRoles.size > 0) {
+      const lowerConfigRoles = new Set([...this.userRoles].map(role => role.toLowerCase()))
+      return allowedRoles.some(role => lowerConfigRoles.has(role.toLowerCase()))
+    }
+    return false
   }
 }

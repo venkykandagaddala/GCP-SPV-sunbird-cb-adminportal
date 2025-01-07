@@ -46,6 +46,8 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
   ORG_NAME_PATTERN = /^[a-zA-Z0-9 ().,@\-\$\/\\:\[\]!\s]*$/
 
   untilDestroyed$ = new Subject<void>();
+  isMatcompleteOpened = false;
+  EXCLUDED_MINISRIES: string[] = []
   constructor(
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
@@ -59,6 +61,9 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loggedInUserId = _.get(this.activatedRoute, 'snapshot.parent.data.configService.userProfile.userId')
+    this.EXCLUDED_MINISRIES = this.activatedRoute.snapshot.parent ?
+      this.activatedRoute.snapshot.parent?.data?.pageData?.data?.excludedOrganizationsSborgId : []
+
     this.initialization()
     if (this.openMode === 'editMode') {
       this.getOrganization(this.rowData.organisation, this.rowData.type.toLowerCase())
@@ -80,8 +85,11 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
       this.statesList = _.get(this.dropdownList, 'statesList', [])
       this.filteredStates = [...this.statesList]
 
-      this.ministriesList = _.get(this.dropdownList, 'ministriesList', [])
+      this.ministriesList = _.get(this.dropdownList, 'ministriesList', []).filter(
+        (ministry: any) => !this.EXCLUDED_MINISRIES.includes(ministry?.sbOrgId)
+      )
       this.filteredMinistry = [...this.ministriesList]
+
     }
 
     this.organisationForm = this.formBuilder.group({
@@ -302,7 +310,6 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
 
   onSelectStateMinistry(org: any) {
     this.getOrganization(org.orgName, this.controls['category'].value)
-
   }
 
   uploadOrganizationLogo() {
@@ -325,5 +332,17 @@ export class CreateOrganisationComponent implements OnInit, OnDestroy {
         this.selectedLogoName = ''
       }
     })
+  }
+
+  onkeyDown(_event: any) {
+    return this.isMatcompleteOpened
+  }
+
+  onAutoCompleteOpened() {
+    this.isMatcompleteOpened = true
+  }
+
+  onAutoCompleteClosed() {
+    this.isMatcompleteOpened = false
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
+import { MatDialog } from '@angular/material/dialog'
 import { ActivatedRoute, Router } from '@angular/router'
 /* tslint:disable */
 import _ from 'lodash'
@@ -12,6 +12,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 import { UsersService } from '../../../routes/home/services/users.service'
 import { LoaderService } from '../../../routes/home/services/loader.service'
 import { TelemetryEvents } from '../../../routes/home/routes/events/model/telemetry.event.model'
+import { DemoVideoPopupComponent } from '../../home/components/demo-video-popup/demo-video-popup.component'
 // import { ReportsVideoComponent } from '../reports-video/reports-video.component'
 
 @Component({
@@ -111,7 +112,7 @@ export class MentorManageComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         this.getAllVerifiedUsers('')
         this.getMentorUsers('')
-      },         1000)
+      }, 1000)
 
     })
     // this.getNMUsers('')
@@ -134,15 +135,14 @@ export class MentorManageComponent implements OnInit, OnDestroy {
   }
 
   openVideoPopup() {
-    // this.dialog.open(ReportsVideoComponent, {
-    //   data: {
-    //     videoLink: 'https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1&mute=1',
-    //   },
-    //   disableClose: true,
-    //   width: '50%',
-    //   height: '60%',
-    //   panelClass: 'overflow-visable',
-    // })
+    this.dialog.open(DemoVideoPopupComponent, {
+      data: {
+        videoLink: '',
+      },
+      disableClose: true,
+      width: "675px",
+      height: "400px"
+    })
   }
 
   filter(filter: string) {

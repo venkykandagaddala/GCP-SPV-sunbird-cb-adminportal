@@ -117,9 +117,11 @@
         <div class="no-information-found" *ngIf="dataSource.filteredData.length===0">No data found
         </div>
     </div>
-    <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-        [showFirstLastButtons]="showFirstLastButtonsFlag">
-    </mat-paginator>
+    <div class="flex flex-row justify-center" *ngIf="totalRecords">
+        <mat-paginator [pageSize]="pageSize" [length]="totalRecords" [pageSizeOptions]="[20,30,40]"
+            (page)="onChangePage($event)" showFirstLastButtons="showFirstLastButtonsFlag"></mat-paginator>
+
+    </div>
 </div>
 
 <mat-menu #cardMenu="matMenu">
