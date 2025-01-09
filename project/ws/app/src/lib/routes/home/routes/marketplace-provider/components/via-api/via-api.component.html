@@ -4,8 +4,58 @@
       Configure Courses API
     </div>
     <div class="viaApi">
+
+      <div class="linkLable required flex items-center">
+        Link
+        <mat-icon class="info-icon">info_outline</mat-icon>
+      </div>
+
+      <div class="flex gap-4 viaApiUrl">
+        <form [formGroup]="viaApiFormGroup" class="flex w-full gap-0">
+          <div class="apiTypeSelect">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-select class="event-select" formControlName="apiType" placeholder="Select">
+                <ng-container *ngFor="let type of apiTypesList">
+                  <mat-option [value]="type.value">{{type.type}}</mat-option>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="apiUrl w-full">
+            <mat-form-field appearance="outline" class="w-full">
+              <input type="text" matInput formControlName="apiUrl" placeholder="API Url">
+            </mat-form-field>
+          </div>
+        </form>
+      </div>
+
+      <div class="vai-api-tabs mt-1">
+        <ng-container *ngIf="!delayTabLoad">
+          <mat-tab-group>
+            <mat-tab label="Params">
+              <ws-app-via-api-params-table [tableListFormGroup]="paramsFormGroup"
+                [paramsType]="'params'"></ws-app-via-api-params-table>
+            </mat-tab>
+            <mat-tab label="Headers">
+              <ws-app-via-api-params-table [tableListFormGroup]="headersFormGroup"
+                [paramsType]="'headers'"></ws-app-via-api-params-table>
+            </mat-tab>
+            <mat-tab label="Body">
+              <ws-app-via-api-params-table [tableListFormGroup]="bodyFormGroup"
+                [paramsType]="'body'"></ws-app-via-api-params-table>
+            </mat-tab>
+            <ng-container *ngIf="servicesFormGroup?.controls?.isAuthenticated.value">
+              <mat-tab label="Authentication">
+                <ws-app-via-api-params-table [tableListFormGroup]="authenticationFormGroup"
+                  [paramsType]="'authentication'"></ws-app-via-api-params-table>
+              </mat-tab>
+            </ng-container>
+          </mat-tab-group>
+        </ng-container>
+      </div>
+
       <form [formGroup]="servicesFormGroup">
-        <div class="flex flex-column gap-14">
+        <div class="flex flex-column gap-14 mt-14">
           <div class="flex flex-column gap-1 w-full">
             <div class="flex items-center gap-1 required">
               <span class="lable">Service Name</span>
@@ -71,7 +121,7 @@
             </mat-form-field>
           </div>
 
-          <div class="flex flex-col gap-4 mb-6">
+          <div class="flex flex-col gap-4">
             <div class="flex justify-between">
               <mat-slide-toggle formControlName="isAuthenticated" (change)="authenticationToggleChange()">
                 <span class="lable">Has Authentication</span>
@@ -102,54 +152,6 @@
         </div>
       </form>
 
-      <div class="linkLable required flex items-center mt-8">
-        Link
-        <mat-icon class="info-icon">info_outline</mat-icon>
-      </div>
-
-      <div class="flex gap-4 viaApiUrl">
-        <form [formGroup]="viaApiFormGroup" class="flex w-full gap-0">
-          <div class="apiTypeSelect">
-            <mat-form-field appearance="outline" class="w-full">
-              <mat-select class="event-select" formControlName="apiType" placeholder="Select">
-                <ng-container *ngFor="let type of apiTypesList">
-                  <mat-option [value]="type.value">{{type.type}}</mat-option>
-                </ng-container>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="apiUrl w-full">
-            <mat-form-field appearance="outline" class="w-full">
-              <input type="text" matInput formControlName="apiUrl" placeholder="API Url">
-            </mat-form-field>
-          </div>
-        </form>
-      </div>
-
-      <div class="vai-api-tabs mt-1">
-        <ng-container *ngIf="!delayTabLoad">
-          <mat-tab-group>
-            <mat-tab label="Params">
-              <ws-app-via-api-params-table [tableListFormGroup]="paramsFormGroup"
-                [paramsType]="'params'"></ws-app-via-api-params-table>
-            </mat-tab>
-            <mat-tab label="Headers">
-              <ws-app-via-api-params-table [tableListFormGroup]="headersFormGroup"
-                [paramsType]="'headers'"></ws-app-via-api-params-table>
-            </mat-tab>
-            <mat-tab label="Body">
-              <ws-app-via-api-params-table [tableListFormGroup]="bodyFormGroup"
-                [paramsType]="'body'"></ws-app-via-api-params-table>
-            </mat-tab>
-            <ng-container *ngIf="servicesFormGroup?.controls?.isAuthenticated.value">
-              <mat-tab label="Authentication">
-                <ws-app-via-api-params-table [tableListFormGroup]="authenticationFormGroup"
-                  [paramsType]="'authentication'"></ws-app-via-api-params-table>
-              </mat-tab>
-            </ng-container>
-          </mat-tab-group>
-        </ng-container>
-      </div>
     </div>
   </div>
 
