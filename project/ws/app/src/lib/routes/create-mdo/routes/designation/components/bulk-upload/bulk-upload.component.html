@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-6 bulk-upload-wrapper">
   <div class="flex flex-row gap-4 items-center">
-    <mat-icon class="cursor-pointer" [routerLink]="['/app/home/org-designations']">arrow_back</mat-icon>
+    <mat-icon class="cursor-pointer" (click)="showMyDesignations()">arrow_back</mat-icon>
     <div class="flex font-bold">{{bulkUploadConfig?.mainHeading}}</div>
   </div>
 
@@ -29,7 +29,7 @@
         <div class="flex flex-col gap-2 dashed-card items-center">
           <div class="flex cursor-pointer margin-top-m" (click)="fileInput.click()"
             (dblclick)="$event.preventDefault()">
-            <img src="/assets/icons/csv-file.svg" alt="CSV file logo" />
+            <img src="/assets/icons/csv.svg" class="csv-file" alt="CSV file logo" />
           </div>
           <div *ngIf="showFileError" class="error-msg">{{bulkUploadConfig?.supportedFileTypeText2}}</div>
           <div class="flex flex-col items-center">

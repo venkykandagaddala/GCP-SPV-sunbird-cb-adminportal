@@ -40,7 +40,7 @@ export class DesignationsComponent implements OnInit {
   }[] = []
   orgId = ''
   showTopSection = false
-  isImportDesignation = false
+  designationMaster = 'desigantion master'
   constructor(
     private designationsService: DesignationsService,
     private dialog: MatDialog,
@@ -115,11 +115,10 @@ export class DesignationsComponent implements OnInit {
         this.createFreamwork()
       }
       if (this.goToImportMaster) {
-        this.isImportDesignation = true
+        this.designationMaster = 'import designations'
       }
 
     })
-    // this.getFrameworkInfo('0140788510336040962_odcs')
   }
 
   createFreamwork() {
@@ -354,8 +353,13 @@ export class DesignationsComponent implements OnInit {
 
   //#endregion
   removeImportDesignationComp(flag: boolean): void {
-    this.isImportDesignation = flag
+    this.designationMaster = flag ? 'import designations' : 'desigantion master'
     this.goToImportMaster = false
+    this.getRoutesData()
+  }
+
+  showDesignationMaster(flag: boolean): void {
+    this.designationMaster = flag ? 'desigantion master' : 'bulk upload'
     this.getRoutesData()
   }
 }
