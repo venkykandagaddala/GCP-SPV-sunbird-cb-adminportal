@@ -134,7 +134,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
   }
 
   get actualUrl(): string {
-    const actualUrl = this.actualUrl
+    const actualUrl = this.viaApiFormGroup.controls.apiUrl.value.split('?')[0]
     return actualUrl
   }
 
@@ -402,7 +402,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
 
   getParamsAndUrl() {
     const parmsAndUrl = {
-      url: `${this.viaApiFormGroup.controls.apiUrl.value.split('?')[0]}`,
+      url: `${this.actualUrl}`,
       urlPlaceholder: '',
     }
     const params = this.paramsFormGroup.value.tableListFormArray

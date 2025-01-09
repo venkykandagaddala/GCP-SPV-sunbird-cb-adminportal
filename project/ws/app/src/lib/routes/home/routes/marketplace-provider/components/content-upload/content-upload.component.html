@@ -74,7 +74,7 @@
 </mat-card>
 
 <ng-container *ngIf="!delayTabLoad">
-  <mat-tab-group [ngClass]="{'hideTabs': uploadMode === 'viaApi'}">
+  <mat-tab-group [ngClass]="{'hideTabs': !(uploadMode === 'viaCsv' && viaApiTabIndex === 0)}">
     <mat-tab label="Upload Status">
       <div class="w-full mt-3 flex flex-col">
         <ng-container *ngIf="!showUploadedStatusLoader; else showLoader">
