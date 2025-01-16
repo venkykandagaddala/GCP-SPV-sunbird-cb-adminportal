@@ -39,6 +39,7 @@ export class DesignationsComponent implements OnInit {
     isMdoLeader: boolean
   }[] = []
   orgId = ''
+  orgName = ''
   showTopSection = false
   designationMaster = 'desigantion master'
   constructor(
@@ -61,11 +62,14 @@ export class DesignationsComponent implements OnInit {
   }
 
   initializeDefaultValues() {
-    this.configSvc = this.activateRoute.snapshot.data['configService']
-    this.designationsService.setUserProfile(_.get(this.configSvc, 'userProfileV2'))
-    // this.orgId = _.get(this.configSvc, 'userProfile.rootOrgId')
-    this.orgId = this.activateRoute.snapshot.params.department
-    this.designationConfig = this.activateRoute.snapshot.data['pageData'].data
+    if (this.activateRoute.snapshot) {
+      this.configSvc = this.activateRoute.snapshot.data['configService']
+      this.designationsService.setUserProfile(_.get(this.configSvc, 'userProfileV2'))
+      // this.orgId = _.get(this.configSvc, 'userProfile.rootOrgId')
+      this.orgId = this.activateRoute.snapshot.params.department
+      this.designationConfig = this.activateRoute.snapshot.data['pageData'].data
+      this.orgName = _.get(this.activateRoute, 'snapshot.queryParams.orgName')
+    }
 
     this.actionMenuItem = [
       // {
@@ -124,7 +128,7 @@ export class DesignationsComponent implements OnInit {
   createFreamwork() {
     this.showCreateLoader = true
     this.loaderMsg = this.designationConfig.frameworkCreationMSg
-    const departmentName = _.get(this.configSvc, 'userProfile.departmentName')
+    const departmentName = this.orgName ? this.orgName : _.get(this.configSvc, 'userProfile.departmentName')
     const masterFrameWorkName = this.environment.ODCSMasterFramework
     this.designationsService.createFrameWork(masterFrameWorkName, this.orgId, departmentName).subscribe((res: any) => {
       if (_.get(res, 'result.framework')) {
