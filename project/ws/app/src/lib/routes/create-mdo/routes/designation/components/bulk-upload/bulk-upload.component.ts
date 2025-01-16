@@ -48,6 +48,7 @@ export class BulkUploadComponent implements OnInit, OnDestroy, AfterViewInit {
   startIndex = 0
   lastIndex: any
   pageSize = 0
+  orgId = ''
 
   constructor(
     private fileService: FileService,
@@ -65,6 +66,7 @@ export class BulkUploadComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this.getUserDetails()
+    this.orgId = _.get(this.activateRoute, 'snapshot.queryParams.roleId', '')
     this.getBulkStatusList()
     this.activateRoute.data.subscribe(data => {
       this.bulkUploadConfig = data.pageData.data.bulkUploadConfig
@@ -99,7 +101,8 @@ export class BulkUploadComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getBulkStatusList(): void {
-    this.fileService.getBulkDesignationUploadData(this.rootOrgId)
+    const orgId = this.orgId ? this.orgId : this.rootOrgId
+    this.fileService.getBulkDesignationUploadData(orgId)
       .pipe(takeUntil(this.destroySubject$))
       .subscribe((res: any) => {
         this.lastUploadList = res.result.content.sort((a: IBulkUploadDesignationList, b: IBulkUploadDesignationList) =>
@@ -195,7 +198,7 @@ export class BulkUploadComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.fileSelected) {
         const formData: FormData = new FormData()
         formData.append('file', this.fileSelected)
-        this.fileService.bulkUploadDesignation(this.fileName, formData, this.bulkUploadFrameworkId)
+        this.fileService.bulkUploadDesignation(this.fileName, formData, this.bulkUploadFrameworkId, this.orgId)
           .pipe(takeUntil(this.destroySubject$))
           .subscribe((_res: any) => {
             this.fileUploadDialogInstance.close()
