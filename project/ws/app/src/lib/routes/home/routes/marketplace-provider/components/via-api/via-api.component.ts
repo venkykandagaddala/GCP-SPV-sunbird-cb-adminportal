@@ -18,6 +18,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
   @Input() providerDetails?: any
   @Input() viaApiTabIndex = 0
   @Input() tabIndex = -1
+  @Input() transformationType = ''
 
   @Output() loadProviderDetails = new EventEmitter<Boolean>()
   //#endregion
@@ -34,7 +35,8 @@ export class ViaApiComponent implements OnInit, OnChanges {
   apiUrlEdited = false
 
   //#region (transformation variables)
-  transforamtionForm!: FormGroup
+  transformationSpecForm!: FormControl
+  transforamtionType = 'viaSpec'
   editorOptions = new JsonEditorOptions()
   transformationsUpdated = false
   providerConfiguration: any
@@ -65,7 +67,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
     this.servicesFormGroup = this.formBuilder.group({
       serviceName: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/)]),
       serviceCode: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/)]),
-      serviceDescription: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9.\-_$/:\[\] ' !]*$/)]),
+      serviceDescription: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9,.\-_$/:\[\] ' !]*$/)]),
       isAuthenticated: new FormControl(false),
       strictCache: new FormControl(false),
       strictCacheTimeInMinutes: new FormControl()
@@ -113,9 +115,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
     this.editorOptions.enableSort = false
     this.editorOptions.enableTransform = false
 
-    this.transforamtionForm = this.formBuilder.group({
-      transformContent: new FormControl({}, Validators.required)
-    })
+    this.transformationSpecForm = new FormControl({}, Validators.required)
 
     this.paramsFormArray.valueChanges.subscribe((params: any) => {
       if (!this.apiUrlEdited) {
@@ -219,8 +219,8 @@ export class ViaApiComponent implements OnInit, OnChanges {
         this.patchFormData(responce)
       })
     } else {
-      const transformContent = _.get(this.providerConfiguration, 'transformContentViaApi')
-      this.transforamtionForm.controls.transformContent.patchValue(transformContent)
+      const transformContent = _.get(this.providerConfiguration, this.transformationType)
+      this.transformationSpecForm.patchValue(transformContent)
     }
   }
 
@@ -268,8 +268,8 @@ export class ViaApiComponent implements OnInit, OnChanges {
       this.authenticationFormGroup.controls.rawData.patchValue(authPayload)
     }
 
-    const transformContent = _.get(configurationDetails, 'transformContentViaApi', _.get(this.providerConfiguration, 'transformContentViaApi'))
-    this.transforamtionForm.controls.transformContent.patchValue(transformContent)
+    const transformContent = _.get(configurationDetails, this.transformationType, _.get(this.providerConfiguration, this.transformationType))
+    this.transformationSpecForm.patchValue(transformContent)
 
   }
 
@@ -320,6 +320,24 @@ export class ViaApiComponent implements OnInit, OnChanges {
     this.servicesFormGroup.controls.strictCacheTimeInMinutes.updateValueAndValidity()
   }
 
+  get getUpdateBtnText(): string {
+    let btnText = ''
+    if (this.transformationType === 'transformContentViaApi') {
+      if (this.providerConfiguration.trasformContentViaApi) {
+        btnText = 'Update Transform Content'
+      } else {
+        btnText = 'Save Transform Content'
+      }
+    } else if (this.transformationType === 'transformProgressViaApi') {
+      if (this.providerConfiguration.transformProgressViaApi) {
+        btnText = 'Update Transform Progress'
+      } else {
+        btnText = 'Save Transform Progress'
+      }
+    }
+    return btnText
+  }
+
   configure() {
     this.configured = true
     if (this.servicesFormGroup.valid && this.viaApiFormGroup.valid && this.transformationsUpdated) {
@@ -361,7 +379,7 @@ export class ViaApiComponent implements OnInit, OnChanges {
     } else {
       this.servicesFormGroup.markAllAsTouched()
       this.viaApiFormGroup.markAllAsTouched()
-      this.transforamtionForm.markAllAsTouched()
+      this.transformationSpecForm.markAsTouched()
       if (!this.transformationsUpdated) {
         const message = 'Please update transform content'
         this.showSnackBar(message)
@@ -391,11 +409,11 @@ export class ViaApiComponent implements OnInit, OnChanges {
       requestPayload: {
         requestMap: isFormData ? this.generateObjectFromForm(this.bodyFormGroup.value.tableListFormArray) : this.bodyFormGroup.value.rawData,
         headerMap: this.generateObjectFromForm(this.headersFormGroup.value.tableListFormArray),
-        urlMap: this.generateObjectFromForm(this.paramsFormGroup.value.tableListFormArray, true),
-        strictCache: serviceDetails.strictCache,
-        strictCacheTimeInMinutes: serviceDetails.strictCacheTimeInMinutes
+        urlMap: this.generateObjectFromForm(this.paramsFormGroup.value.tableListFormArray, true)
       },
-      authPayload: this.authenticationFormGroup.value.rawData
+      authPayload: this.authenticationFormGroup.value.rawData,
+      strictCache: serviceDetails.strictCache,
+      strictCacheTimeInMinutes: serviceDetails.strictCacheTimeInMinutes
     }
     return formBody
   }
@@ -436,10 +454,10 @@ export class ViaApiComponent implements OnInit, OnChanges {
 
   upDateTransforamtionDetails() {
     this.providerDetails['data']['isActive'] = true
-    const hasTransformationAlready = this.providerDetails['transformContentViaApi'] ? true : false
-    this.transforamtionForm.markAllAsTouched()
-    if (this.transforamtionForm.valid) {
-      this.providerDetails['transformContentViaApi'] = this.transforamtionForm.controls.transformContent.value
+    const hasTransformationAlready = this.providerDetails[this.transformationType] ? true : false
+    this.transformationSpecForm.markAsTouched()
+    if (this.transformationSpecForm.valid) {
+      this.providerDetails[this.transformationType] = this.transformationSpecForm.value
       this.marketPlaceSvc.updateProvider(this.providerDetails).subscribe({
         next: (responce: any) => {
           if (responce) {
